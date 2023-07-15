@@ -1,7 +1,10 @@
 # STRELA
 [![Build Status](https://github.com/AkchurinDA/STRELA.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/AkchurinDA/STRELA.jl/actions/workflows/CI.yml?query=branch%3Amain)
 
-<img src = "assets/LogoS.svg" alt = "Logo" style = "display: block; margin: auto; width: 50%;"/>
+<p align="center">
+  <img src="assets/LogoS.svg" alt = "Logo" width="50%">
+</p>
+
 
 ## Description
 STRELA (**St**ructural **Rel**iability **A**nalysis) is a general purpose Julia package for structural and system reliability analysis.
@@ -174,7 +177,7 @@ println("β from G₂: $β₂")
 ```
 
 #### First-Order Reliability Method (FORM)
-The FORM overcomes the invariance problem faced by the MCFOSM method by using the first-order Taylor expansion if the limit state function at a point known as the "design point" on the failure boundary. Since the design point is not known a priori, the FORM is inherently an iterative method.
+The FORM overcomes the invariance problem faced by the MCFOSM method by using the first-order Taylor expansion if the limit state function at a point known as the "design point" on the failure boundary. Since the design point is not known a priori, the FORM is inherently an iterative method. 
 
 ```julia
 β₁, _, _ = FORM(Problem₁)
