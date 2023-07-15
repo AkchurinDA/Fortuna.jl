@@ -10,7 +10,7 @@ function MCFOSM(Problem::ReliabilityProblem)
 
     # Convert the correlation matrix into covariance matrix:
     σˣ = std.(X)
-    Dˣ = Diagonal(σˣ)
+    Dˣ = diagm(σˣ)
     Σˣ = Dˣ * ρˣ * Dˣ
 
     # Compute gradient of the limit state function and evaluate it at the means of the marginal distributions:
@@ -139,7 +139,7 @@ function FORM(Problem::ReliabilityProblem; MaxNumIterations=100, ϵ₁=10^(-6), 
             continue
         else
             if i == MaxNumIterations - 1
-                error("FORM did not converge. Try increasing the number of iterations.")
+                error("FORM did not converge. Try increasing the maximum number of iterations allowed.")
             end
         end
     end

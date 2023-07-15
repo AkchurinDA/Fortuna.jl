@@ -29,7 +29,7 @@ function generaterv(DistributionName::String, DefineBy::String, Values::Union{Re
     elseif DistributionName == "uniform"
         RV = Uniform(Values[1], Values[2])
     else
-        error("Distribution is not supported.")
+        error("Provided distribution is not supported.")
     end
 
     return RV

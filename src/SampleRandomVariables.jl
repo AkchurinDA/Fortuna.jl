@@ -13,7 +13,9 @@ function samplerv(Samplers::Union{Distribution,Vector{<:Distribution}}, NumSampl
         Samples = Matrix{Float64}(undef, NumSamples, NumDims)
     end
 
-    if SamplingTechnique == "inversetransformsampling" || SamplingTechnique == "its"
+    if SamplingTechnique == "its" && SamplingTechnique == "lhs"
+        error("Provided sampling technique is not defined.")
+    elseif SamplingTechnique == "its"
         if NumDims == 1
             # Generate samples from a uniform distributions:
             UniformSamples = rand(NumSamples)
@@ -29,7 +31,7 @@ function samplerv(Samplers::Union{Distribution,Vector{<:Distribution}}, NumSampl
                 Samples[:, i] = quantile(Samplers[i], UniformSamples)
             end
         end
-    elseif SamplingTechnique == "latinhypercubesampling" || SamplingTechnique == "lhs"
+    elseif SamplingTechnique == "lhs"
         # Define the lower limits of each strata:
         LowerLimits = collect(range(0, (NumSamples - 1) / NumSamples, NumSamples))
 
@@ -54,8 +56,6 @@ function samplerv(Samplers::Union{Distribution,Vector{<:Distribution}}, NumSampl
                 Samples[:, i] = quantile(Samplers[i], UniformSamples)
             end
         end
-    else
-        error("Sampling technique is not defined.")
     end
 
     # Convert vector to scalar if only one sample if requested:

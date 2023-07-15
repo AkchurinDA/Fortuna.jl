@@ -77,7 +77,9 @@ function transformsamples(Object::NatafTransformation, Samples::Union{Vector{<:R
     # Convert strings to lowercase:
     TransformationDirection = lowercase(TransformationDirection)
 
-    if TransformationDirection == "x2u"
+    if TransformationDirection != "x2u" && TransformationDirection != "u2x"
+        error("Invalid transformation direction.")
+    elseif TransformationDirection == "x2u"
         # Extract data:
         X = Object.X
         L⁻¹ = Object.L⁻¹
@@ -148,7 +150,9 @@ function getjacobian(Object::NatafTransformation, Samples::Union{Vector{<:Real},
     # Convert strings to lowercase:
     TransformationDirection = lowercase(TransformationDirection)
 
-    if TransformationDirection == "x2u"
+    if TransformationDirection != "x2u" && TransformationDirection != "u2x"
+        error("Invalid transformation direction.")
+    elseif TransformationDirection == "x2u"
         # Extract data:
         X = Object.X
         L = Object.L
