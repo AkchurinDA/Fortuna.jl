@@ -1,7 +1,7 @@
 #=
 Methods of reliability analysis:
 =#
-struct ReliabilityProblem
+mutable struct ReliabilityProblem
     # Marginal distributions:
     X::Vector{<:Distribution}
     # Correlation matrix:

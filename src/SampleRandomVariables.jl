@@ -67,7 +67,7 @@ function samplerv(Samplers::Union{Distribution,Vector{<:Distribution}}, NumSampl
 end
 
 # Sample correlated random variables:
-function samplerv(Object::NatafTransformation, NumSamples::Integer)
+function samplerv(Object::NatafTransformation, NumSamples::Integer, SamplingTechnique::String)
     # Extract data:
     X = Object.X
     L = Object.L
@@ -75,12 +75,18 @@ function samplerv(Object::NatafTransformation, NumSamples::Integer)
     # Compute the number of marginal distributions:
     NumDims = length(X)
 
-    # Preallocate:
-    XSamples = Matrix{Float64}(undef, NumSamples, NumDims)
+    # Generate samples of uncorrelated normal random variables U:
+    NormalDistribution = generaterv("Normal", "Moments", [0, 1])
+    USamples = Matrix{Float64}(undef, NumSamples, NumDims)
+    for i in 1:NumDims
+        USamples[:, i] = samplerv(NormalDistribution, NumSamples, SamplingTechnique)
+    end
 
-    # Generate samples of random variables X:
-    USamples = randn(NumSamples, NumDims)
+    # Generate samples of correlated normal random variables Z:
     ZSamples = USamples * transpose(L)
+
+    # Generate samples of correlated non-normal random variables X:
+    XSamples = Matrix{Float64}(undef, NumSamples, NumDims)
     for i in 1:NumDims
         XSamples[:, i] = quantile(X[i], cdf(Normal(0, 1), ZSamples[:, i]))
     end
