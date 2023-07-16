@@ -2,7 +2,7 @@
 [![Build Status](https://github.com/AkchurinDA/STRELA.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/AkchurinDA/STRELA.jl/actions/workflows/CI.yml?query=branch%3Amain)
 
 <p align="center">
-  <img src="assets/LogoS.svg" alt = "Logo" width="50%">
+  <img src="assets/logo.svg" alt = "Logo" width="50%">
 </p>
 
 
