@@ -1,6 +1,5 @@
 # STRELA
-[![Build Status](https://github.com/AkchurinDA/STRELA.jl/actions/workflows/CI%20(Nightly).yml/badge.svg?branch=main)](https://github.com/AkchurinDA/STRELA.jl/actions/workflows/CI%20(Latest).yml)
-[![Build Status](https://github.com/AkchurinDA/STRELA.jl/actions/workflows/CI%20(Nightly).yml/badge.svg?branch=main)](https://github.com/AkchurinDA/STRELA.jl/actions/workflows/CI%20(Nightly).yml)
+[![Build Status](https://github.com/AkchurinDA/STRELA.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/AkchurinDA/STRELA.jl/actions/workflows/CI.yml)
 
 <p align="center">
   <img src="assets/logo.svg" alt = "Logo" width="50%">
