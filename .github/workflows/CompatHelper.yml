@@ -1,4 +1,4 @@
-name: CompatHelper
+name: CompatibilityHelper
 on:
   schedule:
     # Run at noon:
