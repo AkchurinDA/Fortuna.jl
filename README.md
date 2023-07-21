@@ -12,15 +12,15 @@ STRELA (**St**ructural **Rel**iability **A**nalysis) is a general purpose Julia 
 ## Installation
 To install STRELA package, type `]` in Julia REPL to enter package manager mode and execute the following command:
 
-```
-pkg> add STRELA
+```julia
+using Pkg
 ```
 
 ## Quick Start
 To start using STRELA package, type the following command in Julia REPL or in the beginning of a file:
 
-```julia
-using STRELA
+```
+add STRELA
 ```
 
 ### Generating Random Variables
@@ -50,7 +50,7 @@ X = [X₁, X₂]
 NatafObject = NatafTransformation(X, ρˣ)
 ```
 
-The results of the performed Nataf transformation can be accesses from the fields of the defined `NatafTransformation` object:
+The results of the performed Nataf transformation can be accesses from the fields of the defined `NatafTransformation` object.
 
 ```julia
 # Extract the distorted correlation matrix of correlated normal random variables:
@@ -76,7 +76,7 @@ display(NatafObject.L⁻¹)
 STRELA package also allows to easily generate samples of uncorrelated and correlated random variables using `samplerv()` function using different sampling techniques. Current version of the package implements [Inverse Transform Sampling (ITS)](https://en.wikipedia.org/wiki/Inverse_transform_sampling) and [Latin Hypercube Sampling (LHS)](https://en.wikipedia.org/wiki/Latin_hypercube_sampling) techniques.
 
 #### Uncorrelated Random Variables
-The function `generaterv()` allows for generating samples of a single distribution, as well as generating samples of random vectors.
+The function `generaterv()` allows to generate samples of a single distribution, as well as to generate samples of random vectors.
 ```julia
 # Define a random vector:
 X₁ = generaterv("Gamma", "Moments", [10, 1.5])
@@ -89,7 +89,6 @@ X₁SamplesITS = samplerv(X₁, 3, "ITS")
 #  8.438113227625095
 #  9.103174415760643
 #  11.11171748034975
-
 
 # Generate 3 samples of the random variable X₁ using Latin Hypercube Sampling:
 X₁SamplesLHS = samplerv(X₁, 3, "LHS")
@@ -115,7 +114,7 @@ XSamplesLHS = samplerv(X, 3, "LHS")
 
 #### Correlated Random Variables
 Generating the correlated random variables can be done by:
-1. Performing the Nataf transformation of the random correlated variables:
+1. Performing the Nataf transformation of the random correlated variables.
 
     ```julia
     # Define a random vector:
