@@ -1,12 +1,10 @@
-name = "STRELA"
+name = "SRel"
 uuid = "c1a2adf5-a52e-430c-84bf-168fab86e0c1"
 authors = ["Damir Akchurin"]
 version = "0.1.0"
 
 [deps]
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
-Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
-DocumenterTools = "35a29f4d-8980-5a13-9543-d66fff28ecb8"
 FastGaussQuadrature = "442a2c76-b920-505d-bb47-c5924d526838"
 ForwardDiff = "f6369f11-7733-5829-9624-2563aa707210"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
@@ -15,8 +13,6 @@ Roots = "f2b01f46-fcfa-551c-844a-d8ac1e96c665"
 
 [compat]
 Distributions = "0.25"
-Documenter = "0.27"
-DocumenterTools = "0.1"
 FastGaussQuadrature = "0.5"
 ForwardDiff = "0.10"
 Roots = "2"

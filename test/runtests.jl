@@ -1,4 +1,4 @@
-using STRELA
+using SRel
 using Test
 
 @testset "Reliability Analysis: MCFOSM" begin

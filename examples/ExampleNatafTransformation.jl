@@ -4,7 +4,7 @@ Date:   July 14, 2023
 =#
 
 # Preamble:
-using STRELA, Distributions
+using SRel, Distributions
 
 # Define the distribution types and moments of the marginal random variables:
 RVTypesₓ = ["Gamma", "Gumbel"]

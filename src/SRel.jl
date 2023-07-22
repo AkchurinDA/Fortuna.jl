@@ -1,4 +1,4 @@
-module STRELA
+module SRel
 # Load dependencies:
 using Distributions: Distribution
 using Distributions: MvNormal

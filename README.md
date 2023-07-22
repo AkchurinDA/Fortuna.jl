@@ -1,4 +1,4 @@
-# STRELA
+# `SRel` - Structural and System Reliability Analysis Made Easy
 [![Build Status](https://github.com/AkchurinDA/STRELA.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/AkchurinDA/STRELA.jl/actions/workflows/CI.yml)
 
 <p align="center">
@@ -7,24 +7,24 @@
 
 
 ## Description
-STRELA (**St**ructural **Rel**iability **A**nalysis) is a general purpose Julia package for structural and system reliability analysis.
+SRel (**S**tructural and **S**ystem **Rel**iability Analysis) is a general purpose Julia package for structural and system reliability analysis.
 
 ## Installation
-To install STRELA package, type `]` in Julia REPL to enter package manager mode and execute the following command:
+To install SRel package, type `]` in Julia REPL to enter package manager mode and execute the following command:
 
 ```
-pkg> add STRELA
+pkg> add SRel
 ```
 
 ## Quick Start
-To start using STRELA package, type the following command in Julia REPL or in the beginning of a file:
+To start using SRel package, type the following command in Julia REPL or in the beginning of a file:
 
 ```julia
-using STRELA
+using SRel
 ```
 
 ### Generating Random Variables
-STRELA package builds its capacity to generate random variables using `generaterv()` function by utilizing the widely-adopted [Distributions](https://github.com/JuliaStats/Distributions.jl) package, enabling seamless integration with other Julia packages such as [Turing](https://github.com/TuringLang/Turing.jl). However, unlike [Distributions](https://github.com/JuliaStats/Distributions.jl) package, STRELA allows you to generate random variables not only using their **parameters**, but also using their **moments**, which often useful.
+SRel package builds its capacity to generate random variables using `generaterv()` function by utilizing the widely-adopted [Distributions](https://github.com/JuliaStats/Distributions.jl) package, enabling seamless integration with other Julia packages such as [Turing](https://github.com/TuringLang/Turing.jl). However, unlike [Distributions](https://github.com/JuliaStats/Distributions.jl) package, SRel allows you to generate random variables not only using their **parameters**, but also using their **moments**, which often useful.
 
 ```julia
 # Generate a lognormally distributed random variable R with mean (μ) of 15 and standard deviation (σ) of 2.5:
@@ -35,7 +35,7 @@ Q = generaterv("Gamma", "Parameters", [16, 0.625])
 ```
 
 ### Performing Nataf Transformation
-STRELA package allows to easily perform the Nataf transformation of correlated random variables into the space of uncorrelated standard normal variables.
+SRel package allows to easily perform the Nataf transformation of correlated random variables into the space of uncorrelated standard normal variables.
 
 ```julia
 # Define a random vector:
@@ -73,7 +73,7 @@ display(NatafObject.L⁻¹)
 ```
 
 ### Sampling Random Variables
-STRELA package also allows to easily generate samples of uncorrelated and correlated random variables using `samplerv()` function using different sampling techniques. Current version of the package implements [Inverse Transform Sampling (ITS)](https://en.wikipedia.org/wiki/Inverse_transform_sampling) and [Latin Hypercube Sampling (LHS)](https://en.wikipedia.org/wiki/Latin_hypercube_sampling) techniques.
+SRel package also allows to easily generate samples of uncorrelated and correlated random variables using `samplerv()` function using different sampling techniques. Current version of the package implements [Inverse Transform Sampling (ITS)](https://en.wikipedia.org/wiki/Inverse_transform_sampling) and [Latin Hypercube Sampling (LHS)](https://en.wikipedia.org/wiki/Latin_hypercube_sampling) techniques.
 
 #### Uncorrelated Random Variables
 The function `generaterv()` allows to generate samples of a single distribution, as well as to generate samples of random vectors.
@@ -147,7 +147,7 @@ Generating the correlated random variables can be done by:
     ```
 
 ### Reliability Analysis 
-Ultimately, STRELA package is developed to perform structural and system reliability analysis. The current version of the package implements the Mean-Centered First-Order Second-Moment (MCFOSM) reliability method, as well as the First-Order Reliability Method (FORM).
+Ultimately, SRel package is developed to perform structural and system reliability analysis. The current version of the package implements the Mean-Centered First-Order Second-Moment (MCFOSM) reliability method, as well as the First-Order Reliability Method (FORM).
 
 #### Mean-Centered First-Order Second-Moment (MCFOSM) Reliability Method
 The MCFOSM method is the simplest and least expensive type of reliability method. It utilizes the first-order Taylor expansion of the limit state function at the mean values and the first two moments of the random variables involved in the reliability problem to evaluate the reliability index. However, despite the fact that it is simple and does not require the complete knowledge of the random variables involved in the reliability problem, the MCFOSM method faces an issue known as the invariance problem. This problem arises because the resulting reliability index is dependent on the formulation of the limit state function. In other words, two equivalent limit state functions with the same failure boundaries produce two different reliability indices.
@@ -189,7 +189,7 @@ println("β from G₂: $β₂")
 ```
 
 # License
-STRELA package is distributed under the [MIT license](https://en.wikipedia.org/wiki/MIT_License). More information can be found in the `LICENSE` file.
+SRel package is distributed under the [MIT license](https://en.wikipedia.org/wiki/MIT_License). More information can be found in the `LICENSE` file.
 
 # Help and Support
 For assistance with the package, please raise an issue on the Github Issues page. Please use the appropriate labels to indicate the specific functionality you are inquiring about.
