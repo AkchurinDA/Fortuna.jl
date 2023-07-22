@@ -12,15 +12,15 @@ STRELA (**St**ructural **Rel**iability **A**nalysis) is a general purpose Julia 
 ## Installation
 To install STRELA package, type `]` in Julia REPL to enter package manager mode and execute the following command:
 
-```julia
-using Pkg
+```
+pkg> add STRELA
 ```
 
 ## Quick Start
 To start using STRELA package, type the following command in Julia REPL or in the beginning of a file:
 
 ```
-add STRELA
+using STRELA
 ```
 
 ### Generating Random Variables
