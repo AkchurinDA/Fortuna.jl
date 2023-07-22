@@ -1,13 +1,12 @@
 # `STRELA` - Reliability Analysis Made Easy
 [![Build Status](https://github.com/AkchurinDA/STRELA.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/AkchurinDA/STRELA.jl/actions/workflows/CI.yml)
 
+## Description
+`STRELA` (**S**tructural and **S**ystem **Rel**iability **A**nalysis) is a general purpose Julia package for structural and system reliability analysis.
+
 <p align="center">
   <img src="assets/logo.svg" alt = "Logo" width="50%">
 </p>
-
-
-## Description
-`STRELA` (**S**tructural and **S**ystem **Rel**iability **A**nalysis) is a general purpose Julia package for structural and system reliability analysis.
 
 ## Installation
 To install `STRELA` package, type `]` in Julia REPL to enter package manager mode and execute the following command:
@@ -175,7 +174,7 @@ println("β from G₂: $β₂")
 ```
 
 #### First-Order Reliability Method (FORM)
-The FORM overcomes the invariance problem faced by the MCFOSM method by using the first-order Taylor expansion of the limit state function at a point known as the "design point" on the failure boundary. Since the design point is not known a priori, the FORM is inherently an iterative method. Current implementation of FORM uses improved Hasofer-Lind Rackwitz-Fiessler (iHL-RF) algorithms.
+The FORM overcomes the invariance problem faced by the MCFOSM method by using the first-order Taylor expansion of the limit state function at a point known as the "design point" on the failure boundary. Since the design point is not known a priori, the FORM is inherently an iterative method. Current implementation of FORM uses improved Hasofer-Lind Rackwitz-Fiessler (iHL-RF) algorithm.
 
 ```julia
 β₁, _, _ = FORM(Problem₁)
