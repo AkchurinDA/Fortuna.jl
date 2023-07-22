@@ -19,7 +19,7 @@ pkg> add STRELA
 ## Quick Start
 To start using STRELA package, type the following command in Julia REPL or in the beginning of a file:
 
-```
+```julia
 using STRELA
 ```
 
@@ -175,7 +175,7 @@ println("β from G₂: $β₂")
 ```
 
 #### First-Order Reliability Method (FORM)
-The FORM overcomes the invariance problem faced by the MCFOSM method by using the first-order Taylor expansion of the limit state function at a point known as the "design point" on the failure boundary. Since the design point is not known a priori, the FORM is inherently an iterative method. 
+The FORM overcomes the invariance problem faced by the MCFOSM method by using the first-order Taylor expansion of the limit state function at a point known as the "design point" on the failure boundary. Since the design point is not known a priori, the FORM is inherently an iterative method. Current implementation of FORM uses improved Hasofer-Lind Rackwitz-Fiessler (iHL-RF) algorithms.
 
 ```julia
 β₁, _, _ = FORM(Problem₁)
