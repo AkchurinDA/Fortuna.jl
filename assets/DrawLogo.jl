@@ -25,7 +25,7 @@ W = 600
 
     # Add text
     fontsize(70)
-    fontface("PTMono-Bold")
+    fontface("PTMono-Regular")
     textcurve("STRELA", 0, 210, Point(0, 0))
     textcurve("STRELA", π, 210, Point(0, 0))
 end W H
