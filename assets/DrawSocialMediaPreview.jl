@@ -3,7 +3,7 @@ using Luxor, Colors
 H = 640
 W = 1280
 
-@drawsvg begin
+@draw begin
     # Draw background box
     setcolor("antiquewhite")
     box(O, W, H, action=:fill)
