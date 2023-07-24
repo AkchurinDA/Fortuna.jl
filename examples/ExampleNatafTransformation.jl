@@ -33,23 +33,19 @@ display(NatafObject.L)
 display(NatafObject.L⁻¹)
 
 # Generate samples of the correlated marginal random variables:
-NumSamples = 5 * 10^3
+NumSamples = 10^3
 XSamples, ZSamples, USamples = samplerv(NatafObject, NumSamples, "LHS")
 
 # Plot generated samples and the joint PDF at these samples:
 using CairoMakie, MathTeXEngine
-CairoMakie.activate!(type=:png)
+CairoMakie.activate!(type=:svg)
 
 begin
-    F = Figure(resolution=72 .* (9, 9))
+    F = Figure(resolution=72 .* (9, 9), fonts=(; regular=texfont()))
 
     A = Axis(F[1, 1],
         xlabel=L"$x_1$, $z_1$, $u_1$", ylabel=L"$x_2$, $z_2$, $u_2$",
-        xgridcolor=:black, ygridcolor=:black,
         xminorticks=IntervalsBetween(5), yminorticks=IntervalsBetween(5),
-        xminorgridvisible=true, yminorgridvisible=true,
-        xminorgridcolor=:grey, yminorgridcolor=:grey,
-        xticklabelfont=texfont(), yticklabelfont=texfont(),
         limits=(-10, 30, -10, 30),
         aspect=1)
 
