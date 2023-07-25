@@ -1,5 +1,5 @@
 # Sample uncorrelated random variables:
-function samplerv(Samplers::Union{Distribution,Vector{<:Distribution}}, NumSamples::Integer, SamplingTechnique::String)
+function samplerv(Samplers::Union{<:Distribution,Vector{<:Distribution}}, NumSamples::Integer, SamplingTechnique::String)
     # Convert strings to lowercase:
     SamplingTechnique = lowercase(SamplingTechnique)
 

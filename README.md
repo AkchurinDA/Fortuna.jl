@@ -2,7 +2,7 @@
 [![Build Status](https://github.com/AkchurinDA/STRELA.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/AkchurinDA/STRELA.jl/actions/workflows/CI.yml)
 
 ## Description
-`STRELA` (**S**tructural and **S**ystem **Rel**iability **A**nalysis) is a general purpose Julia package for structural and system reliability analysis.
+`STRELA` (**S**tructural **Rel**iability **A**nalysis) is a general purpose Julia package for structural and system reliability analysis.
 
 <p align="center">
   <img src="assets/Logo.svg" alt = "Logo" width="25%">
