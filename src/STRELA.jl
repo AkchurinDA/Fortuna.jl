@@ -8,7 +8,9 @@ using FastGaussQuadrature: gausslegendre
 using ForwardDiff: gradient
 using LinearAlgebra
 using Random: rand, randn, shuffle
-using Roots: find_zero
+using NonlinearSolve: NonlinearProblem
+using NonlinearSolve: NewtonRaphson
+using NonlinearSolve: solve
 
 # Include the following files into the scope of the module:
 include("DefineStructures.jl")

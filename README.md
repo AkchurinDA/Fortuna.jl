@@ -5,7 +5,7 @@
 `STRELA` (**S**tructural **Rel**iability **A**nalysis) is a general purpose Julia package for structural and system reliability analysis.
 
 <p align="center">
-  <img src="assets/Logo.svg" alt = "Logo" width="30%">
+  <img src="assets/Logo.svg" alt = "Logo" width="40%">
 </p>
 
 ## Installation

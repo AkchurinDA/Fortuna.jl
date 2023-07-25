@@ -57,10 +57,13 @@ function getdistortedcorrelation(X::Vector{<:Distribution}, ρˣ::Matrix{<:Real}
             # Define a function from which we will compute the entries of the distorted correlation matrix:
             hᵢ = (quantile.(X[i], cdf.(Normal(0, 1), zᵢ)) .- mean(X[i])) / std(X[i])
             hⱼ = (quantile.(X[j], cdf.(Normal(0, 1), zⱼ)) .- mean(X[j])) / std(X[j])
-            F(ρ) = ((ZMax - ZMin) / 2)^2 * dot(Wᵢⱼ .* (hᵢ .* hⱼ), ((1 / (2 * π * sqrt(1 - ρ^2))) * exp.((2 * ρ * (zᵢ .* zⱼ) - zᵢ .^ 2 - zⱼ .^ 2) / (2 * (1 - ρ^2))))) - ρˣ[i, j]
+            F(ρ, p) = ((ZMax - ZMin) / 2)^2 * dot(Wᵢⱼ .* (hᵢ .* hⱼ), ((1 / (2 * π * sqrt(1 - ρ^2))) * exp.((2 * ρ * (zᵢ .* zⱼ) - zᵢ .^ 2 - zⱼ .^ 2) / (2 * (1 - ρ^2))))) - ρˣ[i, j]
+
 
             # Compute the entries of the correlation matrix of the distorted correlation matrix:
-            ρᶻ[i, j] = find_zero(F, ρˣ[i, j])
+            Problem = NonlinearProblem(F, ρˣ[i, j])
+            Solution = solve(Problem, NewtonRaphson())
+            ρᶻ[i, j] = Solution.u
             ρᶻ[j, i] = ρᶻ[i, j]
         end
     end
