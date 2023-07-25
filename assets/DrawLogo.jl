@@ -5,7 +5,7 @@ using Luxor, Colors
     setcolor("antiquewhite")
     circle(Point(0, 0), 300, action=:fill)
     setcolor("black")
-    circle(Point(0, 0), 300, action=:stroke)
+    circle(Point(0, 0), 300 - 1, action=:stroke)
 
     # Draw concentric circles
     Radii = range(25, 200, 8)
