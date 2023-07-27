@@ -1,4 +1,4 @@
-module STRELA
+module Fortuna
 # Load dependencies:
 using Distributions: Distribution
 using Distributions: MvNormal
@@ -13,7 +13,7 @@ using NonlinearSolve: NewtonRaphson
 using NonlinearSolve: solve
 
 # Include the following files into the scope of the module:
-include("DefineStructures.jl")
+include("Structures.jl")
 export NatafTransformation
 export ReliabilityProblem
 include("GenerateRandomVariables.jl")
@@ -21,7 +21,7 @@ export generaterv
 export convertmoments
 include("SampleRandomVariables.jl")
 export samplerv
-include("PerformNatafTransformation.jl")
+include("Transformations/NatafTransformation.jl")
 export getdistortedcorrelation
 export transformsamples
 export getjacobian

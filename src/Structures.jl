@@ -13,9 +13,9 @@ end
 #=
 Transformations:
 =#
-abstract type Transformation end
+abstract type AbstractTransformation end
 
-mutable struct NatafTransformation <: Transformation
+mutable struct NatafTransformation <: AbstractTransformation
     # Marginal distributions:
     X::Vector{<:Distribution}
     # Correlation matrix:
@@ -32,4 +32,8 @@ mutable struct NatafTransformation <: Transformation
         ρᶻ, L, L⁻¹ = getdistortedcorrelation(X, ρˣ)
         new(X, ρˣ, ρᶻ, L, L⁻¹)
     end
+end
+
+mutable struct RosenblattTransformations <: AbstractTransformation
+
 end

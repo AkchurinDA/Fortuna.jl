@@ -1,4 +1,4 @@
-using STRELA
+using Fortuna
 using Test
 
 # Include and run tests:
