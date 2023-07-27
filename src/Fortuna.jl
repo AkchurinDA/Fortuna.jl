@@ -15,6 +15,7 @@ using NonlinearSolve: solve
 # Include the following files into the scope of the module:
 include("Structures.jl")
 export NatafTransformation
+export RosenblattTransformation
 export ReliabilityProblem
 include("GenerateRandomVariables.jl")
 export generaterv

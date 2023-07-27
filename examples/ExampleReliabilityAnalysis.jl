@@ -1,4 +1,4 @@
-using STRELA
+using Fortuna
 
 # Define a random vector of correlated marginal distributions:
 X₁ = generaterv("Normal", "Moments", [10, 2])

@@ -4,8 +4,6 @@ using Luxor, Colors
     # Draw background:
     setcolor("antiquewhite")
     circle(Point(0, 0), 300, action=:fill)
-    setcolor("black")
-    circle(Point(0, 0), 300 - 1, action=:stroke)
 
     # Draw concentric circles
     Radii = range(25, 200, 8)
@@ -17,13 +15,14 @@ using Luxor, Colors
         circle(Point(0, 0), R, action=:stroke)
     end
 
-    # Draw axes
+    # Draw axes:
+    setcolor("black")
     line(Point(0, 250), Point(0, -250), action=:stroke)
     line(Point(-250, 0), Point(250, 0), action=:stroke)
 
     # Add text
-    fontsize(60)
-    fontface("PTMono-Bold")
-    textcurve("STRELA", 0, 210, Point(0, 0))
-    textcurve("STRELA", π, 210, Point(0, 0))
+    fontsize(50)
+    fontface("PTMono-Regular")
+    textcurve("FORTUNA", 0, 210, Point(0, 0))
+    textcurve("FORTUNA", π, 210, Point(0, 0))
 end 600 600

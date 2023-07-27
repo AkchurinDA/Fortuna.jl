@@ -1,12 +1,12 @@
 # Fortuna
 [![Build Status](https://github.com/AkchurinDA/Fortuna.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/AkchurinDA/Fortuna.jl/actions/workflows/CI.yml)
 
-## Description
-`Fortuna` (**S**tructural **Rel**iability **A**nalysis) is a general purpose Julia package for structural and system reliability analysis.
-
 <p align="center">
   <img src="assets/Logo.svg" alt = "Logo" width="40%">
 </p>
+
+## Description
+`Fortuna` is a general purpose Julia package for structural and system reliability analysis.
 
 ## Installation
 To install `Fortuna` package, type `]` in Julia REPL to enter package manager mode and execute the following command:

@@ -34,6 +34,6 @@ mutable struct NatafTransformation <: AbstractTransformation
     end
 end
 
-mutable struct RosenblattTransformations <: AbstractTransformation
+mutable struct RosenblattTransformation <: AbstractTransformation
 
 end
