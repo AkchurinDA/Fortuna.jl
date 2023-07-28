@@ -1,8 +1,5 @@
 # Sample uncorrelated random variables:
-function samplerv(Samplers::Union{<:Distribution,Vector{<:Distribution}}, NumSamples::Integer, SamplingTechnique::String)
-    # Convert strings to lowercase:
-    SamplingTechnique = lowercase(SamplingTechnique)
-
+function samplerv(Samplers::Union{<:Distribution,Vector{<:Distribution}}, NumSamples::Integer, SamplingTechnique::ITS)
     # Compute the number of distributions:
     NumDims = length(Samplers)
 
@@ -13,29 +10,55 @@ function samplerv(Samplers::Union{<:Distribution,Vector{<:Distribution}}, NumSam
         Samples = Matrix{Float64}(undef, NumSamples, NumDims)
     end
 
-    if SamplingTechnique == "its" && SamplingTechnique == "lhs"
-        error("Provided sampling technique is not defined.")
-    elseif SamplingTechnique == "its"
-        if NumDims == 1
+    if NumDims == 1
+        # Generate samples from a uniform distributions:
+        UniformSamples = rand(NumSamples)
+
+        # Generate samples for each distribution:
+        Samples = quantile.(Samplers, UniformSamples)
+    else
+        for i = 1:NumDims
             # Generate samples from a uniform distributions:
             UniformSamples = rand(NumSamples)
 
             # Generate samples for each distribution:
-            Samples = quantile(Samplers, UniformSamples)
-        else
-            for i = 1:NumDims
-                # Generate samples from a uniform distributions:
-                UniformSamples = rand(NumSamples)
-
-                # Generate samples for each distribution:
-                Samples[:, i] = quantile(Samplers[i], UniformSamples)
-            end
+            Samples[:, i] = quantile.(Samplers[i], UniformSamples)
         end
-    elseif SamplingTechnique == "lhs"
-        # Define the lower limits of each strata:
-        LowerLimits = collect(range(0, (NumSamples - 1) / NumSamples, NumSamples))
+    end
 
-        if NumDims == 1
+    # Convert vector to scalar if only one sample if requested:
+    if NumDims == 1 && NumSamples == 1
+        Samples = Samples[1]
+    end
+
+    return Samples
+end
+
+function samplerv(Samplers::Union{<:Distribution,Vector{<:Distribution}}, NumSamples::Integer, SamplingTechnique::LHS)
+    # Compute the number of distributions:
+    NumDims = length(Samplers)
+
+    # Preallocate:
+    if NumDims == 1
+        Samples = Vector{Float64}(undef, NumSamples)
+    else
+        Samples = Matrix{Float64}(undef, NumSamples, NumDims)
+    end
+
+    # Define the lower limits of each strata:
+    LowerLimits = collect(range(0, (NumSamples - 1) / NumSamples, NumSamples))
+
+    if NumDims == 1
+        # Generate samples from a uniform distributions:
+        UniformSamples = LowerLimits + rand(Uniform(0, 1 / NumSamples), NumSamples)
+
+        # Shuffle samples from a uniform distributions:
+        UniformSamples = shuffle(UniformSamples)
+
+        # Generate samples:
+        Samples = quantile.(Samplers, UniformSamples)
+    else
+        for i = 1:NumDims
             # Generate samples from a uniform distributions:
             UniformSamples = LowerLimits + rand(Uniform(0, 1 / NumSamples), NumSamples)
 
@@ -43,18 +66,7 @@ function samplerv(Samplers::Union{<:Distribution,Vector{<:Distribution}}, NumSam
             UniformSamples = shuffle(UniformSamples)
 
             # Generate samples:
-            Samples = quantile(Samplers, UniformSamples)
-        else
-            for i = 1:NumDims
-                # Generate samples from a uniform distributions:
-                UniformSamples = LowerLimits + rand(Uniform(0, 1 / NumSamples), NumSamples)
-
-                # Shuffle samples from a uniform distributions:
-                UniformSamples = shuffle(UniformSamples)
-
-                # Generate samples:
-                Samples[:, i] = quantile(Samplers[i], UniformSamples)
-            end
+            Samples[:, i] = quantile.(Samplers[i], UniformSamples)
         end
     end
 
@@ -67,7 +79,7 @@ function samplerv(Samplers::Union{<:Distribution,Vector{<:Distribution}}, NumSam
 end
 
 # Sample correlated random variables:
-function samplerv(Object::NatafTransformation, NumSamples::Integer, SamplingTechnique::String)
+function samplerv(Object::NatafTransformation, NumSamples::Integer)
     # Extract data:
     X = Object.X
     L = Object.L
@@ -79,7 +91,7 @@ function samplerv(Object::NatafTransformation, NumSamples::Integer, SamplingTech
     NormalDistribution = generaterv("Normal", "Moments", [0, 1])
     USamples = Matrix{Float64}(undef, NumSamples, NumDims)
     for i in 1:NumDims
-        USamples[:, i] = samplerv(NormalDistribution, NumSamples, SamplingTechnique)
+        USamples[:, i] = samplerv(NormalDistribution, NumSamples, ITS())
     end
 
     # Generate samples of correlated normal random variables Z:
@@ -88,7 +100,7 @@ function samplerv(Object::NatafTransformation, NumSamples::Integer, SamplingTech
     # Generate samples of correlated non-normal random variables X:
     XSamples = Matrix{Float64}(undef, NumSamples, NumDims)
     for i in 1:NumDims
-        XSamples[:, i] = quantile(X[i], cdf(Normal(0, 1), ZSamples[:, i]))
+        XSamples[:, i] = quantile.(X[i], cdf(Normal(0, 1), ZSamples[:, i]))
     end
 
     return XSamples, ZSamples, USamples

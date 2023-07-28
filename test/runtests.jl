@@ -1,4 +1,4 @@
-using Fortuna
+using Fortuna, Distributions
 using Test
 
 # Include and run tests:

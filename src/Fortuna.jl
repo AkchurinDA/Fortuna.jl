@@ -3,7 +3,7 @@ module Fortuna
 using Distributions: Distribution
 using Distributions: MvNormal
 using Distributions: Exponential, Gamma, Gumbel, LogNormal, Normal, Poisson, Uniform
-using Distributions: mean, std, pdf, cdf, quantile
+using Distributions: mean, std, pdf, cdf, quantile, cor
 using FastGaussQuadrature: gausslegendre
 using ForwardDiff: gradient
 using LinearAlgebra
@@ -14,8 +14,8 @@ using NonlinearSolve: solve
 
 # Include the following files into the scope of the module:
 include("Structures.jl")
-export NatafTransformation
-export RosenblattTransformation
+export NatafTransformation, RosenblattTransformation
+export ITS, LHS
 export ReliabilityProblem
 export MCFOSM
 export FORM, HLRF, iHLRF

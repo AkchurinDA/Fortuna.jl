@@ -83,28 +83,28 @@ X₂ = generaterv("Gumbel", "Moments", [15, 2.5])
 X = [X₁, X₂]
 
 # Generate 3 samples of the random variable X₁ using Inverse Transform Sampling:
-X₁SamplesITS = samplerv(X₁, 3, "ITS")
+X₁SamplesITS = samplerv(X₁, 3, ITS())
 # 3-element Vector{Float64}:
 #  8.438113227625095
 #  9.103174415760643
 #  11.11171748034975
 
 # Generate 3 samples of the random variable X₁ using Latin Hypercube Sampling:
-X₁SamplesLHS = samplerv(X₁, 3, "LHS")
+X₁SamplesLHS = samplerv(X₁, 3, LHS())
 # 3-element Vector{Float64}:
 #  10.70297332783710
 #  9.380731608864231
 #  8.997067439248992
 
 # Generate 3 samples of the random vector using Inverse Transform Sampling:
-XSamplesITS = samplerv(X, 3, "ITS")
+XSamplesITS = samplerv(X, 3, ITS())
 # 3×2 Matrix{Float64}:
 #  11.1815  11.6162
 #  11.0042  12.6362
 #  10.4576  13.8437
 
 # Generate 3 samples of the random vector using Latin Hypercube Sampling:
-XSamplesLHS = samplerv(X, 3, "LHS")
+XSamplesLHS = samplerv(X, 3, LHS())
 # 3×2 Matrix{Float64}:
 #  9.14107  12.6207
 #  9.64263  13.5258
@@ -131,18 +131,11 @@ Generating the correlated random variables can be done by:
 2. Generating samples of the random vector with correlated marginal random variables by passing the defined `NatafTransformation` object directly into the sampling function `samplerv()`.
 
     ```julia
-    # Generate 3 samples of the random vector using Inverse Transform Sampling:
-    XSamplesITS, _, _ = samplerv(NatafObject, 3, "ITS")
+    # Generate 3 samples of the random vector:
+    XSamplesITS, _, _ = samplerv(NatafObject, 3)
     #  10.1631  14.1579
     #  9.42206  12.6114
     #  12.3663  14.9653
-
-    # Generate 3 samples of the random vector using Latin Hypercube Sampling:
-    XSamplesLHS, _, _ = samplerv(NatafObject, 3, "LHS")
-    # 3×2 Matrix{Float64}:
-    #  11.3783  17.6984
-    #  9.02893  12.6861
-    #  10.0632  14.2938
     ```
 
 ### Reliability Analysis 

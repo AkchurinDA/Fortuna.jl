@@ -1,45 +1,7 @@
-#=
-Reliability analysis:
-=#
-mutable struct ReliabilityProblem
-    # Marginal distributions:
-    X::Vector{<:Distribution}
-    # Correlation matrix:
-    ρˣ::Matrix{<:Real}
-    # Limit state function:
-    g::Function
-end
+#= Transformations =#
+abstract type AbstractTransformation end
 
-abstract type ReliabililyAnalysisMethod end
-
-# Mean-Centered First-Order Second-Moment Method:
-struct MCFOSM <: ReliabililyAnalysisMethod
-
-end
-
-# First-Order Reliability Method:
-abstract type FORMSubmethod end
-
-Base.@kwdef struct HLRF <: FORMSubmethod # Hasofer-Lind Rackwitz-Fiessler method
-
-end
-
-Base.@kwdef struct iHLRF <: FORMSubmethod # Improved Hasofer-Lind Rackwitz-Fiessler method
-    MaxNumIterations::Integer = 100
-    ϵ₁::Number = 10^(-9)
-    ϵ₂::Number = 10^(-9)
-end
-
-struct FORM <: ReliabililyAnalysisMethod
-    Submethod::FORMSubmethod
-end
-
-#=
-Transformations:
-=#
-abstract type Transformation end
-
-mutable struct NatafTransformation <: Transformation
+mutable struct NatafTransformation <: AbstractTransformation
     # Marginal distributions:
     X::Vector{<:Distribution}
     # Correlation matrix:
@@ -58,6 +20,53 @@ mutable struct NatafTransformation <: Transformation
     end
 end
 
-mutable struct RosenblattTransformation <: Transformation
+mutable struct RosenblattTransformation <: AbstractTransformation
 
+end
+
+#= Sampling Techniques =#
+abstract type AbstractSamplingTechnique end
+
+# Inverse Transform Sampling:
+struct ITS <: AbstractSamplingTechnique
+
+end
+
+# Latin Hypercube Sampling:
+struct LHS <: AbstractSamplingTechnique
+
+end
+
+#= Reliability Analysis =#
+mutable struct ReliabilityProblem
+    # Marginal distributions:
+    X::Vector{<:Distribution}
+    # Correlation matrix:
+    ρˣ::Matrix{<:Real}
+    # Limit state function:
+    g::Function
+end
+
+abstract type AbstractReliabililyAnalysisMethod end
+
+# Mean-Centered First-Order Second-Moment Method:
+struct MCFOSM <: AbstractReliabililyAnalysisMethod
+
+end
+
+# First-Order Reliability Method:
+abstract type FORMSubmethod end
+
+Base.@kwdef struct HLRF <: FORMSubmethod # Hasofer-Lind Rackwitz-Fiessler method
+
+end
+
+Base.@kwdef struct iHLRF <: FORMSubmethod # Improved Hasofer-Lind Rackwitz-Fiessler method
+    MaxNumIterations::Integer = 100
+    ϵ₁::Number = 10^(-9)
+    ϵ₂::Number = 10^(-9)
+end
+
+struct FORM <: AbstractReliabililyAnalysisMethod
+    Submethod::FORMSubmethod
 end
