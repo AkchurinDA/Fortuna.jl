@@ -1,65 +1,55 @@
 using Luxor, Colors
 
-# @drawsvg begin
-#     # Background:
-#     setcolor("antiquewhite")
-#     circle(Point(0, 0), 300, action=:fill)
-
-#     # Outer ring:
-#     setcolor("goldenrod")
-#     circle(Point(0, 0), 200, action=:fill)
-#     setcolor("antiquewhite")
-#     circle(Point(0, 0), 150, action=:fill)
-#     setcolor("black")
-#     circle(Point(0, 0), 200, action=:stroke)
-#     circle(Point(0, 0), 150, action=:stroke)
-
-#     # Lines:
-#     setcolor("black")
-#     for i = 1:3
-#         line(Point(-150, 0), Point(+150, 0), action=:stroke)
-#         rotate(π / 3)
-#     end
-
-#     # Reset:
-#     origin()
-
-#     # Inner ring:
-#     setcolor("goldenrod")
-#     circle(Point(0, 0), 50, action=:fill)
-#     setcolor("black")
-#     circle(Point(0, 0), 50, action=:stroke)
-
-#     # Text:
-#     setcolor("black")
-
-#     fontsize(50)
-#     text("β", Point(0, 0), halign=:center, valign=:middle)
-# end 600 600
-
 @drawsvg begin
-    # Draw background:
-    setcolor("antiquewhite")
-    circle(Point(0, 0), 300, action=:fill)
+    # Box:
+    gsave()
+    setcolor("navajowhite")
+    circle(O, 450, action=:fill)
+    grestore()
 
-    # Draw concentric circles
-    Radii = range(25, 200, 8)
-    JuliaColors = [Luxor.julia_blue, Luxor.julia_red, Luxor.julia_green, Luxor.julia_purple]
-    for (i, R) in enumerate(reverse(Radii))
-        setcolor(JuliaColors[mod1(i, length(JuliaColors))])
-        circle(Point(0, 0), R, action=:fill)
-        setcolor("black")
-        circle(Point(0, 0), R, action=:stroke)
-    end
-
-    # Draw axes:
+    # Outer wheel:
+    gsave()
+    setline(5)
     setcolor("black")
-    line(Point(0, 250), Point(0, -250), action=:stroke)
-    line(Point(-250, 0), Point(250, 0), action=:stroke)
+    circle(O, 300, action=:stroke)
+    for i = 1:6
+        line(Point(0, -100), Point(0, -300), action=:stroke)
+        rotate(π / 3)
+    end
+    circle(O, 200, action=:stroke)
+    grestore()
 
-    # Add text
-    fontsize(50)
-    fontface("PTMono-Regular")
-    textcurve("FORTUNA", 0, 210, Point(0, 0))
-    textcurve("FORTUNA", π, 210, Point(0, 0))
-end 600 600
+    # Inner wheel:
+    gsave()
+    setline(5)
+    setcolor("goldenrod")
+    circle(O, 100, action=:fill)
+    setcolor("black")
+    circle(O, 100, action=:stroke)
+    grestore()
+
+    # Julia cicles:
+    gsave()
+    rotate(0)
+    juliacircles(300, outercircleratio=0.15)
+    rotate(π)
+    juliacircles(300, outercircleratio=0.15)
+    grestore()
+
+    gsave()
+    setline(5)
+    setcolor("black")
+    for i = 1:6
+        circle(Point(0, -300), 45, action=:stroke)
+        rotate(π / 3)
+    end
+    grestore()
+
+    # # FORTUNA:
+    # gsave()
+    # setcolor("black")
+    # fontsize(125)
+    # fontface("Copperplate-Light")
+    # textcurvecentered("FORTUNA", π / 2, 450, O, clockwise=false, letter_spacing=15, baselineshift=25)
+    # grestore()
+end 900 900
