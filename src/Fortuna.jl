@@ -17,6 +17,8 @@ include("Structures.jl")
 export NatafTransformation
 export RosenblattTransformation
 export ReliabilityProblem
+export MCFOSM
+export FORM, HLRF, iHLRF
 include("GenerateRandomVariables.jl")
 export generaterv
 export convertmoments
@@ -28,6 +30,5 @@ export transformsamples
 export getjacobian
 export jointpdf
 include("PerformReliabilityAnalysis.jl")
-export MCFOSM
-export FORM
+export analyze
 end

@@ -163,8 +163,8 @@ G₁(x::Vector) = x[1]^2 - 2 * x[2]
 G₂(x::Vector) = 1 - 2 * x[2] / x[1]^2
 
 # Perform the reliability analysis using MCFOSM:
-β₁ = MCFOSM(Problem₁)
-β₂ = MCFOSM(Problem₂)
+β₁ = analyze(Problem₁, MCFOSM())
+β₂ = analyze(Problem₂, MCFOSM())
 println("MCFOSM:")
 println("β from G₁: $β₁")
 println("β from G₂: $β₂")
@@ -174,11 +174,11 @@ println("β from G₂: $β₂")
 ```
 
 #### First-Order Reliability Method (FORM)
-The FORM overcomes the invariance problem faced by the MCFOSM method by using the first-order Taylor expansion of the limit state function at a point known as the "design point" on the failure boundary. Since the design point is not known a priori, the FORM is inherently an iterative method. Current implementation of FORM uses improved Hasofer-Lind Rackwitz-Fiessler (iHL-RF) algorithm.
+The FORM overcomes the invariance problem faced by the MCFOSM method by using the first-order Taylor expansion of the limit state function at a point known as the "design point" on the failure boundary. Since the design point is not known a priori, the FORM is inherently an iterative method. 
 
 ```julia
-β₁, _, _ = FORM(Problem₁)
-β₂, _, _ = FORM(Problem₂)
+β₁, _, _ = analyze(Problem₁, FORM(iHLRF()))
+β₂, _, _ = analyze(Problem₂, FORM(iHLRF()))
 println("FORM:")
 println("β from G₁: $β₁")
 println("β from G₂: $β₂")

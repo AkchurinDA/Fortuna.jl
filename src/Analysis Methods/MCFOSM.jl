@@ -1,5 +1,5 @@
 # Mean-Centered First-Order Second-Moment Method:
-function MCFOSM(Problem::ReliabilityProblem)
+function analyze(Problem::ReliabilityProblem, AnalysisMethod::MCFOSM)
     # Extract data:
     g = Problem.g
     X = Problem.X

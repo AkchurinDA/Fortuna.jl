@@ -15,15 +15,15 @@ Problem₁ = ReliabilityProblem(X, ρˣ, G₁)
 Problem₂ = ReliabilityProblem(X, ρˣ, G₂)
 
 # Perform the reliability analysis using MCFOSM:
-β₁ = MCFOSM(Problem₁)
-β₂ = MCFOSM(Problem₂)
+β₁ = analyze(Problem₁, MCFOSM())
+β₂ = analyze(Problem₂, MCFOSM())
 println("MCFOSM:")
 println("β from G₁: $β₁")
 println("β from G₂: $β₂")
 
 # Perform the reliability analysis using FORM:
-β₁, x₁, u₁ = FORM(Problem₁)
-β₂, x₂, u₂ = FORM(Problem₂)
+β₁, x₁, u₁ = analyze(Problem₁, FORM(iHLRF()))
+β₂, x₂, u₂ = analyze(Problem₂, FORM(iHLRF()))
 println("FORM:")
 println("β from G₁: $β₁")
 println("β from G₂: $β₂")

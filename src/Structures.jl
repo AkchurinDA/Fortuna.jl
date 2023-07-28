@@ -1,5 +1,5 @@
 #=
-Methods of reliability analysis:
+Reliability analysis:
 =#
 mutable struct ReliabilityProblem
     # Marginal distributions:
@@ -10,12 +10,36 @@ mutable struct ReliabilityProblem
     g::Function
 end
 
+abstract type ReliabililyAnalysisMethod end
+
+# Mean-Centered First-Order Second-Moment Method:
+struct MCFOSM <: ReliabililyAnalysisMethod
+
+end
+
+# First-Order Reliability Method:
+abstract type FORMSubmethod end
+
+Base.@kwdef struct HLRF <: FORMSubmethod # Hasofer-Lind Rackwitz-Fiessler method
+
+end
+
+Base.@kwdef struct iHLRF <: FORMSubmethod # Improved Hasofer-Lind Rackwitz-Fiessler method
+    MaxNumIterations::Integer = 100
+    ϵ₁::Number = 10^(-9)
+    ϵ₂::Number = 10^(-9)
+end
+
+struct FORM <: ReliabililyAnalysisMethod
+    Submethod::FORMSubmethod
+end
+
 #=
 Transformations:
 =#
-abstract type AbstractTransformation end
+abstract type Transformation end
 
-mutable struct NatafTransformation <: AbstractTransformation
+mutable struct NatafTransformation <: Transformation
     # Marginal distributions:
     X::Vector{<:Distribution}
     # Correlation matrix:
@@ -34,6 +58,6 @@ mutable struct NatafTransformation <: AbstractTransformation
     end
 end
 
-mutable struct RosenblattTransformation <: AbstractTransformation
+mutable struct RosenblattTransformation <: Transformation
 
 end
