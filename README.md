@@ -163,8 +163,8 @@ Problem₁ = ReliabilityProblem(X, ρˣ, G₁)
 Problem₂ = ReliabilityProblem(X, ρˣ, G₂)
 
 # Perform the reliability analysis using MCFOSM:
-β₁ = analyze(Problem₁, MCFOSM())
-β₂ = analyze(Problem₂, MCFOSM())
+β₁ = analyze(Problem₁, FORM(MCFOSM()))
+β₂ = analyze(Problem₂, FORM(MCFOSM()))
 println("MCFOSM:")
 println("β from G₁: $β₁")
 println("β from G₂: $β₂")
