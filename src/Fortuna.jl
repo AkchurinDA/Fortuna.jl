@@ -17,8 +17,7 @@ include("Structures.jl")
 export NatafTransformation, RosenblattTransformation
 export ITS, LHS
 export ReliabilityProblem
-export MCFOSM
-export FORM, HLRF, iHLRF
+export FORM, MCFOSM, HLRF, iHLRF
 include("GenerateRandomVariables.jl")
 export generaterv
 export convertmoments

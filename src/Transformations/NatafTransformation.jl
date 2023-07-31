@@ -2,7 +2,7 @@ function getdistortedcorrelation(X::Vector{<:Distribution}, ρˣ::Matrix{<:Real}
     # Compute the number of marginal distributions:
     NumDims = length(X)
 
-    # Error catching:
+    # Error-catching:
     if size(ρˣ) != (NumDims, NumDims)
         error("Size of the correlation matrix ρₓ is not compatible with the number of the marginal distributions.")
     end
@@ -68,7 +68,7 @@ function getdistortedcorrelation(X::Vector{<:Distribution}, ρˣ::Matrix{<:Real}
     end
 
     # Compute the lower triangular matrix of the Cholesky decomposition of the distorted correlation matrix and its inverse:
-    C = cholesky(ρᶻ; check=true)
+    C = cholesky(ρᶻ, check=true)
     L = C.L
     L⁻¹ = inv(L)
 

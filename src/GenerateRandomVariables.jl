@@ -3,7 +3,7 @@ function generaterv(DistributionName::String, DefineBy::String, Values::Union{Re
     DistributionName = lowercase(DistributionName)
     DefineBy = lowercase(DefineBy)
 
-    # Error catching:
+    # Error-catching:
     if DefineBy != "moments" && DefineBy != "m" && DefineBy != "parameters" && DefineBy != "p"
         error("""Random variables can only be defined by "Moments" ("M") and "Parameters ("P")".""")
     end

@@ -10,19 +10,12 @@ function samplerv(Samplers::Union{<:Distribution,Vector{<:Distribution}}, NumSam
         Samples = Matrix{Float64}(undef, NumSamples, NumDims)
     end
 
+    # Generate samples for each distribution:
     if NumDims == 1
-        # Generate samples from a uniform distributions:
-        UniformSamples = rand(NumSamples)
-
-        # Generate samples for each distribution:
-        Samples = quantile.(Samplers, UniformSamples)
+        Samples = rand(Samplers, NumSamples)
     else
         for i = 1:NumDims
-            # Generate samples from a uniform distributions:
-            UniformSamples = rand(NumSamples)
-
-            # Generate samples for each distribution:
-            Samples[:, i] = quantile.(Samplers[i], UniformSamples)
+            Samples[:, i] = rand(Samplers[i], NumSamples)
         end
     end
 
@@ -47,6 +40,7 @@ function samplerv(Samplers::Union{<:Distribution,Vector{<:Distribution}}, NumSam
 
     # Define the lower limits of each strata:
     LowerLimits = collect(range(0, (NumSamples - 1) / NumSamples, NumSamples))
+    println(LowerLimits)
 
     if NumDims == 1
         # Generate samples from a uniform distributions:
@@ -88,10 +82,9 @@ function samplerv(Object::NatafTransformation, NumSamples::Integer)
     NumDims = length(X)
 
     # Generate samples of uncorrelated normal random variables U:
-    NormalDistribution = generaterv("Normal", "Moments", [0, 1])
     USamples = Matrix{Float64}(undef, NumSamples, NumDims)
     for i in 1:NumDims
-        USamples[:, i] = samplerv(NormalDistribution, NumSamples, ITS())
+        USamples[:, i] = randn(NumSamples)
     end
 
     # Generate samples of correlated normal random variables Z:
@@ -100,7 +93,7 @@ function samplerv(Object::NatafTransformation, NumSamples::Integer)
     # Generate samples of correlated non-normal random variables X:
     XSamples = Matrix{Float64}(undef, NumSamples, NumDims)
     for i in 1:NumDims
-        XSamples[:, i] = quantile.(X[i], cdf(Normal(0, 1), ZSamples[:, i]))
+        XSamples[:, i] = quantile.(X[i], cdf.(Normal(0, 1), ZSamples[:, i]))
     end
 
     return XSamples, ZSamples, USamples

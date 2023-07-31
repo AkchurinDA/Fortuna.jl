@@ -38,8 +38,14 @@ struct LHS <: AbstractSamplingTechnique
 end
 
 #= Reliability Analysis =#
-mutable struct ReliabilityProblem
-    # Marginal distributions:
+abstract type AbstractReliabilityProblem end
+
+abstract type AbstractReliabililyAnalysisMethod end
+abstract type FORMSubmethod end
+abstract type SORMSubmethod end
+
+mutable struct ReliabilityProblem <: AbstractReliabilityProblem
+    # Marginal random variables:
     X::Vector{<:Distribution}
     # Correlation matrix:
     ρˣ::Matrix{<:Real}
@@ -47,26 +53,32 @@ mutable struct ReliabilityProblem
     g::Function
 end
 
-abstract type AbstractReliabililyAnalysisMethod end
+# First-Order Reliability Method:
+Base.@kwdef struct FORM <: AbstractReliabililyAnalysisMethod
+    Submethod::FORMSubmethod = iHLRF()
+end
 
 # Mean-Centered First-Order Second-Moment Method:
-struct MCFOSM <: AbstractReliabililyAnalysisMethod
+struct MCFOSM <: FORMSubmethod
 
 end
 
-# First-Order Reliability Method:
-abstract type FORMSubmethod end
+Base.@kwdef struct HL <: FORMSubmethod # Hasofer-Lind method
+
+end
+
+Base.@kwdef struct RF <: FORMSubmethod # Rackwitz-Fiessler method
+
+end
 
 Base.@kwdef struct HLRF <: FORMSubmethod # Hasofer-Lind Rackwitz-Fiessler method
-
+    MaxNumIterations::Integer = 100
+    ϵ₁::Number = 10^(-9)
+    ϵ₂::Number = 10^(-9)
 end
 
 Base.@kwdef struct iHLRF <: FORMSubmethod # Improved Hasofer-Lind Rackwitz-Fiessler method
     MaxNumIterations::Integer = 100
     ϵ₁::Number = 10^(-9)
     ϵ₂::Number = 10^(-9)
-end
-
-struct FORM <: AbstractReliabililyAnalysisMethod
-    Submethod::FORMSubmethod
 end

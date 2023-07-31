@@ -1,12 +1,15 @@
 # Fortuna
-[![Build Status](https://github.com/AkchurinDA/Fortuna.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/AkchurinDA/Fortuna.jl/actions/workflows/CI.yml)
 
-<p align="center">
+<div align="center">
   <img src="assets/Logo.svg" alt = "Logo" width="40%">
-</p>
+
+  | Build Status | Latest Release |
+  | :---: | :---: |
+  | [![Build Status](https://github.com/AkchurinDA/Fortuna.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/AkchurinDA/Fortuna.jl/actions/workflows/CI.yml) | [![Latest Release](https://juliahub.com/docs/Fortuna/version.svg)](https://juliahub.com/ui/Packages/Fortuna/fEeSh) |
+</div>
 
 ## Description
-`Fortuna` is a general purpose Julia package for structural and system reliability analysis.
+`Fortuna` is a general purpose Julia package for structural reliability analysis.
 
 ## Installation
 To install `Fortuna` package, type `]` in Julia REPL to enter package manager mode and execute the following command:
@@ -139,7 +142,7 @@ Generating the correlated random variables can be done by:
     ```
 
 ### Reliability Analysis 
-Ultimately, `Fortuna` package is developed to perform structural and system reliability analysis. The current version of the package implements the Mean-Centered First-Order Second-Moment (MCFOSM) reliability method, as well as the First-Order Reliability Method (FORM).
+Ultimately, `Fortuna` package is developed to perform structural reliability analysis. The current version of the package implements Mean-Centered First-Order Second-Moment (MCFOSM), Hasofer-Lind Rackwitz-Fiessler (HLRF), and improved Hasofer-Lind Rackwitz-Fiessler (iHLRF) methods that fall within a broader class of First-Order Reliability Methods (FORM).
 
 #### Mean-Centered First-Order Second-Moment (MCFOSM) Reliability Method
 The MCFOSM method is the simplest and least expensive type of reliability method. It utilizes the first-order Taylor expansion of the limit state function at the mean values and the first two moments of the random variables involved in the reliability problem to evaluate the reliability index. However, despite the fact that it is simple and does not require the complete knowledge of the random variables involved in the reliability problem, the MCFOSM method faces an issue known as the invariance problem. This problem arises because the resulting reliability index is dependent on the formulation of the limit state function. In other words, two equivalent limit state functions with the same failure boundaries produce two different reliability indices.
@@ -155,6 +158,10 @@ X = [X₁, X₂]
 G₁(x::Vector) = x[1]^2 - 2 * x[2]
 G₂(x::Vector) = 1 - 2 * x[2] / x[1]^2
 
+# Define reliability problems:
+Problem₁ = ReliabilityProblem(X, ρˣ, G₁)
+Problem₂ = ReliabilityProblem(X, ρˣ, G₂)
+
 # Perform the reliability analysis using MCFOSM:
 β₁ = analyze(Problem₁, MCFOSM())
 β₂ = analyze(Problem₂, MCFOSM())
@@ -166,8 +173,8 @@ println("β from G₂: $β₂")
 # β from G₂: 4.285714285714286
 ```
 
-#### First-Order Reliability Method (FORM)
-The FORM overcomes the invariance problem faced by the MCFOSM method by using the first-order Taylor expansion of the limit state function at a point known as the "design point" on the failure boundary. Since the design point is not known a priori, the FORM is inherently an iterative method. 
+#### Hasofer-Lind Rackwitz-Fiessler (HLRF) Reliability Method
+The HLRF method overcomes the invariance problem faced by the MCFOSM method by using the first-order Taylor expansion of the limit state function at a point known as the "design point" on the failure boundary. Since the design point is not known a priori, the HLRF method is inherently an iterative method. `Fortuna` implements two versions of HLRF method: plain HLRF method where the step size in the negative gradient descent is set to unity and improved HLRF (iHLRF) method where the step size is determined using a merit function.
 
 ```julia
 β₁, _, _ = analyze(Problem₁, FORM(iHLRF()))
@@ -179,6 +186,25 @@ println("β from G₂: $β₂")
 # β from G₁: 2.10833940741697
 # β from G₂: 2.10833972384163
 ```
+
+# Roadmap
+
+The following functionality is planned to be added:
+- [ ] Transformations
+  - [x] Nataf Transformation
+  - [ ] Rosenblatt Transformation
+- [ ] Sampling Techniques
+  - [x] Inverse Transform Sampling
+  - [x] Latin Hypercube Sampling
+- [ ] Reliability Methods
+  - [ ] First-Order Reliability Method (FORM)
+    - [x] Mean-Centered First-Order Second-Moment (MCFOSM) Method
+    - [ ] Hasofer-Lind (HL) Method
+    - [ ] Rackwitz-Fiessler (RF) Method
+    - [x] Hasofer-Lind Rackwitz-Fiessler (HLRF) Method
+    - [x] Improved Hasofer-Lind Rackwitz-Fiessler (iHLRF) Method
+  - [ ] Second-Order Reliability Method (SORM)
+- [ ] Sensitivity Analysis
 
 # License
 `Fortuna` package is distributed under the [MIT license](https://en.wikipedia.org/wiki/MIT_License). More information can be found in the `LICENSE` file.

@@ -1,2 +1,2 @@
-include("Analysis Methods/MCFOSM.jl")
 include("Analysis Methods/FORM.jl")
+include("Analysis Methods/SORM.jl")

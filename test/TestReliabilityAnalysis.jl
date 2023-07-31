@@ -16,8 +16,8 @@
     Problem₂ = ReliabilityProblem(X, ρˣ, G₂)
 
     # Perform the reliability analysis using MCFOSM:
-    β₁ = analyze(Problem₁, MCFOSM())
-    β₂ = analyze(Problem₂, MCFOSM())
+    β₁ = analyze(Problem₁, FORM(MCFOSM()))
+    β₂ = analyze(Problem₂, FORM(MCFOSM()))
 
     # Test the results:
     @test round(β₁, digits=2) == 1.66
