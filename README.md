@@ -1,7 +1,7 @@
 # Fortuna
 
 <div align="center">
-  <img src="assets/Logo.svg" alt = "Logo" width="40%">
+  <img src="assets/Logo.svg" alt = "Logo" width="50%">
 
   | Build Status | Latest Release |
   | :---: | :---: |
@@ -134,7 +134,7 @@ Generating the correlated random variables can be done by:
 2. Generating samples in X-, Z-, and U-spaces of the random vector with correlated marginal random variables by passing the defined `NatafTransformation` object directly into the sampling function `samplerv()`.
 
     ```julia
-    # Generate 3 samples of the random vector:
+    # Generate samples of the random vector in X-, Z-, and U-spaces:
     XSamples, ZSample, USamples = samplerv(NatafObject, 10^3)
     ```
     <div align = center>
