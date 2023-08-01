@@ -131,15 +131,15 @@ Generating the correlated random variables can be done by:
     NatafObject = NatafTransformation(X, ρˣ)
     ```
 
-2. Generating samples of the random vector with correlated marginal random variables by passing the defined `NatafTransformation` object directly into the sampling function `samplerv()`.
+2. Generating samples in X-, Z-, and U-spaces of the random vector with correlated marginal random variables by passing the defined `NatafTransformation` object directly into the sampling function `samplerv()`.
 
     ```julia
     # Generate 3 samples of the random vector:
-    XSamplesITS, _, _ = samplerv(NatafObject, 3)
-    #  10.1631  14.1579
-    #  9.42206  12.6114
-    #  12.3663  14.9653
+    XSamples, ZSample, USamples = samplerv(NatafObject, 10^3)
     ```
+    <div align = center>
+      <img src="assets/READMENatafTransformation.svg" alt = "Nataf Transformation" width="50%">
+    </div>
 
 ### Reliability Analysis 
 Ultimately, `Fortuna` package is developed to perform structural reliability analysis. The current version of the package implements Mean-Centered First-Order Second-Moment (MCFOSM), Hasofer-Lind Rackwitz-Fiessler (HLRF), and improved Hasofer-Lind Rackwitz-Fiessler (iHLRF) methods that fall within a broader class of First-Order Reliability Methods (FORM).
