@@ -120,12 +120,12 @@ Generating the correlated random variables can be done by:
 
     ```julia
     # Define a random vector:
-    X₁ = generaterv("Gamma", "Moments", [10, 1.5])
-    X₂ = generaterv("Gumbel", "Moments", [15, 2.5])
+    X₁ = generaterv("Gamma", "Moments", [5, 1])
+    X₂ = generaterv("Gumbel", "Moments", [7.5, 2.5])
     X = [X₁, X₂]
 
     # Define correlation coefficients between marginal distributions of the random vector:
-    ρˣ = [1 0.75; 0.75 1]
+    ρˣ = [1 0.90; 0.90 1]
 
     # Perform Nataf transformation by defining a "NatafTransformation" object:
     NatafObject = NatafTransformation(X, ρˣ)
@@ -135,10 +135,10 @@ Generating the correlated random variables can be done by:
 
     ```julia
     # Generate samples of the random vector in X-, Z-, and U-spaces:
-    XSamples, ZSample, USamples = samplerv(NatafObject, 10^3)
+    XSamples, ZSample, USamples = samplerv(NatafObject, 5*10^3)
     ```
     <div align = center>
-      <img src="assets/READMENatafTransformation.svg" alt = "Nataf Transformation" width="50%">
+      <img src="assets/READMENatafTransformation.svg" alt = "Nataf Transformation">
     </div>
 
 ### Reliability Analysis 
