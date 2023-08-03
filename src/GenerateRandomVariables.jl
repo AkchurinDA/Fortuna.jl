@@ -28,6 +28,8 @@ function generaterv(DistributionName::String, DefineBy::String, Values::Union{Re
         RV = Poisson(Values[1])
     elseif DistributionName == "uniform"
         RV = Uniform(Values[1], Values[2])
+    elseif DistributionName == "weibull"
+        RV = Weibull(Values[1], Values[2])
     else
         error("Provided distribution is not supported.")
     end
@@ -35,7 +37,7 @@ function generaterv(DistributionName::String, DefineBy::String, Values::Union{Re
     return RV
 end
 
-function convertmoments(DistributionName::String, Moments)
+function convertmoments(DistributionName::String, Moments::Union{Real,Vector{<:Real}})
     # Convert strings to lowercase:
     DistributionName = lowercase(DistributionName)
 
@@ -110,6 +112,19 @@ function convertmoments(DistributionName::String, Moments)
         a = Mean - STD * sqrt(3)
         b = Mean + STD * sqrt(3)
         Parameters = [a, b]
+    elseif DistributionName == "weibull"
+        # Extract moments:
+        Mean = Moments[1]
+        STD = Moments[2]
+
+        # Convert moments to parameters:
+        F(u, p) = sqrt(gamma(1 + 2 / u) - gamma(1 + 1 / u)^2) / gamma(1 + 1 / u) - STD / Mean
+        u₀ = (0.1, 1000)
+        Problem = IntervalNonlinearProblem(F, u₀)
+        Solution = solve(Problem, Bisection(), abstol=10^(-9), reltol=10^(-9))
+        α = Solution.u
+        θ = Mean / gamma(1 + 1 / α)
+        Parameters = [α, θ]
     else
         error("Provided distribution is not supported.")
     end

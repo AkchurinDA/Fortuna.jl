@@ -118,33 +118,35 @@ XSamplesLHS = samplerv(X, 3, LHS())
 Generating the correlated random variables can be done by:
 1. Performing the Nataf transformation of the random correlated variables.
 
-    ```julia
-    # Define a random vector:
-    X₁ = generaterv("Gamma", "Moments", [5, 1])
-    X₂ = generaterv("Gumbel", "Moments", [7.5, 2.5])
-    X = [X₁, X₂]
+```julia
+# Define a random vector:
+X₁ = generaterv("Gamma", "Moments", [5, 1])
+X₂ = generaterv("Gumbel", "Moments", [7.5, 2.5])
+X = [X₁, X₂]
 
-    # Define correlation coefficients between marginal distributions of the random vector:
-    ρˣ = [1 0.90; 0.90 1]
+# Define correlation coefficients between marginal distributions of the random vector:
+ρˣ = [1 0.90; 0.90 1]
 
-    # Perform Nataf transformation by defining a "NatafTransformation" object:
-    NatafObject = NatafTransformation(X, ρˣ)
-    ```
+# Perform Nataf transformation by defining a "NatafTransformation" object:
+NatafObject = NatafTransformation(X, ρˣ)
+```
 
 2. Generating samples in X-, Z-, and U-spaces of the random vector with correlated marginal random variables by passing the defined `NatafTransformation` object directly into the sampling function `samplerv()`.
 
-    ```julia
-    # Generate samples of the random vector in X-, Z-, and U-spaces:
-    XSamples, ZSample, USamples = samplerv(NatafObject, 5*10^3)
-    ```
-    <div align = center>
-      <img src="assets/READMENatafTransformation.svg" alt = "Nataf Transformation">
-    </div>
+```julia
+# Generate samples of the random vector in X-, Z-, and U-spaces:
+XSamples, ZSample, USamples = samplerv(NatafObject, 5*10^3)
+```
+<div align = center>
+  <img src="assets/READMENatafTransformation.svg" alt = "Nataf Transformation">
+</div>
 
 ### Reliability Analysis 
-Ultimately, `Fortuna` package is developed to perform structural reliability analysis. The current version of the package implements Mean-Centered First-Order Second-Moment (MCFOSM), Hasofer-Lind Rackwitz-Fiessler (HLRF), and improved Hasofer-Lind Rackwitz-Fiessler (iHLRF) methods that fall within a broader class of First-Order Reliability Methods (FORM).
+Ultimately, `Fortuna` package is developed to perform structural reliability analysis. The current version of the package implements Mean-Centered First-Order Second-Moment (MCFOSM), Hasofer-Lind Rackwitz-Fiessler (HLRF), and improved Hasofer-Lind Rackwitz-Fiessler (iHLRF) methods that fall within a broader class of First-Order Reliability Methods (FORM). `Fortuna` package also implements Curve-Fitting and Point-Fitting methods that fall within a broader class of Second-Order Reliability Methods (SORM) for a more precise estimation of probabilities of failure.
 
-#### Mean-Centered First-Order Second-Moment (MCFOSM) Reliability Method
+#### First-Order Reliability Methods (FORM)
+
+##### Mean-Centered First-Order Second-Moment (MCFOSM) Reliability Method
 The MCFOSM method is the simplest and least expensive type of reliability method. It utilizes the first-order Taylor expansion of the limit state function at the mean values and the first two moments of the random variables involved in the reliability problem to evaluate the reliability index. However, despite the fact that it is simple and does not require the complete knowledge of the random variables involved in the reliability problem, the MCFOSM method faces an issue known as the invariance problem. This problem arises because the resulting reliability index is dependent on the formulation of the limit state function. In other words, two equivalent limit state functions with the same failure boundaries produce two different reliability indices.
 
 ```julia
@@ -173,12 +175,12 @@ println("β from G₂: $β₂")
 # β from G₂: 4.285714285714286
 ```
 
-#### Hasofer-Lind Rackwitz-Fiessler (HLRF) Reliability Method
+##### Hasofer-Lind Rackwitz-Fiessler (HLRF) Reliability Method
 The HLRF method overcomes the invariance problem faced by the MCFOSM method by using the first-order Taylor expansion of the limit state function at a point known as the "design point" on the failure boundary. Since the design point is not known a priori, the HLRF method is inherently an iterative method. `Fortuna` implements two versions of HLRF method: plain HLRF method where the step size in the negative gradient descent is set to unity and improved HLRF (iHLRF) method where the step size is determined using a merit function.
 
 ```julia
-β₁, _, _ = analyze(Problem₁, FORM(iHLRF()))
-β₂, _, _ = analyze(Problem₂, FORM(iHLRF()))
+β₁, _, _, _ = analyze(Problem₁, FORM(iHLRF()))
+β₂, _, _, _ = analyze(Problem₂, FORM(iHLRF()))
 println("FORM:")
 println("β from G₁: $β₁")
 println("β from G₂: $β₂")
@@ -187,13 +189,18 @@ println("β from G₂: $β₂")
 # β from G₂: 2.10833972384163
 ```
 
-# Roadmap
+#### Second-Order Reliability Methods (SORM)
+
+##### Curve-Fitting (CF) method
+
+##### Point-Fitting (PF) method
+
+## Roadmap
 
 The following functionality is planned to be added:
-- [ ] Transformations
+- [x] Transformations
   - [x] Nataf Transformation
-  - [ ] Rosenblatt Transformation
-- [ ] Sampling Techniques
+- [x] Sampling Techniques
   - [x] Inverse Transform Sampling
   - [x] Latin Hypercube Sampling
 - [ ] Reliability Methods
@@ -204,10 +211,12 @@ The following functionality is planned to be added:
     - [x] Hasofer-Lind Rackwitz-Fiessler (HLRF) Method
     - [x] Improved Hasofer-Lind Rackwitz-Fiessler (iHLRF) Method
   - [ ] Second-Order Reliability Method (SORM)
+    - [x] Curve-Fitting (CF) Method
+    - [ ] Point-Fitting (PF) Method
 - [ ] Sensitivity Analysis
 
-# License
+## License
 `Fortuna` package is distributed under the [MIT license](https://en.wikipedia.org/wiki/MIT_License). More information can be found in the `LICENSE` file.
 
-# Help and Support
+## Help and Support
 For assistance with the package, please raise an issue on the Github Issues page. Please use the appropriate labels to indicate the specific functionality you are inquiring about.

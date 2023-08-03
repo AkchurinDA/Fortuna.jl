@@ -29,8 +29,8 @@ function getdistortedcorrelation(X::Vector{<:Distribution}, ρˣ::Matrix{<:Real}
     ξ = Vector{Float64}(undef, NumIP^2)
     η = Vector{Float64}(undef, NumIP^2)
     Wᵢⱼ = Vector{Float64}(undef, NumIP^2)
-    for i = 1:NumIP
-        for j = 1:NumIP
+    for i in 1:NumIP
+        for j in 1:NumIP
             ξ[(i-1)*NumIP+j] = IPLocations1D[i]
             η[(i-1)*NumIP+j] = IPLocations1D[j]
             Wᵢⱼ[(i-1)*NumIP+j] = IPWeights1D[i] * IPWeights1D[j]
@@ -47,8 +47,8 @@ function getdistortedcorrelation(X::Vector{<:Distribution}, ρˣ::Matrix{<:Real}
 
     # Compute the entries of the distorted correlation matrix:
     ρᶻ = Matrix{Float64}(I, NumDims, NumDims)
-    for i = 1:NumDims
-        for j = i+1:NumDims
+    for i in 1:NumDims
+        for j in i+1:NumDims
             # Check if the marginal distributions are uncorrelated:
             if ρˣ[i, j] == 0
                 continue
@@ -100,7 +100,7 @@ function transformsamples(Object::NatafTransformation, Samples::Union{Vector{<:R
         ZSamples = Matrix{Float64}(undef, NumSamples, NumDims)
 
         # Convert samples of the marginal distributions X into the space of correlated standard normal random variables Z:
-        for i = 1:NumDims
+        for i in 1:NumDims
             ZSamples[:, i] = quantile.(Normal(0, 1), cdf.(X[i], XSamples[:, i]))
         end
 
@@ -135,7 +135,7 @@ function transformsamples(Object::NatafTransformation, Samples::Union{Vector{<:R
         XSamples = Matrix{Float64}(undef, NumSamples, NumDims)
 
         # Convert samples of the correlated standard normal random variables Z into samples of the marginals:
-        for i = 1:NumDims
+        for i in 1:NumDims
             XSamples[:, i] = quantile.(X[i], cdf.(Normal(0, 1), ZSamples[:, i]))
         end
 
@@ -174,7 +174,7 @@ function getjacobian(Object::NatafTransformation, Samples::Union{Vector{<:Real},
         ZSamples = Matrix{Float64}(undef, NumSamples, NumDims)
 
         # Convert samples to the space of correlated standard normal random variables Z:
-        for i = 1:NumDims
+        for i in 1:NumDims
             ZSamples[:, i] = quantile.(Normal(0, 1), cdf.(X[i], XSamples[:, i]))
         end
 
@@ -182,9 +182,9 @@ function getjacobian(Object::NatafTransformation, Samples::Union{Vector{<:Real},
         J = Array{Float64}(undef, NumDims, NumDims, NumSamples)
 
         # Compute the Jacobian:
-        for i = 1:NumSamples
+        for i in 1:NumSamples
             D = zeros(NumDims, NumDims)
-            for j = 1:NumDims
+            for j in 1:NumDims
                 D[j, j] = pdf(Normal(0, 1), ZSamples[i, j]) / pdf(X[j], XSamples[i, j])
             end
             J[:, :, i] = D * L
@@ -218,7 +218,7 @@ function getjacobian(Object::NatafTransformation, Samples::Union{Vector{<:Real},
         XSamples = Matrix{Float64}(undef, NumSamples, NumDims)
 
         # Convert samples of the correlated standard normal random variables Z into samples of the marginals:
-        for i = 1:NumDims
+        for i in 1:NumDims
             XSamples[:, i] = quantile(X[i], cdf(Normal(0, 1), ZSamples[:, i]))
         end
 
@@ -226,9 +226,9 @@ function getjacobian(Object::NatafTransformation, Samples::Union{Vector{<:Real},
         J = Array{Float64}(undef, NumDims, NumDims, NumSamples)
 
         # Compute the Jacobian:
-        for i = 1:NumSamples
+        for i in 1:NumSamples
             D = zeros(NumDims, NumDims)
-            for j = 1:NumDims
+            for j in 1:NumDims
                 D[j, j] = pdf(X[j], XSamples[i, j]) / pdf(Normal(0, 1), ZSamples[i, j])
             end
             J[:, :, i] = L⁻¹ * D
@@ -264,7 +264,7 @@ function jointpdf(Object::NatafTransformation, XSamples::Union{Vector{<:Real},Ma
     ϕ = Matrix{Float64}(undef, NumSamples, NumDims)
 
     # Convert samples to the space of correlated standard normal random variables Z:
-    for i = 1:NumDims
+    for i in 1:NumDims
         ZSamples[:, i] = quantile(Normal(0, 1), cdf(X[i], XSamples[:, i]))
         f[:, i] = pdf.(X[i], XSamples[:, i])
         ϕ[:, i] = pdf.(Normal(0, 1), ZSamples[:, i])
