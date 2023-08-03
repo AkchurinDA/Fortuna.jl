@@ -62,7 +62,15 @@ struct MCFOSM <: FORMSubmethod # Mean-Centered First-Order Second-Moment method
 
 end
 
+struct MCFOSMCache
+    β::Number
+end
+
 Base.@kwdef struct HL <: FORMSubmethod # Hasofer-Lind method
+
+end
+
+struct HLCache
 
 end
 
@@ -70,17 +78,53 @@ Base.@kwdef struct RF <: FORMSubmethod # Rackwitz-Fiessler method
 
 end
 
+struct RFCache
+
+end
+
 Base.@kwdef struct HLRF <: FORMSubmethod # Hasofer-Lind Rackwitz-Fiessler method
+    # Maximum number of iterations allowed:
     MaxNumIterations::Integer = 100
+    # Criterion #1:
     ϵ₁::Number = 10^(-9)
+    # Criterion #2:
     ϵ₂::Number = 10^(-9)
 end
 
+struct HLRFCache
+    β::Number
+    PoF::Number
+    x::Matrix{Float64}
+    u::Matrix{Float64}
+    G::Vector{Float64}
+    ∇G::Matrix{Float64}
+    α::Matrix{Float64}
+    d::Matrix{Float64}
+end
+
 Base.@kwdef struct iHLRF <: FORMSubmethod # Improved Hasofer-Lind Rackwitz-Fiessler method
+    # Maximum number of iterations allowed:
     MaxNumIterations::Integer = 100
+    # Criterion #1:
     ϵ₁::Number = 10^(-9)
+    # Criterion #2:
     ϵ₂::Number = 10^(-9)
 end
+
+struct iHLRFCache
+    β::Number
+    PoF::Number
+    x::Matrix{Float64}
+    u::Matrix{Float64}
+    G::Vector{Float64}
+    ∇G::Matrix{Float64}
+    α::Matrix{Float64}
+    d::Matrix{Float64}
+    c::Vector{Float64}
+    m::Vector{Float64}
+    λ::Vector{Float64}
+end
+
 
 # Second-Order Reliability Method:
 Base.@kwdef struct SORM <: AbstractReliabililyAnalysisMethod
@@ -91,7 +135,22 @@ Base.@kwdef struct CF <: SORMSubmethod # Curve-Fitting method
     ϵ::Number = 1 / 1000
 end
 
+struct CFCache
+    β₁::Number
+    PoF₁::Number
+    β₂::Vector{Float64}
+    PoF₂::Vector{Float64}
+    H::Matrix{Float64}
+    P::Matrix{Float64}
+    A::Matrix{Float64}
+    κ::Vector{Float64}
+end
+
 Base.@kwdef struct PF <: SORMSubmethod # Point-Fitting method
+
+end
+
+struct PFCache
 
 end
 

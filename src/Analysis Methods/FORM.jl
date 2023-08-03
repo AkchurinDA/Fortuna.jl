@@ -25,7 +25,8 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::FORM)
         # Compute the reliability index:
         β = g(Mˣ) / sqrt(transpose(∇g) * Σˣ * ∇g)
 
-        return β
+        # Return results:
+        return MCFOSMCache(β)
     elseif isa(Submethod, HL)
         # Not yet implemented
     elseif isa(Submethod, RF)
@@ -47,6 +48,10 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::FORM)
         # Preallocate:
         x = Matrix{Float64}(undef, NumDims, MaxNumIterations)
         u = Matrix{Float64}(undef, NumDims, MaxNumIterations)
+        G = Vector{Float64}(undef, MaxNumIterations)
+        ∇G = Matrix{Float64}(undef, NumDims, MaxNumIterations)
+        α = Matrix{Float64}(undef, NumDims, MaxNumIterations)
+        d = Matrix{Float64}(undef, NumDims, MaxNumIterations)
 
         # Perform Nataf transformation:
         NatafObject = NatafTransformation(X, ρˣ)
@@ -74,57 +79,43 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::FORM)
             Jₓᵤ = getjacobian(NatafObject, x[:, i], "X2U")
 
             # Evaluate the limit state function at the design point in X-space:
-            G = g(x[:, i])
+            G[i] = g(x[:, i])
 
             # Evaluate gradient of the limit state function at the design point in X-space:
             ∇g = transpose(gradient(g, x[:, i]))
 
             # Convert the evaluated gradient of the limit state function from X- to U-space:
-            ∇G = ∇g * Jₓᵤ
+            ∇G[:, i] = vec(∇g * Jₓᵤ)
 
             # Compute the normalized negative gradient vector at the design point in U-space:
-            α = -∇G / norm(∇G)
+            α[:, i] = -∇G[:, i] / norm(∇G[:, i])
 
             # Compute the search direction:
-            d = (G / norm(∇G) + α * u[:, i]) * transpose(α) - u[:, i]
+            d[:, i] = (G[i] / norm(∇G[:, i]) + dot(α[:, i], u[:, i])) * α[:, i] - u[:, i]
 
             # Compute the new design point in U-space:
-            u[:, i+1] = u[:, i] + λ * d
-
-            # Compute the new design point in X-space:
-            x[:, i+1] = transformsamples(NatafObject, u[:, i+1], "U2X")
+            u[:, i+1] = u[:, i] + λ * d[:, i]
 
             # Check for convergance:
-            Criterion₁ = abs(g(x[:, i+1]) / G₀) # Check if the design point is on the failure boundary.
-            Criterion₂ = norm(u[:, i+1] - α * u[:, i+1] * transpose(α)) # Check if the design point is on the failure boundary.
+            Criterion₁ = abs(g(x[:, i]) / G₀) # Check if the design point is on the failure boundary.
+            Criterion₂ = norm(u[:, i] - dot(α[:, i], u[:, i]) * α[:, i]) # Check if the design point is on the failure boundary.
             if Criterion₁ < ϵ₁ && Criterion₂ < ϵ₂
-                # Compute the Jacobian of the transformation of the design point from X- to U-space:
-                Jₓᵤ = getjacobian(NatafObject, x[:, i+1], "X2U")
-
-                # Evaluate the limit state function at the design point in X-space:
-                G = g(x[:, i])
-
-                # Evaluate gradient of the limit state function at the design point in X-space:
-                ∇g = transpose(gradient(g, x[:, i+1]))
-
-                # Convert the evauated gradient of the limit state function from X- to U-space:
-                ∇G = ∇g * Jₓᵤ
-
-                # Compute the normalized negative gradient vector at the design point in U-space:
-                α = -∇G / norm(∇G)
-
                 # Compute the reliability index:
-                β = α * u[:, i+1]
+                β = dot(α[:, i], u[:, i])
 
                 # Compute the probability of failure:
                 PoF = cdf(Normal(0, 1), -β)
 
                 # Clean up the results:
-                x = x[:, 1:i+1]
-                u = u[:, 1:i+1]
+                x = x[:, 1:i]
+                u = u[:, 1:i]
+                G = G[1:i]
+                ∇G = ∇G[:, 1:i]
+                α = α[:, 1:i]
+                d = d[:, 1:i]
 
                 # Return results:
-                return β, PoF, x, u
+                return HLRFCache(β, PoF, x, u, G, ∇G, α, d)
 
                 # Break out:
                 continue
@@ -151,6 +142,13 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::FORM)
         # Preallocate:
         x = Matrix{Float64}(undef, NumDims, MaxNumIterations)
         u = Matrix{Float64}(undef, NumDims, MaxNumIterations)
+        G = Vector{Float64}(undef, MaxNumIterations)
+        ∇G = Matrix{Float64}(undef, NumDims, MaxNumIterations)
+        α = Matrix{Float64}(undef, NumDims, MaxNumIterations)
+        d = Matrix{Float64}(undef, NumDims, MaxNumIterations)
+        c = Vector{Float64}(undef, MaxNumIterations)
+        m = Vector{Float64}(undef, MaxNumIterations)
+        λ = Vector{Float64}(undef, MaxNumIterations)
 
         # Perform Nataf transformation:
         NatafObject = NatafTransformation(X, ρˣ)
@@ -175,86 +173,76 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::FORM)
             Jₓᵤ = getjacobian(NatafObject, x[:, i], "X2U")
 
             # Evaluate the limit state function at the design point in X-space:
-            G = g(x[:, i])
+            G[i] = g(x[:, i])
 
             # Evaluate gradient of the limit state function at the design point in X-space:
             ∇g = transpose(gradient(g, x[:, i]))
 
             # Convert the evaluated gradient of the limit state function from X- to U-space:
-            ∇G = ∇g * Jₓᵤ
+            ∇G[:, i] = vec(∇g * Jₓᵤ)
 
             # Compute the normalized negative gradient vector at the design point in U-space:
-            α = -∇G / norm(∇G)
+            α[:, i] = -∇G[:, i] / norm(∇G[:, i])
 
             # Compute the search direction:
-            d = (G / norm(∇G) + α * u[:, i]) * transpose(α) - u[:, i]
-
-            # Assume the step size:
-            λ = 1
+            d[:, i] = (G[i] / norm(∇G[:, i]) + dot(α[:, i], u[:, i])) * α[:, i] - u[:, i]
 
             # Compute the c-coefficient:
-            c = ceil(norm(u[:, i]) / norm(∇G))
+            c[i] = ceil(norm(u[:, i]) / norm(∇G[:, i]))
 
-            # Compute the merit function:
-            m = 0.5 * norm(u[:, i])^2 + c * abs(G)
+            # Compute the merit function at the current design point:
+            m[i] = 0.5 * norm(u[:, i])^2 + c[i] * abs(G[i])
 
-            # Check if the assumed step size satisfies the Armijo rule, such that m(uᵢ + λᵢdᵢ) < m(uᵢ):
-            uₜ = u[:, i] + λ * d
+            # Find a step size that satisfies m(uᵢ + λᵢdᵢ) < m(uᵢ):
+            λₜ = 1
+            uₜ = u[:, i] + λₜ * d[:, i]
             xₜ = transformsamples(NatafObject, uₜ, "U2X")
             Gₜ = g(xₜ)
-            mₜ = 0.5 * norm(uₜ)^2 + c * abs(Gₜ)
-            while mₜ ≥ m
+            mₜ = 0.5 * norm(uₜ)^2 + c[i] * abs(Gₜ)
+            while mₜ ≥ m[i]
                 # Update the step size and merit function:
-                λ = λ / 2
-                m = mₜ
+                λₜ = λₜ / 2
+                m[i] = mₜ
 
                 # Recalculate the merit function:
-                uₜ = u[:, i] + λ * d
+                uₜ = u[:, i] + λₜ * d[:, i]
                 xₜ = transformsamples(NatafObject, uₜ, "U2X")
                 Gₜ = g(xₜ)
-                mₜ = 0.5 * norm(uₜ)^2 + c * abs(Gₜ)
+                mₜ = 0.5 * norm(uₜ)^2 + c[i] * abs(Gₜ)
             end
 
-            # Update the merit function:
-            m = mₜ
+            # Update the step size:
+            λ[i] = λₜ
 
             # Compute the new design point in U-space:
-            u[:, i+1] = u[:, i] + λ * d
+            u[:, i+1] = u[:, i] + λ[i] * d[:, i]
 
             # Compute the new design point in X-space:
             x[:, i+1] = transformsamples(NatafObject, u[:, i+1], "U2X")
 
             # Check for convergance:
-            Criterion₁ = abs(g(x[:, i+1]) / G₀) # Check if the design point is on the failure boundary.
-            Criterion₂ = norm(u[:, i+1] - α * u[:, i+1] * transpose(α)) # Check if the design point is on the failure boundary.
+            Criterion₁ = abs(g(x[:, i]) / G₀) # Check if the design point is on the failure boundary.
+            Criterion₂ = norm(u[:, i] - dot(α[:, i], u[:, i]) * α[:, i]) # Check if the design point is on the failure boundary.
             if Criterion₁ < ϵ₁ && Criterion₂ < ϵ₂
-                # Compute the Jacobian of the transformation of the design point from X- to U-space:
-                Jₓᵤ = getjacobian(NatafObject, x[:, i+1], "X2U")
-
-                # Evaluate the limit state function at the design point in X-space:
-                G = g(x[:, i])
-
-                # Evaluate gradient of the limit state function at the design point in X-space:
-                ∇g = transpose(gradient(g, x[:, i+1]))
-
-                # Convert the evauated gradient of the limit state function from X- to U-space:
-                ∇G = ∇g * Jₓᵤ
-
-                # Compute the normalized negative gradient vector at the design point in U-space:
-                α = -∇G / norm(∇G)
-
                 # Compute the reliability index:
-                β = α * u[:, i+1]
+                β = dot(α[:, i], u[:, i])
 
                 # Compute the probability of failure:
                 PoF = cdf(Normal(0, 1), -β)
 
                 # Clean up the results:
-                x = x[:, 1:i+1]
-                u = u[:, 1:i+1]
+                x = x[:, 1:i]
+                u = u[:, 1:i]
+                G = G[1:i]
+                ∇G = ∇G[:, 1:i]
+                α = α[:, 1:i]
+                d = d[:, 1:i]
+                c = c[1:i]
+                m = m[1:i]
+                λ = λ[1:i]
 
                 # Return results:
-                return β, PoF, x, u
+                return iHLRFCache(β, PoF, x, u, G, ∇G, α, d, c, m, λ)
 
                 # Break out:
                 continue

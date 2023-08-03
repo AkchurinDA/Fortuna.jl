@@ -1,14 +1,10 @@
 # News
 
 # Release V0.3.0
-- Benchmarked FORM and Nataf Transformation functionalities against [UQPy](https://github.com/SURGroup/UQpy). The sources for the benchmarks are indicated. 
+- Added Curve-Fitting method that falls within a broader class of Second-Order Reliability Methods (SORM).
+- Added cache output system for analysis results for easier work in the future. You can now access a lot of iterative data related to the reliability analysis, such as the value of the limit state function, its gradient, merit function, and more at each iteration.
+- Benchmarked FORM, SORM, and Nataf Transformation functionalities against various sources. The sources for the benchmarks are indicated. 
 - Added support for Weibull distribution.
-- Probability of failure is now one the outputs of the reliability analysis conducted using HLRF or iHLRF methods, such that:
-```julia
-β, PoF, x, u = analyze(Problem, FORM(HLRF()))
-β, PoF, x, u = analyze(Problem, FORM(iHLRF()))
-```
-- Added Curve-Fitting and Point-Fitting methods that fall within a broader class of Second-Order Reliability Methods (SORM).
 
 # Release V0.2.0
 - Sampling function `samplerv()` now uses native `rand()` and `randn()` functions from the `Random` package to perform ITS and LHS sampling.

@@ -18,11 +18,11 @@ G(x::Vector) = 1 - x[1] / (s₁ * x[4]) - x[2] / (s₂ * x[4]) - (x[3] / (a * x[
 Problem = ReliabilityProblem(X, ρˣ, G)
 
 # Perform the reliability analysis using curve-fitting SORM:
-β₁, β₂, PoF₁, PoF₂, _ = analyze(Problem, SORM(CF()))
+Solution = analyze(Problem, SORM(CF()))
 println("SORM:")
-println("β from FORM: $β₁")
-println("β from SORM: $(β₂[1]) (Hohenbichler and Rackwitz)")
-println("β from SORM: $(β₂[2]) (Breitung)")
-println("PoF from FORM: $PoF₁")
-println("PoF from SORM: $(PoF₂[1]) (Hohenbichler and Rackwitz)")
-println("PoF from SORM: $(PoF₂[2]) (Breitung)")
+println("β from FORM: $(Solution.β₁)")
+println("β from SORM: $(Solution.β₂[1]) (Hohenbichler and Rackwitz)")
+println("β from SORM: $(Solution.β₂[2]) (Breitung)")
+println("PoF from FORM: $(Solution.PoF₁)")
+println("PoF from SORM: $(Solution.PoF₂[1]) (Hohenbichler and Rackwitz)")
+println("PoF from SORM: $(Solution.PoF₂[2]) (Breitung)")
