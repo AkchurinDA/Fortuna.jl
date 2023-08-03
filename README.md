@@ -1,11 +1,11 @@
 # Fortuna
 
 <div align="center">
-  <img src="assets/Logo.svg" alt = "Logo" width="50%">
+  <img src="assets/Logo.svg" alt = "Logo" width="35%">
 
-  | Build Status | Latest Release |
-  | :---: | :---: |
-  | [![Build Status](https://github.com/AkchurinDA/Fortuna.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/AkchurinDA/Fortuna.jl/actions/workflows/CI.yml) | [![Latest Release](https://juliahub.com/docs/Fortuna/version.svg)](https://juliahub.com/ui/Packages/Fortuna/fEeSh) |
+  | Build Status | Latest Release | Downloads | License |
+  | :---: | :---: | :---: | :---: |
+  | [![Build Status](https://github.com/AkchurinDA/Fortuna.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/AkchurinDA/Fortuna.jl/actions/workflows/CI.yml) | [![Latest Release](https://juliahub.com/docs/Fortuna/version.svg)](https://juliahub.com/ui/Packages/Fortuna/fEeSh) | [![Downloads](https://shields.io/endpoint?url=https://pkgs.genieframework.com/api/v1/badge/Fortuna&label=Downloads)](https://pkgs.genieframework.com?packages=Fortuna) | [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) |
 </div>
 
 ## Description
@@ -142,7 +142,7 @@ XSamples, ZSample, USamples = samplerv(NatafObject, 5*10^3)
 </div>
 
 ### Reliability Analysis 
-Ultimately, `Fortuna` package is developed to perform structural reliability analysis. The current version of the package implements Mean-Centered First-Order Second-Moment (MCFOSM), Hasofer-Lind Rackwitz-Fiessler (HLRF), and improved Hasofer-Lind Rackwitz-Fiessler (iHLRF) methods that fall within a broader class of First-Order Reliability Methods (FORM). `Fortuna` package also implements Curve-Fitting method that fall within a broader class of Second-Order Reliability Methods (SORM) for a more precise estimation of probabilities of failure.
+Ultimately, `Fortuna` package is developed to perform structural reliability analysis. The current version of the package implements Mean-Centered First-Order Second-Moment (MCFOSM), Hasofer-Lind Rackwitz-Fiessler (HLRF), and improved Hasofer-Lind Rackwitz-Fiessler (iHLRF) methods that fall within a broader class of First-Order Reliability Methods (FORM). `Fortuna` package also implements Curve-Fitting method that falls within a broader class of Second-Order Reliability Methods (SORM) for a more precise estimation of probabilities of failure.
 
 #### First-Order Reliability Methods (FORM)
 
@@ -193,7 +193,7 @@ println("β from G₂: $(Solution₂.β)")
 
 ##### Curve-Fitting (CF) method
 
-The SORM is an improvement over the FORM by accounting for the curved nature of the failure boundary around the design point; thus, providing a better approximation of the probability of failure. The current version of `Fortuna` implements the Curve-Fitting (CF) method that fits a hyper-paraboloid surface with a vertex at the design point and the principal curvatures matching the principal curvatures of the failure boundary at that point. The probabilities of failure are estimated using Hohenbichler-Rackwitz (1988) and Breitung (1984) approximations of the exact solution provided by Tvedt (1990). The calculated probabilities of failure are then used to estimate the generalized reliability indices that account curved nature of the failure boundary around the design point.
+The SORM is an improvement over the FORM by accounting for the curved nature of the failure boundary around the design point; thus, providing a better approximation of the probability of failure. The current version of `Fortuna` implements the Curve-Fitting (CF) method that fits a hyper-paraboloid surface with a vertex at the design point and the principal curvatures matching the principal curvatures of the failure boundary at that point. The probabilities of failure are estimated using Hohenbichler-Rackwitz (1988) and Breitung (1984) approximations of the exact solution provided by Tvedt (1990). The calculated probabilities of failure are then used to estimate the generalized reliability indices that account for the curved nature of the failure boundary around the design point.
 
 ```julia
 # Define a random vector of correlated marginal distributions:
@@ -236,21 +236,21 @@ println("PoF from SORM: $(Solution.PoF₂[2]) (Breitung)")
 The following functionality is planned to be added:
 - [x] Transformations
   - [x] Nataf Transformation
-  - [ ] Rosennblatt Transformation
+  - [ ] Rosennblatt Transformation (?)
 - [x] Sampling Techniques
   - [x] Inverse Transform Sampling
   - [x] Latin Hypercube Sampling
 - [ ] Reliability Methods
   - [ ] First-Order Reliability Method (FORM)
     - [x] Mean-Centered First-Order Second-Moment (MCFOSM) Method
-    - [ ] Hasofer-Lind (HL) Method?
-    - [ ] Rackwitz-Fiessler (RF) Method?
+    - [ ] Hasofer-Lind (HL) Method (?)
+    - [ ] Rackwitz-Fiessler (RF) Method (?)
     - [x] Hasofer-Lind Rackwitz-Fiessler (HLRF) Method
     - [x] Improved Hasofer-Lind Rackwitz-Fiessler (iHLRF) Method
   - [ ] Second-Order Reliability Method (SORM)
     - [x] Curve-Fitting (CF) Method
-    - [ ] Gradient-Free (GF) Method?
-    - [ ] Point-Fitting (PF) Method?
+    - [ ] Gradient-Free (GF) Method (?)
+    - [ ] Point-Fitting (PF) Method (?)
 - [ ] Sensitivity Analysis
 
 ## License
