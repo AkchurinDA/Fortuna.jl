@@ -12,7 +12,6 @@ using NonlinearSolve: NonlinearProblem, IntervalNonlinearProblem
 using NonlinearSolve: NewtonRaphson, Bisection
 using NonlinearSolve: solve
 using SpecialFunctions: gamma
-using QuadGK: quadgk
 
 # Include the following files into the scope of the module:
 include("Structures.jl")
