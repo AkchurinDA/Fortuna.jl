@@ -16,12 +16,12 @@
     Problem₂ = ReliabilityProblem(X, ρˣ, G₂)
 
     # Perform the reliability analysis using MCFOSM:
-    β₁ = analyze(Problem₁, FORM(MCFOSM()))
-    β₂ = analyze(Problem₂, FORM(MCFOSM()))
+    Solution₁ = analyze(Problem₁, FORM(MCFOSM()))
+    Solution₂ = analyze(Problem₂, FORM(MCFOSM()))
 
     # Test the results:
-    @test isapprox(β₁, 1.66, rtol=0.01)
-    @test isapprox(β₂, 4.29, rtol=0.01)
+    @test isapprox(Solution₁.β, 1.66, rtol=0.01)
+    @test isapprox(Solution₂.β, 4.29, rtol=0.01)
 end
 
 @testset "Reliability Analysis: FORM - HLRF #1" begin
@@ -42,16 +42,16 @@ end
     Problem₂ = ReliabilityProblem(X, ρˣ, G₂)
 
     # Perform the reliability analysis using FORM:
-    β₁, _, x₁, u₁ = analyze(Problem₁, FORM(HLRF()))
-    β₂, _, x₂, u₂ = analyze(Problem₂, FORM(HLRF()))
+    Solution₁ = analyze(Problem₁, FORM(HLRF()))
+    Solution₂ = analyze(Problem₂, FORM(HLRF()))
 
     # Test the results:
-    @test isapprox(β₁, 2.11, rtol=0.01)
-    @test isapprox(β₂, 2.11, rtol=0.01)
-    @test isapprox(x₁[:, end], [6.14, 18.9], rtol=0.01)
-    @test isapprox(x₂[:, end], [6.14, 18.9], rtol=0.01)
-    @test isapprox(u₁[:, end], [-1.928, 0.852], rtol=0.01)
-    @test isapprox(u₂[:, end], [-1.928, 0.852], rtol=0.01)
+    @test isapprox(Solution₁.β, 2.11, rtol=0.01)
+    @test isapprox(Solution₂.β, 2.11, rtol=0.01)
+    @test isapprox(Solution₁.x[:, end], [6.14, 18.9], rtol=0.01)
+    @test isapprox(Solution₂.x[:, end], [6.14, 18.9], rtol=0.01)
+    @test isapprox(Solution₁.u[:, end], [-1.928, 0.852], rtol=0.01)
+    @test isapprox(Solution₂.u[:, end], [-1.928, 0.852], rtol=0.01)
 end
 
 @testset "Reliability Analysis: FORM - HLRF #2" begin
@@ -70,13 +70,13 @@ end
     Problem = ReliabilityProblem(X, ρˣ, G)
 
     # Perform the reliability analysis using FORM:
-    β, PoF, x, u = analyze(Problem, FORM(HLRF()))
+    Solution = analyze(Problem, FORM(HLRF()))
 
     # Test the results:
-    @test isapprox(β, 2.236067977499917, rtol=10^(-9))
-    @test isapprox(PoF, 0.012673659338729965, rtol=10^(-9))
-    @test isapprox(x[:, end], [160, 160], rtol=10^(-9))
-    @test isapprox(u[:, end], [-2, 1], rtol=10^(-9))
+    @test isapprox(Solution.β, 2.236067977499917, rtol=10^(-9))
+    @test isapprox(Solution.PoF, 0.012673659338729965, rtol=10^(-9))
+    @test isapprox(Solution.x[:, end], [160, 160], rtol=10^(-9))
+    @test isapprox(Solution.u[:, end], [-2, 1], rtol=10^(-9))
 end
 
 @testset "Reliability Analysis: FORM - HLRF #3" begin
@@ -100,11 +100,11 @@ end
     Problem = ReliabilityProblem(X, ρˣ, G)
 
     # Perform the reliability analysis using curve-fitting SORM:
-    β, PoF, x, u = analyze(Problem, FORM(HLRF()))
-    @test isapprox(β, 2.47, rtol=0.01)
-    @test isapprox(PoF, 0.00682, rtol=0.01)
-    @test isapprox(x[:, end], [341, 170, 3223, 31770], rtol=0.01)
-    @test isapprox(u[:, end], [1.210, 0.699, 0.941, -1.80], rtol=0.01)
+    Solution = analyze(Problem, FORM(HLRF()))
+    @test isapprox(Solution.β, 2.47, rtol=0.01)
+    @test isapprox(Solution.PoF, 0.00682, rtol=0.01)
+    @test isapprox(Solution.x[:, end], [341, 170, 3223, 31770], rtol=0.01)
+    @test isapprox(Solution.u[:, end], [1.210, 0.699, 0.941, -1.80], rtol=0.01)
     # Note: There is a typo in the book for this example. The last coordinate of the design point in U-space must be -1.80.
 end
 
@@ -126,16 +126,16 @@ end
     Problem₂ = ReliabilityProblem(X, ρˣ, G₂)
 
     # Perform the reliability analysis using FORM:
-    β₁, _, x₁, u₁ = analyze(Problem₁, FORM(iHLRF()))
-    β₂, _, x₂, u₂ = analyze(Problem₂, FORM(iHLRF()))
+    Solution₁ = analyze(Problem₁, FORM(iHLRF()))
+    Solution₂ = analyze(Problem₂, FORM(iHLRF()))
 
     # Test the results:
-    @test isapprox(β₁, 2.11, rtol=0.01)
-    @test isapprox(β₂, 2.11, rtol=0.01)
-    @test isapprox(x₁[:, end], [6.14, 18.9], rtol=0.01)
-    @test isapprox(x₂[:, end], [6.14, 18.9], rtol=0.01)
-    @test isapprox(u₁[:, end], [-1.928, 0.852], rtol=0.01)
-    @test isapprox(u₂[:, end], [-1.928, 0.852], rtol=0.01)
+    @test isapprox(Solution₁.β, 2.11, rtol=0.01)
+    @test isapprox(Solution₂.β, 2.11, rtol=0.01)
+    @test isapprox(Solution₁.x[:, end], [6.14, 18.9], rtol=0.01)
+    @test isapprox(Solution₂.x[:, end], [6.14, 18.9], rtol=0.01)
+    @test isapprox(Solution₁.u[:, end], [-1.928, 0.852], rtol=0.01)
+    @test isapprox(Solution₂.u[:, end], [-1.928, 0.852], rtol=0.01)
 end
 
 @testset "Reliability Analysis: FORM - iHLRF #2" begin
@@ -154,13 +154,13 @@ end
     Problem = ReliabilityProblem(X, ρˣ, G)
 
     # Perform the reliability analysis using FORM:
-    β, PoF, x, u = analyze(Problem, FORM(iHLRF()))
+    Solution = analyze(Problem, FORM(iHLRF()))
 
     # Test the results:
-    @test isapprox(β, 2.236067977499917, rtol=10^(-9))
-    @test isapprox(PoF, 0.012673659338729965, rtol=10^(-9))
-    @test isapprox(x[:, end], [160, 160], rtol=10^(-9))
-    @test isapprox(u[:, end], [-2, 1], rtol=10^(-9))
+    @test isapprox(Solution.β, 2.236067977499917, rtol=10^(-9))
+    @test isapprox(Solution.PoF, 0.012673659338729965, rtol=10^(-9))
+    @test isapprox(Solution.x[:, end], [160, 160], rtol=10^(-9))
+    @test isapprox(Solution.u[:, end], [-2, 1], rtol=10^(-9))
 end
 
 @testset "Reliability Analysis: FORM - iHLRF #3" begin
@@ -184,9 +184,9 @@ end
     Problem = ReliabilityProblem(X, ρˣ, G)
 
     # Perform the reliability analysis using curve-fitting SORM:
-    β, PoF, x, u = analyze(Problem, FORM(iHLRF()))
-    @test isapprox(β, 2.47, rtol=0.01)
-    @test isapprox(PoF, 0.00682, rtol=0.01)
-    @test isapprox(x[:, end], [341, 170, 3223, 31770], rtol=0.01)
-    @test isapprox(u[:, end], [1.210, 0.699, 0.941, -1.80], rtol=0.01)
+    Solution = analyze(Problem, FORM(iHLRF()))
+    @test isapprox(Solution.β, 2.47, rtol=0.01)
+    @test isapprox(Solution.PoF, 0.00682, rtol=0.01)
+    @test isapprox(Solution.x[:, end], [341, 170, 3223, 31770], rtol=0.01)
+    @test isapprox(Solution.u[:, end], [1.210, 0.699, 0.941, -1.80], rtol=0.01)
 end

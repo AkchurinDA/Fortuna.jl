@@ -19,10 +19,10 @@
     Problem = ReliabilityProblem(X, ρˣ, G)
 
     # Perform the reliability analysis using curve-fitting SORM:
-    β₁, β₂, PoF₁, PoF₂, κ = analyze(Problem, SORM(CF()))
+    Solution = analyze(Problem, SORM(CF()))
 
     # Test the results:
-    @test isapprox(β₂, [2.35, 2.35], rtol=0.01)
-    @test isapprox(PoF₂, [0.00960, 0.00914], rtol=0.01)
-    @test isapprox(κ, [-0.155, -0.0399, 0], rtol=0.01)
+    @test isapprox(Solution.β₂, [2.35, 2.35], rtol=0.01)
+    @test isapprox(Solution.PoF₂, [0.00960, 0.00914], rtol=0.01)
+    @test isapprox(Solution.κ, [-0.155, -0.0399, 0], rtol=0.01)
 end
