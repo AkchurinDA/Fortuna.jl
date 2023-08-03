@@ -116,12 +116,15 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::FORM)
                 # Compute the reliability index:
                 β = α * u[:, i+1]
 
+                # Compute the probability of failure:
+                PoF = cdf(Normal(0, 1), -β)
+
                 # Clean up the results:
                 x = x[:, 1:i+1]
                 u = u[:, 1:i+1]
 
                 # Return results:
-                return β, x, u
+                return β, PoF, x, u
 
                 # Break out:
                 continue
@@ -243,12 +246,15 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::FORM)
                 # Compute the reliability index:
                 β = α * u[:, i+1]
 
+                # Compute the probability of failure:
+                PoF = cdf(Normal(0, 1), -β)
+
                 # Clean up the results:
                 x = x[:, 1:i+1]
                 u = u[:, 1:i+1]
 
                 # Return results:
-                return β, x, u
+                return β, PoF, x, u
 
                 # Break out:
                 continue

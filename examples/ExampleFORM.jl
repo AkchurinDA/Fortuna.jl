@@ -22,8 +22,8 @@ println("β from G₁: $β₁")
 println("β from G₂: $β₂")
 
 # Perform the reliability analysis using FORM:
-β₁, x₁, u₁ = analyze(Problem₁, FORM(iHLRF()))
-β₂, x₂, u₂ = analyze(Problem₂, FORM(iHLRF()))
+β₁, PoF₁, x₁, u₁ = analyze(Problem₁, FORM(iHLRF()))
+β₂, PoF₂, x₂, u₂ = analyze(Problem₂, FORM(iHLRF()))
 println("FORM:")
 println("β from G₁: $β₁")
 println("β from G₂: $β₂")

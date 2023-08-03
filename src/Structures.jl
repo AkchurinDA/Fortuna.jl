@@ -58,8 +58,7 @@ Base.@kwdef struct FORM <: AbstractReliabililyAnalysisMethod
     Submethod::FORMSubmethod = iHLRF()
 end
 
-# Mean-Centered First-Order Second-Moment Method:
-struct MCFOSM <: FORMSubmethod
+struct MCFOSM <: FORMSubmethod # Mean-Centered First-Order Second-Moment method
 
 end
 
@@ -82,3 +81,17 @@ Base.@kwdef struct iHLRF <: FORMSubmethod # Improved Hasofer-Lind Rackwitz-Fiess
     ϵ₁::Number = 10^(-9)
     ϵ₂::Number = 10^(-9)
 end
+
+# Second-Order Reliability Method:
+Base.@kwdef struct SORM <: AbstractReliabililyAnalysisMethod
+    Submethod::SORMSubmethod = CF()
+end
+
+Base.@kwdef struct CF <: SORMSubmethod # Curve-Fitting method
+    ϵ::Number = 1 / 1000
+end
+
+Base.@kwdef struct PF <: SORMSubmethod # Point-Fitting method
+
+end
+
