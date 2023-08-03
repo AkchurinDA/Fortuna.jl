@@ -9,7 +9,7 @@
     NatafObject = NatafTransformation(X, ρˣ)
 
     # Generate samples:
-    NumSamples = 10^6
+    NumSamples = 5 * 10^6
     XSamples, ZSamples, USamples = samplerv(NatafObject, NumSamples)
 
     # Test the results:
