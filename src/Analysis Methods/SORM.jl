@@ -4,9 +4,13 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::SORM)
     Submethod = AnalysisMethod.Submethod
 
     # Determine the design point using FORM:
-    β₁, PoF₁, x, u = analyze(Problem, FORM(iHLRF()))
-    x = x[:, end]
-    u = u[:, end]
+    Solution = analyze(Problem, FORM(iHLRF()))
+    β₁ = Solution.β
+    PoF₁ = Solution.PoF
+    x = Solution.x[:, end]
+    u = Solution.u[:, end]
+    ∇G = Solution.∇G[:, end]
+    α = Solution.α[:, end]
 
     if !isa(Submethod, CF) && !isa(Submethod, PF)
         error("Invalid SORM submethod.")
@@ -25,26 +29,14 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::SORM)
         # Perform Nataf transformation:
         NatafObject = NatafTransformation(X, ρˣ)
 
-        # Compute the Jacobian of the transformation of the design point from X- to U-space:
-        Jₓᵤ = getjacobian(NatafObject, x, "X2U")
-
-        # Evaluate gradient of the limit state function at the design point in X-space:
-        ∇g = transpose(gradient(g, x))
-
-        # Convert the evaluated gradient of the limit state function from X- to U-space:
-        ∇G = ∇g * Jₓᵤ
-
-        # Compute the normalized negative gradient vector at the design point in U-space:
-        α = -∇G / norm(∇G)
-
         # Compute the Hessian at the design point in U-space:
-        Hᵘ = gethessian(NatafObject, g, u, ϵ, NumDims)
+        H = gethessian(NatafObject, g, u, ϵ, NumDims)
 
         # Compute the orthonomal matrix:
         P = getorthonormal(α, NumDims)
 
         # Evaluate the principal curvatures:
-        A = P * Hᵘ * transpose(P) / norm(∇G)
+        A = P * H * transpose(P) / norm(∇G)
         κ = eigen(A[1:end-1, 1:end-1]).values
 
         # Compute the probabilities of failure:
@@ -64,7 +56,7 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::SORM)
         end
 
         # Return results:
-        return β₁, β₂, PoF₁, PoF₂, κ
+        return CFCache(β₁, PoF₁, β₂, PoF₂, H, P, A, κ)
     elseif isa(Submethod, PF)
 
     end
