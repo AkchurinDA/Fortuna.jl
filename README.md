@@ -9,7 +9,7 @@
 </div>
 
 ## Description
-`Fortuna` is a general purpose Julia package for structural reliability analysis.
+`Fortuna` is a general-purpose Julia package for structural reliability analysis.
 
 ## Installation
 To install `Fortuna` package, type `]` in Julia REPL to enter package manager mode and execute the following command:
