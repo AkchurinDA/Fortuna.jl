@@ -1,6 +1,9 @@
 # News
 
 # Release V0.3.0
+- Added error-catching for SORM's probability of failure approximations.
+
+# Release V0.3.0
 - Added Curve-Fitting method that falls within a broader class of Second-Order Reliability Methods (SORM).
 - Added cache output system for analysis results for easier work in the future. You can now access a lot of iterative data related to the reliability analysis, such as the value of the limit state function, its gradient, merit function, and more at each iteration.
 - Benchmarked FORM, SORM, and Nataf Transformation functionalities against various sources. The sources for the benchmarks are indicated. 
