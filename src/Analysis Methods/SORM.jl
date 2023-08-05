@@ -4,13 +4,13 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::SORM)
     Submethod = AnalysisMethod.Submethod
 
     # Determine the design point using FORM:
-    Solution = analyze(Problem, FORM(iHLRF()))
-    β₁ = Solution.β
-    PoF₁ = Solution.PoF
-    x = Solution.x[:, end]
-    u = Solution.u[:, end]
-    ∇G = Solution.∇G[:, end]
-    α = Solution.α[:, end]
+    FORMSolution = analyze(Problem, FORM(iHLRF()))
+    β₁ = FORMSolution.β
+    PoF₁ = FORMSolution.PoF
+    x = FORMSolution.x[:, end]
+    u = FORMSolution.u[:, end]
+    ∇G = FORMSolution.∇G[:, end]
+    α = FORMSolution.α[:, end]
 
     if !isa(Submethod, CF) && !isa(Submethod, PF)
         error("Invalid SORM submethod.")
@@ -33,10 +33,10 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::SORM)
         H = gethessian(NatafObject, g, u, ϵ, NumDims)
 
         # Compute the orthonomal matrix:
-        P = getorthonormal(α, NumDims)
+        R = getorthonormal(α, NumDims)
 
         # Evaluate the principal curvatures:
-        A = P * H * transpose(P) / norm(∇G)
+        A = R * H * transpose(R) / norm(∇G)
         κ = eigen(A[1:end-1, 1:end-1]).values
 
         # Compute the probabilities of failure:
@@ -55,15 +55,18 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::SORM)
 
         begin # Breitung (1984)
             if all(x -> β₁ * x > -1, κ)
-                PoF₂[2] = cdf(Normal(0, 1), -β₁) * prod(1 ./ sqrt.(1 .+ β₁ .* κ))
+                PoF₂[2] = cdf(Normal(0, 1), -β₁) * prod(κᵢ -> 1 / sqrt(1 + β₁ * κᵢ), κ)
             else
                 PoF₂[2] = nothing
                 println("Condition of Breitung's approximation of the probability of failure was not satisfied.")
             end
         end
 
+        # Compute the generalized reliability index:
+        β₂ = -quantile.(Normal(0, 1), PoF₂)
+
         # Return results:
-        return CFCache(β₁, PoF₁, β₂, PoF₂, H, P, A, κ)
+        return CFCache(β₁, PoF₁, β₂, PoF₂, H, R, A, κ)
     elseif isa(Submethod, PF)
 
     end
