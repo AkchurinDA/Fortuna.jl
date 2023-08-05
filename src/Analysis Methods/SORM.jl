@@ -41,18 +41,25 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::SORM)
 
         # Compute the probabilities of failure:
         PoF₂ = Vector{Float64}(undef, 2)
-        if all(x -> β₁ * x > -1, κ)
-            # Hohenbichler and Rackwitz:
+
+        begin # Hohenbichler-Rackwitz (1988)
             ψ = pdf(Normal(0, 1), β₁) / cdf(Normal(0, 1), -β₁)
-            PoF₂[1] = cdf(Normal(0, 1), -β₁) * prod(1 ./ sqrt.(1 .+ ψ .* κ))
 
-            # Breaitung:
-            PoF₂[2] = cdf(Normal(0, 1), -β₁) * prod(1 ./ sqrt.(1 .+ β₁ .* κ))
+            if all(x -> ψ * x > -1, κ)
+                PoF₂[1] = cdf(Normal(0, 1), -β₁) * prod(κᵢ -> 1 / sqrt(1 + ψ * κᵢ), κ)
+            else
+                PoF₂[1] = nothing
+                println("Condition of Hohenbichler-Rackwitz's approximation of the probability of failure was not satisfied.")
+            end
+        end
 
-            # Generalized reliability index:
-            β₂ = -quantile.(Normal(0, 1), PoF₂)
-        else
-            error("Approximations of the probability of failure from SORM are not valid since the principal curvatures are not located at the design point.")
+        begin # Breitung (1984)
+            if all(x -> β₁ * x > -1, κ)
+                PoF₂[2] = cdf(Normal(0, 1), -β₁) * prod(1 ./ sqrt.(1 .+ β₁ .* κ))
+            else
+                PoF₂[2] = nothing
+                println("Condition of Breitung's approximation of the probability of failure was not satisfied.")
+            end
         end
 
         # Return results:
