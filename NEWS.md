@@ -1,11 +1,20 @@
 # News
 
-# Release V0.3.0
-- Added error-catching for SORM's probability of failure approximations.
+# Release V0.3.2
+- Fixed the generalized reliability index calculation in the SORM.
+
+# Release V0.3.1
+- Added error-catching for the SORM's probability of failure approximations.
 
 # Release V0.3.0
-- Added Curve-Fitting method that falls within a broader class of Second-Order Reliability Methods (SORM).
+- Added Curve-Fitting method that falls within a broader class of the Second-Order Reliability Methods (SORM).
 - Added cache output system for analysis results for easier work in the future. You can now access a lot of iterative data related to the reliability analysis, such as the value of the limit state function, its gradient, merit function, and more at each iteration.
+
+```julia
+FORMSolution = analyze(Problem, FORM())
+SORMSolution = analyze(Problem, SORM())
+```
+
 - Benchmarked FORM, SORM, and Nataf Transformation functionalities against various sources. The sources for the benchmarks are indicated. 
 - Added support for Weibull distribution.
 
@@ -13,6 +22,7 @@
 - Sampling function `samplerv()` now uses native `rand()` and `randn()` functions from the `Random` package to perform ITS and LHS sampling.
 - `SamplingTechnique` argument's options in `samplerv()` function have been changed from strings (`"ITS"`, `"LHS"`) to their own types (`ITS()`, `LHS()`).
 - Added `analyze()` function that replaces `MCFOSM()` and `FORM()` functions. The deprecated functions `MCFOSM()` and `FORM()` are now `AnalysisMethod` argument's options in `analyze()` function with their own types. For example, to perform reliability analysis using FORM use the following syntax:
+
 ```julia
 β = analyze(Problem, FORM(MCFOSM()))
 β, x, u = analyze(Problem, FORM(HLRF()))
