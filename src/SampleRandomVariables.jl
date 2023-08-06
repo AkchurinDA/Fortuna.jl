@@ -40,7 +40,6 @@ function samplerv(Samplers::Union{<:Distribution,Vector{<:Distribution}}, NumSam
 
     # Define the lower limits of each strata:
     LowerLimits = collect(range(0, (NumSamples - 1) / NumSamples, NumSamples))
-    println(LowerLimits)
 
     if NumDims == 1
         # Generate samples from a uniform distributions:

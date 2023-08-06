@@ -1,5 +1,8 @@
 # News
 
+# Release V0.3.3
+- Removed `println()` statement from `samplerv()` function that was left there by accident.
+
 # Release V0.3.2
 - Fixed the generalized reliability index calculation in the SORM.
 
