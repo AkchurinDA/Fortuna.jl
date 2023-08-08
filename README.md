@@ -9,16 +9,23 @@
 </div>
 
 ## Description
+
 `Fortuna` is a general-purpose Julia package for structural reliability analysis.
 
 ## Installation
+
 To install `Fortuna` package, type `]` in Julia REPL to enter package manager mode and execute the following command:
 
 ```
 pkg> add Fortuna
 ```
 
+## Documentation
+
+A comprehensive documentation is not yet fully implemented. To check the functionality of the package and its latest updates please refer the ["Quick Start"](#quick-start) section and `NEWS.md` file.
+
 ## Quick Start
+
 To start using `Fortuna` package, type the following command in Julia REPL or in the beginning of a file:
 
 ```julia
@@ -26,6 +33,7 @@ using Fortuna
 ```
 
 ### Generating Random Variables
+
 `Fortuna` package builds its capacity to generate random variables using `generaterv()` function by utilizing the widely-adopted [Distributions](https://github.com/JuliaStats/Distributions.jl) package, enabling seamless integration with other Julia packages such as [Turing](https://github.com/TuringLang/Turing.jl). However, unlike [Distributions](https://github.com/JuliaStats/Distributions.jl) package, Fortuna allows you to generate random variables not only using their **parameters**, but also using their **moments**, which often useful.
 
 ```julia
@@ -37,6 +45,7 @@ Q = generaterv("Gamma", "Parameters", [16, 0.625])
 ```
 
 ### Performing Nataf Transformation
+
 `Fortuna` package allows to easily perform the Nataf transformation of correlated random variables into the space of uncorrelated standard normal variables.
 
 ```julia
@@ -75,9 +84,11 @@ display(NatafObject.L⁻¹)
 ```
 
 ### Sampling Random Variables
+
 `Fortuna` package also allows to easily generate samples of uncorrelated and correlated random variables using `samplerv()` function using different sampling techniques. Current version of the package implements [Inverse Transform Sampling (ITS)](https://en.wikipedia.org/wiki/Inverse_transform_sampling) and [Latin Hypercube Sampling (LHS)](https://en.wikipedia.org/wiki/Latin_hypercube_sampling) techniques.
 
 #### Uncorrelated Random Variables
+
 The function `generaterv()` allows to generate samples of a single distribution, as well as to generate samples of random vectors.
 ```julia
 # Define a random vector:
@@ -115,13 +126,15 @@ XSamplesLHS = samplerv(X, 3, LHS())
 ```
 
 #### Correlated Random Variables
+
 Generating the correlated random variables can be done by:
+
 1. Performing the Nataf transformation of the random correlated variables.
 
 ```julia
 # Define a random vector:
-X₁ = generaterv("Gamma", "Moments", [5, 1])
-X₂ = generaterv("Gumbel", "Moments", [7.5, 2.5])
+X₁ = generaterv("Gamma", "Moments", [2.5, 1])
+X₂ = generaterv("Gumbel", "Moments", [0, 2.5])
 X = [X₁, X₂]
 
 # Define correlation coefficients between marginal distributions of the random vector:
@@ -135,18 +148,17 @@ NatafObject = NatafTransformation(X, ρˣ)
 
 ```julia
 # Generate samples of the random vector in X-, Z-, and U-spaces:
-XSamples, ZSample, USamples = samplerv(NatafObject, 5*10^3)
+XSamples, ZSamples, USamples = samplerv(NatafObject, 10^3)
 ```
-<div align = center>
-  <img src="assets/READMENatafTransformation.svg" alt = "Nataf Transformation">
-</div>
 
 ### Reliability Analysis 
+
 Ultimately, `Fortuna` package is developed to perform structural reliability analysis. The current version of the package implements Mean-Centered First-Order Second-Moment (MCFOSM), Hasofer-Lind Rackwitz-Fiessler (HLRF), and improved Hasofer-Lind Rackwitz-Fiessler (iHLRF) methods that fall within a broader class of First-Order Reliability Methods (FORM). `Fortuna` package also implements Curve-Fitting method that falls within a broader class of Second-Order Reliability Methods (SORM) for a more precise estimation of probabilities of failure.
 
 #### First-Order Reliability Methods (FORM)
 
 ##### Mean-Centered First-Order Second-Moment (MCFOSM) Reliability Method
+
 The MCFOSM method is the simplest and least expensive type of reliability method. It utilizes the first-order Taylor expansion of the limit state function at the mean values and the first two moments of the random variables involved in the reliability problem to evaluate the reliability index. However, despite the fact that it is simple and does not require the complete knowledge of the random variables involved in the reliability problem, the MCFOSM method faces an issue known as the invariance problem. This problem arises because the resulting reliability index is dependent on the formulation of the limit state function. In other words, two equivalent limit state functions with the same failure boundaries produce two different reliability indices; thus, the use of MCFOSM method is not recommended.
 
 ```julia
@@ -176,6 +188,7 @@ println("β from G₂: $(Solution₂.β)")
 ```
 
 ##### Hasofer-Lind Rackwitz-Fiessler (HLRF) Reliability Method
+
 The HLRF method overcomes the invariance problem faced by the MCFOSM method by using the first-order Taylor expansion of the limit state function at a point known as the "design point" on the failure boundary. Since the design point is not known a priori, the HLRF method is inherently an iterative method. `Fortuna` implements two versions of HLRF method: plain HLRF method where the step size in the negative gradient descent is set to unity and improved HLRF (iHLRF) method where the step size is determined using a merit function. 
 
 ```julia
@@ -255,7 +268,7 @@ The following functionality is planned to be added:
 
 ## License
 
-`Fortuna` package is distributed under the [MIT license](https://en.wikipedia.org/wiki/MIT_License). More information can be found in the `LICENSE` file.
+`Fortuna` package is distributed under the [MIT license](https://en.wikipedia.org/wiki/MIT_License). More information can be found in the `LICENSE.md` file.
 
 ## Help and Support
 
@@ -263,4 +276,4 @@ For assistance with the package, please raise an issue on the Github Issues page
 
 ## Acknowledgements
 
-The author thanks academic and industrial partners of the "Reliability 2030" project for their financial support. The author also thanks Dr. Armen Der Kiureghian for his book "Structural and System Reliability" (2022) that was a major inspiration for the development of this package.
+The author thanks academic and industrial partners of the "Reliability 2030" initiative for their financial support. The author also thanks Dr. Armen Der Kiureghian for his book "Structural and System Reliability" (2022) that was a major inspiration for the development of this package.
