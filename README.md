@@ -151,6 +151,8 @@ NatafObject = NatafTransformation(X, ρˣ)
 XSamples, ZSamples, USamples = samplerv(NatafObject, 10^3)
 ```
 
+https://github.com/AkchurinDA/Fortuna.jl/assets/92001164/010041b9-388d-41f4-8fc1-a410428ef93e
+
 ### Reliability Analysis 
 
 Ultimately, `Fortuna` package is developed to perform structural reliability analysis. The current version of the package implements Mean-Centered First-Order Second-Moment (MCFOSM), Hasofer-Lind Rackwitz-Fiessler (HLRF), and improved Hasofer-Lind Rackwitz-Fiessler (iHLRF) methods that fall within a broader class of First-Order Reliability Methods (FORM). `Fortuna` package also implements Curve-Fitting method that falls within a broader class of Second-Order Reliability Methods (SORM) for a more precise estimation of probabilities of failure.
