@@ -141,7 +141,7 @@ struct CFCache
     β₂::Vector{Float64}
     PoF₂::Vector{Float64}
     H::Matrix{Float64}
-    P::Matrix{Float64}
+    R::Matrix{Float64}
     A::Matrix{Float64}
     κ::Vector{Float64}
 end

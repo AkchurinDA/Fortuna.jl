@@ -7,7 +7,6 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::SORM)
     FORMSolution = analyze(Problem, FORM(iHLRF()))
     β₁ = FORMSolution.β
     PoF₁ = FORMSolution.PoF
-    x = FORMSolution.x[:, end]
     u = FORMSolution.u[:, end]
     ∇G = FORMSolution.∇G[:, end]
     α = FORMSolution.α[:, end]
@@ -45,7 +44,7 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::SORM)
         begin # Hohenbichler-Rackwitz (1988)
             ψ = pdf(Normal(0, 1), β₁) / cdf(Normal(0, 1), -β₁)
 
-            if all(x -> ψ * x > -1, κ)
+            if all(κᵢ -> ψ * κᵢ > -1, κ)
                 PoF₂[1] = cdf(Normal(0, 1), -β₁) * prod(κᵢ -> 1 / sqrt(1 + ψ * κᵢ), κ)
             else
                 PoF₂[1] = nothing
@@ -54,7 +53,7 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::SORM)
         end
 
         begin # Breitung (1984)
-            if all(x -> β₁ * x > -1, κ)
+            if all(κᵢ -> β₁ * κᵢ > -1, κ)
                 PoF₂[2] = cdf(Normal(0, 1), -β₁) * prod(κᵢ -> 1 / sqrt(1 + β₁ * κᵢ), κ)
             else
                 PoF₂[2] = nothing
@@ -70,21 +69,6 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::SORM)
     elseif isa(Submethod, PF)
 
     end
-end
-
-function getorthonormal(α, NumDims)
-    # Initilize the matrix:
-    A = Matrix(1.0 * I, NumDims, NumDims)
-    A = reverse(A, dims=2)
-    A[:, 1] = transpose(α)
-
-    # Perform QR factorization:
-    Q, _ = qr(A)
-
-    # Clean up the result:
-    P = transpose(reverse(Q, dims=2))
-
-    return P
 end
 
 function gethessian(NatafObject, g, u, ϵ, NumDims)
@@ -123,4 +107,19 @@ function gethessian(NatafObject, g, u, ϵ, NumDims)
     end
 
     return H
+end
+
+function getorthonormal(α, NumDims)
+    # Initilize the matrix:
+    A = Matrix(1.0 * I, NumDims, NumDims)
+    A = reverse(A, dims=2)
+    A[:, 1] = transpose(α)
+
+    # Perform QR factorization:
+    Q, _ = qr(A)
+
+    # Clean up the result:
+    R = transpose(reverse(Q, dims=2))
+
+    return R
 end
