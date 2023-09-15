@@ -1,7 +1,7 @@
 # Fortuna
 
 <div align="center">
-  <img src="assets/Logo.svg" alt = "Logo" width="75%">
+  <img src="assets/Logo.svg" alt = "Logo" width="60%">
 
   | Build Status | Latest Release | Downloads | License |
   | :---: | :---: | :---: | :---: |
