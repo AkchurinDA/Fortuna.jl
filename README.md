@@ -1,7 +1,7 @@
 # Fortuna
 
 <div align="center">
-  <img src="assets/Logo.svg" alt = "Logo" width="35%">
+  <img src="assets/Logo.svg" alt = "Logo" width="75%">
 
   | Build Status | Latest Release | Downloads | License |
   | :---: | :---: | :---: | :---: |
@@ -10,7 +10,7 @@
 
 ## Description
 
-`Fortuna` is a general-purpose Julia package for structural reliability analysis.
+`Fortuna` is a general-purpose Julia package for structural and system reliability analysis.
 
 ## Installation
 
@@ -22,7 +22,7 @@ pkg> add Fortuna
 
 ## Documentation
 
-A comprehensive documentation is not yet fully implemented. To check the functionality of the package and its latest updates please refer the ["Quick Start"](#quick-start) section and `NEWS.md` file.
+A comprehensive documentation is not yet fully implemented. To check the functionality of the package and the latest updates please refer the ["Quick Start"](#quick-start) section and `NEWS.md` file.
 
 ## Quick Start
 
@@ -284,4 +284,4 @@ For assistance with the package, please raise an issue on the Github Issues page
 
 ## Acknowledgements
 
-The author thanks academic and industrial partners of the "Reliability 2030" initiative for their financial support. The author also thanks Dr. Armen Der Kiureghian for his book "Structural and System Reliability" (2022) that was a major inspiration for the development of this package.
+The author thanks the academic and industrial partners of the Cold-Formed Steel Research Consortium’s “Reliability 2030” initiative for their financial support. The author also thanks Dr. Armen Der Kiureghian for his book "Structural and System Reliability" (2022) that was a major inspiration for the development of this package.
