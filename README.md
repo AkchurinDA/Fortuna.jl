@@ -1,12 +1,12 @@
-<picture>
+
+
+<div align="center">
+  <!-- <img src="assets/logo-dark.svg" alt = "Logo" width="50%"> -->
+  <picture>
     <source media="(prefers-color-scheme: dark)" srcset="assets/logo-dark.svg">
     <source media="(prefers-color-scheme: light)" srcset="assets/logo-light.svg">
     <img src="assets/logo-light.svg" alt="Fortuna" width="50%">
   </picture>
-
-<div align="center">
-  <!-- <img src="assets/logo-dark.svg" alt = "Logo" width="50%"> -->
-  
 
   | Build Status | Latest Release | Downloads | License |
   | :---: | :---: | :---: | :---: |
