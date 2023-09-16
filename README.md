@@ -267,14 +267,14 @@ The following functionality is planned to be added:
 - [ ] Reliability Methods
   - [ ] First-Order Reliability Method (FORM)
     - [x] Mean-Centered First-Order Second-Moment (MCFOSM) Method
-    - [ ] Hasofer-Lind (HL) Method (?)
-    - [ ] Rackwitz-Fiessler (RF) Method (?)
+    - [x] Hasofer-Lind (HL) Method
+    - [ ] Rackwitz-Fiessler (RF) Method
     - [x] Hasofer-Lind Rackwitz-Fiessler (HLRF) Method
     - [x] Improved Hasofer-Lind Rackwitz-Fiessler (iHLRF) Method
   - [ ] Second-Order Reliability Method (SORM)
     - [x] Curve-Fitting (CF) Method
-    - [ ] Gradient-Free (GF) Method (?)
-    - [ ] Point-Fitting (PF) Method (?)
+    - [ ] Gradient-Free (GF) Method
+    - [ ] Point-Fitting (PF) Method
 - [ ] Sensitivity Analysis
 
 ## License
