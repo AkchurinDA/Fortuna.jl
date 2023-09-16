@@ -260,7 +260,7 @@ println("PoF from SORM: $(Solution.PoF₂[2]) (Breitung)")
 The following functionality is planned to be added:
 - [x] Transformations
   - [x] Nataf Transformation
-  - [ ] Rosennblatt Transformation (?)
+  - [ ] Rosennblatt Transformation
 - [x] Sampling Techniques
   - [x] Inverse Transform Sampling
   - [x] Latin Hypercube Sampling
