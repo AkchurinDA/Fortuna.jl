@@ -1,5 +1,3 @@
-
-
 <div align="center">
   <!-- <img src="assets/logo-dark.svg" alt = "Logo" width="50%"> -->
   <picture>
