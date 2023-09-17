@@ -1,3 +1,8 @@
+"""
+    getdistortedcorrelation(X::Vector{<:Distribution}, ρˣ::Matrix{<:Real})
+
+Return a distorted correlation matrix ``\\underline{\\underline{\\rho}}^{Z}`` of correlated standard normal random variables ``\\underline{Z}``.
+"""
 function getdistortedcorrelation(X::Vector{<:Distribution}, ρˣ::Matrix{<:Real})
     # Compute the number of marginal distributions:
     NumDims = length(X)
@@ -243,6 +248,11 @@ function getjacobian(Object::NatafTransformation, Samples::Union{Vector{<:Real},
     return J
 end
 
+"""
+    jointpdf(Object::NatafTransformation, XSamples::Union{Vector{<:Real},Matrix{<:Real}})
+
+Return values of joint probability density functions of non-normal correlated random variables ``\\underline{X}`` evaluated at given points.
+"""
 function jointpdf(Object::NatafTransformation, XSamples::Union{Vector{<:Real},Matrix{<:Real}})
     # Extract data:
     X = Object.X
