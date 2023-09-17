@@ -1,5 +1,0 @@
-## Theory
-
-
-## Associated Functions
-

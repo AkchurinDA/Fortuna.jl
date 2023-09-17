@@ -1,5 +1,4 @@
 <div align="center">
-  <!-- <img src="assets/logo-dark.svg" alt = "Logo" width="50%"> -->
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="assets/logo-dark.svg">
     <source media="(prefers-color-scheme: light)" srcset="assets/logo.svg">
@@ -13,11 +12,11 @@
 
 ## Description
 
-`Fortuna` is a general-purpose Julia package for structural and system reliability analysis.
+`Fortuna.jl` is a general-purpose Julia package for structural and system reliability analysis.
 
 ## Installation
 
-To install `Fortuna` package, type `]` in Julia REPL to enter package manager mode and execute the following command:
+To install `Fortuna.jl` package, type `]` in Julia REPL to enter package manager mode and execute the following command:
 
 ```
 pkg> add Fortuna
@@ -29,7 +28,7 @@ A comprehensive documentation is not yet fully implemented. To check the functio
 
 ## Quick Start
 
-To start using `Fortuna` package, type the following command in Julia REPL or in the beginning of a file:
+To start using `Fortuna.jl` package, type the following command in Julia REPL or in the beginning of a file:
 
 ```julia
 using Fortuna
@@ -37,7 +36,7 @@ using Fortuna
 
 ### Generating Random Variables
 
-`Fortuna` package builds its capacity to generate random variables using `generaterv()` function by utilizing the widely-adopted [Distributions](https://github.com/JuliaStats/Distributions.jl) package, enabling seamless integration with other Julia packages such as [Turing](https://github.com/TuringLang/Turing.jl). However, unlike [Distributions](https://github.com/JuliaStats/Distributions.jl) package, Fortuna allows you to generate random variables not only using their **parameters**, but also using their **moments**, which often useful.
+`Fortuna.jl` package builds its capacity to generate random variables using `generaterv()` function by utilizing the widely-adopted [Distributions](https://github.com/JuliaStats/Distributions.jl) package, enabling seamless integration with other Julia packages such as [Turing](https://github.com/TuringLang/Turing.jl). However, unlike [Distributions](https://github.com/JuliaStats/Distributions.jl) package, Fortuna allows you to generate random variables not only using their **parameters**, but also using their **moments**, which often useful.
 
 ```julia
 # Generate a lognormally distributed random variable R with mean (μ) of 15 and standard deviation (σ) of 2.5:
@@ -49,7 +48,7 @@ Q = generaterv("Gamma", "Parameters", [16, 0.625])
 
 ### Performing Nataf Transformation
 
-`Fortuna` package allows to easily perform the Nataf transformation of correlated random variables into the space of uncorrelated standard normal variables.
+`Fortuna.jl` package allows to easily perform the Nataf transformation of correlated random variables into the space of uncorrelated standard normal variables.
 
 ```julia
 # Define a random vector:
@@ -88,7 +87,7 @@ display(NatafObject.L⁻¹)
 
 ### Sampling Random Variables
 
-`Fortuna` package also allows to easily generate samples of uncorrelated and correlated random variables using `samplerv()` function using different sampling techniques. Current version of the package implements [Inverse Transform Sampling (ITS)](https://en.wikipedia.org/wiki/Inverse_transform_sampling) and [Latin Hypercube Sampling (LHS)](https://en.wikipedia.org/wiki/Latin_hypercube_sampling) techniques.
+`Fortuna.jl` package also allows to easily generate samples of uncorrelated and correlated random variables using `samplerv()` function using different sampling techniques. Current version of the package implements [Inverse Transform Sampling (ITS)](https://en.wikipedia.org/wiki/Inverse_transform_sampling) and [Latin Hypercube Sampling (LHS)](https://en.wikipedia.org/wiki/Latin_hypercube_sampling) techniques.
 
 #### Uncorrelated Random Variables
 
@@ -160,7 +159,7 @@ XSamples, ZSamples, USamples = samplerv(NatafObject, 10^3)
 
 ### Reliability Analysis 
 
-Ultimately, `Fortuna` package is developed to perform structural reliability analysis. The current version of the package implements Mean-Centered First-Order Second-Moment (MCFOSM), Hasofer-Lind Rackwitz-Fiessler (HLRF), and improved Hasofer-Lind Rackwitz-Fiessler (iHLRF) methods that fall within a broader class of First-Order Reliability Methods (FORM). `Fortuna` package also implements Curve-Fitting method that falls within a broader class of Second-Order Reliability Methods (SORM) for a more precise estimation of probabilities of failure.
+Ultimately, `Fortuna.jl` package is developed to perform structural reliability analysis. The current version of the package implements Mean-Centered First-Order Second-Moment (MCFOSM), Hasofer-Lind Rackwitz-Fiessler (HLRF), and improved Hasofer-Lind Rackwitz-Fiessler (iHLRF) methods that fall within a broader class of First-Order Reliability Methods (FORM). `Fortuna.jl` package also implements Curve-Fitting method that falls within a broader class of Second-Order Reliability Methods (SORM) for a more precise estimation of probabilities of failure.
 
 #### First-Order Reliability Methods (FORM)
 
@@ -196,7 +195,7 @@ println("β from G₂: $(Solution₂.β)")
 
 ##### Hasofer-Lind Rackwitz-Fiessler (HLRF) Reliability Method
 
-The HLRF method overcomes the invariance problem faced by the MCFOSM method by using the first-order Taylor expansion of the limit state function at a point known as the "design point" on the failure boundary. Since the design point is not known a priori, the HLRF method is inherently an iterative method. `Fortuna` implements two versions of HLRF method: plain HLRF method where the step size in the negative gradient descent is set to unity and improved HLRF (iHLRF) method where the step size is determined using a merit function. 
+The HLRF method overcomes the invariance problem faced by the MCFOSM method by using the first-order Taylor expansion of the limit state function at a point known as the "design point" on the failure boundary. Since the design point is not known a priori, the HLRF method is inherently an iterative method. `Fortuna.jl` implements two versions of HLRF method: plain HLRF method where the step size in the negative gradient descent is set to unity and improved HLRF (iHLRF) method where the step size is determined using a merit function. 
 
 ```julia
 Solution₁ = analyze(Problem₁, FORM(iHLRF()))
@@ -215,9 +214,9 @@ println("β from G₂: $(Solution₂.β)")
 
 #### Second-Order Reliability Methods (SORM)
 
-##### Curve-Fitting (CF) method
+##### Curve-Fitting (CF) Method
 
-The SORM is an improvement over the FORM by accounting for the curved nature of the failure boundary around the design point; thus, providing a better approximation of the probability of failure. The current version of `Fortuna` implements the Curve-Fitting (CF) method that fits a hyper-paraboloid surface with a vertex at the design point and the principal curvatures matching the principal curvatures of the failure boundary at that point. The probabilities of failure are estimated using Hohenbichler-Rackwitz (1988) and Breitung (1984) approximations of the exact solution provided by Tvedt (1990). The calculated probabilities of failure are then used to estimate the generalized reliability indices that account for the curved nature of the failure boundary around the design point.
+The SORM is an improvement over the FORM by accounting for the curved nature of the failure boundary around the design point; thus, providing a better approximation of the probability of failure. The current version of `Fortuna.jl` implements the Curve-Fitting (CF) method that fits a hyper-paraboloid surface with a vertex at the design point and the principal curvatures matching the principal curvatures of the failure boundary at that point. The probabilities of failure are estimated using Hohenbichler-Rackwitz (1988) and Breitung (1984) approximations of the exact solution provided by Tvedt (1990). The calculated probabilities of failure are then used to estimate the generalized reliability indices that account for the curved nature of the failure boundary around the design point.
 
 ```julia
 # Define a random vector of correlated marginal distributions:
@@ -267,7 +266,7 @@ The following functionality is planned to be added:
 - [ ] Reliability Methods
   - [ ] First-Order Reliability Method (FORM)
     - [x] Mean-Centered First-Order Second-Moment (MCFOSM) Method
-    - [x] Hasofer-Lind (HL) Method
+    - [ ] Hasofer-Lind (HL) Method
     - [ ] Rackwitz-Fiessler (RF) Method
     - [x] Hasofer-Lind Rackwitz-Fiessler (HLRF) Method
     - [x] Improved Hasofer-Lind Rackwitz-Fiessler (iHLRF) Method
@@ -279,7 +278,7 @@ The following functionality is planned to be added:
 
 ## License
 
-`Fortuna` package is distributed under the [MIT license](https://en.wikipedia.org/wiki/MIT_License). More information can be found in the `LICENSE.md` file.
+`Fortuna.jl` package is distributed under the [MIT license](https://en.wikipedia.org/wiki/MIT_License). More information can be found in the [`LICENSE.md`](https://github.com/AkchurinDA/Fortuna.jl/blob/main/LICENSE.md) file.
 
 ## Help and Support
 

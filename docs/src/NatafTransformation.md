@@ -1,3 +1,7 @@
+# Nataf Transformation
+
+([DerKiureghian2022](@cite), [Lebrun2009](@cite))
+
 ## Theory
 
 ```math
@@ -9,7 +13,7 @@
 ```
 
 ```math
-\underline{U} = T_{2}(\underline{Z}) = \underline{\underline{A}} \underline{Z}
+\underline{U} = T_{2}(\underline{Z}) = \underline{\underline{\Gamma}} \underline{Z}
 ```
 
 ## Associated Functions
