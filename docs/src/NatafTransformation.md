@@ -1,6 +1,6 @@
 # Nataf Transformation
 
-([DerKiureghian2022](@cite), [Lebrun2009](@cite))
+([Nataf1962](@cite), [Lebrun2009](@cite))
 
 ## Theory
 
