@@ -36,7 +36,7 @@ using Fortuna
 
 ### Generating Random Variables
 
-`Fortuna.jl` package builds its capacity to generate random variables using `generaterv()` function by utilizing the widely-adopted [Distributions](https://github.com/JuliaStats/Distributions.jl) package, enabling seamless integration with other Julia packages such as [`Turing.jl`](https://github.com/TuringLang/Turing.jl) and [`RxInfer.jl`](https://biaslab.github.io/rxinfer-website/). However, unlike [`Distributions.jl`](https://github.com/JuliaStats/Distributions.jl) package, Fortuna allows you to generate random variables not only using their **parameters**, but also using their **moments**, which often useful.
+`Fortuna.jl` package builds its capacity to generate random variables using `generaterv()` function by utilizing the widely-adopted [`Distributions.jl`](https://github.com/JuliaStats/Distributions.jl) package, enabling seamless integration with other Julia packages such as [`Turing.jl`](https://github.com/TuringLang/Turing.jl) and [`RxInfer.jl`](https://biaslab.github.io/rxinfer-website/). However, unlike [`Distributions.jl`](https://github.com/JuliaStats/Distributions.jl) package, Fortuna allows you to generate random variables not only using their **parameters**, but also using their **moments**, which often useful.
 
 ```julia
 # Generate a lognormally distributed random variable R with mean (μ) of 15 and standard deviation (σ) of 2.5:
