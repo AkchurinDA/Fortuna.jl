@@ -112,14 +112,14 @@ X₁SamplesLHS = samplerv(X₁, 3, LHS())
 #  9.380731608864231
 #  8.997067439248992
 
-# Generate 3 samples of the random vector using Inverse Transform Sampling:
+# Generate 3 samples of the random vector X using Inverse Transform Sampling:
 XSamplesITS = samplerv(X, 3, ITS())
 # 3×2 Matrix{Float64}:
 #  11.1815  11.6162
 #  11.0042  12.6362
 #  10.4576  13.8437
 
-# Generate 3 samples of the random vector using Latin Hypercube Sampling:
+# Generate 3 samples of the random vector X using Latin Hypercube Sampling:
 XSamplesLHS = samplerv(X, 3, LHS())
 # 3×2 Matrix{Float64}:
 #  9.14107  12.6207
