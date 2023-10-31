@@ -27,8 +27,8 @@ makedocs(
         ],
         "Sensitivity Analysis" => "SensitivityAnalysis.md",
         "Examples" => "Examples.md",
+        "Hall of Fame" => "HOF.md",
         "References" => "References.md"
     ],
     plugins=[Bibliography]
 )
-
