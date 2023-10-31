@@ -154,7 +154,7 @@ XSamples, ZSamples, USamples = samplerv(NatafObject, 10^3)
 ```
 
 <div align="center">
-  <img src="assets/NatafTransformation.gif" alt = "Nataf Transformation" width = 100%>
+  <img src="assets/NatafTransformation.svg" alt = "Nataf Transformation" width = 100%>
 </div>
 
 ### Reliability Analysis 
@@ -207,10 +207,6 @@ println("β from G₂: $(Solution₂.β)")
 # β from G₁: 2.10833940741697
 # β from G₂: 2.10833972384163
 ```
-
-<div align="center">
-  <img src="assets/FORM.gif" alt = "Nataf Transformation" width = 65%>
-</div>
 
 #### Second-Order Reliability Methods (SORM)
 
