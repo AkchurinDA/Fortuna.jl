@@ -4,6 +4,8 @@
 
 ## Hasofer-Lind (HL) Method
 
+## Rackwitz-Fiessler (RF) Method
+
 ## Hasofer-Lind Rackwitz-Fiessler (HLRF) Method
 
 ## Improved Hasofer-Lind Rackwitz-Fiessler (iHLRF) Method

@@ -13,5 +13,3 @@ Sensitivity with respect to the parameters of the probability distributions ``\u
 ```math
 \underline{\nabla}_{\underline{\theta}_{f}} \beta = \underline{\hat{\alpha}} \ \underline{\underline{J}}_{\underline{T}, \underline{\theta}_{f}}(\underline{x}^{*}, \underline{\theta}_{f})
 ```
-
-## Associated Functions

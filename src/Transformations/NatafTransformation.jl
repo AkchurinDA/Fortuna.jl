@@ -1,7 +1,7 @@
 """
     getdistortedcorrelation(X::Vector{<:Distribution}, ρˣ::Matrix{<:Real})
 
-Return a distorted correlation matrix ``\\underline{\\underline{\\rho}}^{Z}`` of correlated standard normal random variables ``\\underline{Z}``.
+Returns a distorted correlation matrix ``\\underline{\\underline{\\rho}}^{Z}`` of correlated standard normal random variables ``\\underline{Z}``.
 """
 function getdistortedcorrelation(X::Vector{<:Distribution}, ρˣ::Matrix{<:Real})
     # Compute the number of marginal distributions:
@@ -251,7 +251,7 @@ end
 """
     jointpdf(Object::NatafTransformation, XSamples::Union{Vector{<:Real},Matrix{<:Real}})
 
-Return values of joint probability density functions of non-normal correlated random variables ``\\underline{X}`` evaluated at given points.
+Returns values of joint probability density functions ``f_{\\underline{X}}(\\undeline{x})`` of non-normal correlated random variables ``\\underline{X}`` evaluated at given points.
 """
 function jointpdf(Object::NatafTransformation, XSamples::Union{Vector{<:Real},Matrix{<:Real}})
     # Extract data:

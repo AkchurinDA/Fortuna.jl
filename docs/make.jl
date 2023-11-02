@@ -1,7 +1,5 @@
-using Documenter
-using DocumenterCitations
-using Fortuna
-using Distributions
+using Fortuna, Distributions
+using Documenter, DocumenterCitations
 
 Bibliography = CitationBibliography(
     joinpath(@__DIR__, "src/References.bib")
@@ -16,7 +14,7 @@ makedocs(
     ),
     pages=[
         "Home" => "index.md",
-        "Random Variables" => "RandomVariables.md",
+        "Random Variables and Vectors" => "RV.md",
         "Isoprobabilistic Transformations" => [
             "Nataf Transformation" => "NatafTransformation.md",
             "Rosenblatt Transformation" => "RosenblattTransformation.md",
