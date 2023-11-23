@@ -5,9 +5,9 @@
     <img src="assets/logo.svg" alt="Fortuna" width="75%">
   </picture>
 
-  | Build Status | Latest Release | Downloads | License |
-  | :---: | :---: | :---: | :---: |
-  | [![Build Status](https://github.com/AkchurinDA/Fortuna.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/AkchurinDA/Fortuna.jl/actions/workflows/CI.yml) | [![Latest Release](https://juliahub.com/docs/Fortuna/version.svg)](https://juliahub.com/ui/Packages/Fortuna/fEeSh) | [![Downloads](https://shields.io/endpoint?url=https://pkgs.genieframework.com/api/v1/badge/Fortuna&label=Downloads)](https://pkgs.genieframework.com?packages=Fortuna) | [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) |
+  | Build | Documentation | Latest Release | Downloads | License |
+  | :---: | :---: | :---: | :---: | :---: |
+  | [![Build Status](https://github.com/AkchurinDA/Fortuna.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/AkchurinDA/Fortuna.jl/actions/workflows/CI.yml) | [![](https://img.shields.io/badge/Documentation-stable-blue.svg)](https://AkchurinDA.github.io/Fortuna.jl/stable) | [![Latest Release](https://juliahub.com/docs/Fortuna/version.svg)](https://github.com/AkchurinDA/Fortuna.jl/releases) | [![Downloads](https://shields.io/endpoint?url=https://pkgs.genieframework.com/api/v1/badge/Fortuna&label=Downloads)](https://pkgs.genieframework.com?packages=Fortuna) | [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/AkchurinDA/Fortuna.jl/blob/main/LICENSE.md) |
 </div>
 
 ## Description

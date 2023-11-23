@@ -36,7 +36,7 @@ samplerv(Samplers::Union{<:Distribution,Vector{<:Distribution}}, NumSamples::Int
 ## Sampling Random Vectors with Correlated Marginal Random Variables
 
 ```@example 1
-# Generate a random vector X with uncorrelated marginal random variables X₁ and X₂:
+# Generate a random vector X with correlated marginal random variables X₁ and X₂:
 X₁ = generaterv("Gamma", "M", [10, 1.5])
 X₂ = generaterv("Gumbel", "M", [15, 2.5])
 X = [X₁, X₂]
@@ -47,8 +47,8 @@ X = [X₁, X₂]
 # Perform the Nataf Transformation by defining a "NatafTransformation" object:
 NatafObject = NatafTransformation(X, ρˣ)
 
-# Generate 3 samples of the random vector X in X-, Z-, and U-spaces:
-XSamples, USamples, ZSamples = samplerv(NatafObject, 3)
+# Generate 1000 samples of the random vector X in X-, Z-, and U-spaces:
+XSamples, USamples, ZSamples = samplerv(NatafObject, 1000)
 
 nothing # hide
 ```

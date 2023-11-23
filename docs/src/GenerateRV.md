@@ -32,7 +32,7 @@ println("θ = $(params(Q)[2])")
 
 ## Supported Random Variables
 
-`Fortuna.jl` package currently supports the following random variables:
+`Fortuna.jl` package currently supports the following distributions:
 - Exponential
 - Gamma
 - Gumbel

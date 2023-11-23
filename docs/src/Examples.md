@@ -9,19 +9,19 @@ Random.seed!(1)
 ## Example #1: Perform Nataf Transformation
 
 ```@example 1
-# Define a random vector:
-X₁ = generaterv("Gamma", "M", [2.5, 1])
-X₂ = generaterv("Gumbel", "M", [0, 2.5])
+# Generate a random vector X with correlated marginal random variables X₁ and X₂:
+X₁ = generaterv("Gamma", "M", [10, 1.5])
+X₂ = generaterv("Gumbel", "M", [15, 2.5])
 X = [X₁, X₂]
 
-# Define correlation coefficients between marginal distributions of the random vector:
+# Define the correlation matrix:
 ρˣ = [1 0.90; 0.90 1]
 
-# Perform Nataf transformation by defining a custom "NatafTransformation" type:
+# Perform the Nataf Transformation by defining a "NatafTransformation" object:
 NatafObject = NatafTransformation(X, ρˣ)
 
 # Generate 1000 samples of the random vector X in X-, Z-, and U-spaces:
-XSamples, USamples, ZSamples = samplerv(NatafObject, 3)
+XSamples, USamples, ZSamples = samplerv(NatafObject, 1000)
 
 nothing # hide
 ```
