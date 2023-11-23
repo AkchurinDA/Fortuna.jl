@@ -304,5 +304,10 @@ function jointpdf(Object::NatafTransformation, x::Union{Vector{<:Real},Matrix{<:
     JointPDFX = replace(JointPDFX, NaN => 0, Inf => 0)
     JointPDFX = vec(JointPDFX)
 
+    # Convert vector to scalar if needed:
+    if size(x)[1] == 1
+        JointPDFX = JointPDFX[1]
+    end
+
     return JointPDFX
 end
