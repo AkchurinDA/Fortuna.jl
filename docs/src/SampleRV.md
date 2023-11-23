@@ -12,8 +12,8 @@ Random.seed!(1)
 
 ```@example 1
 # Generate a random vector X with uncorrelated marginal random variables X₁ and X₂:
-X₁ = generaterv("Gamma", "P", [10, 1.5])
-X₂ = generaterv("Gumbel", "P", [15, 2.5])
+X₁ = generaterv("Gamma", "M", [10, 1.5])
+X₂ = generaterv("Gumbel", "M", [15, 2.5])
 X = [X₁, X₂]
 
 nothing # hide
@@ -26,7 +26,7 @@ XSamplesITS = samplerv(X, 3, ITS())
 
 ```@example 1
 # Generate 3 samples of the random vector X using Latin Hypercube Sampling technique:
-XSamplesITS = samplerv(X, 3, LHS())
+XSamplesLHS = samplerv(X, 3, LHS())
 ```
 
 ```@docs
@@ -37,8 +37,8 @@ samplerv(Samplers::Union{<:Distribution,Vector{<:Distribution}}, NumSamples::Int
 
 ```@example 1
 # Generate a random vector X with uncorrelated marginal random variables X₁ and X₂:
-X₁ = generaterv("Gamma", "P", [10, 1.5])
-X₂ = generaterv("Gumbel", "P", [15, 2.5])
+X₁ = generaterv("Gamma", "M", [10, 1.5])
+X₂ = generaterv("Gumbel", "M", [15, 2.5])
 X = [X₁, X₂]
 
 # Define the correlation matrix:
@@ -47,10 +47,6 @@ X = [X₁, X₂]
 # Perform the Nataf Transformation by defining a "NatafTransformation" object:
 NatafObject = NatafTransformation(X, ρˣ)
 
-nothing # hide
-```
-
-```@example 1
 # Generate 3 samples of the random vector X in X-, Z-, and U-spaces:
 XSamples, USamples, ZSamples = samplerv(NatafObject, 3)
 
