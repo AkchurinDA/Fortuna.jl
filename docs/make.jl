@@ -37,8 +37,5 @@ makedocs(
 )
 
 deploydocs(
-    repo="github.com/AkchurinDA/Fortuna.jl.git",
-    devbranch="main",
-    devurl="Dev",
-    versions=["Stable" => "V^", "V#.#", "Dev" => "Dev"],
+    repo="github.com/AkchurinDA/Fortuna.jl.git"
 )
