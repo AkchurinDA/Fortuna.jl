@@ -28,7 +28,7 @@ function samplerv(Samplers::Union{<:Distribution,Vector{<:Distribution}}, NumSam
         end
     elseif isa(SamplingTechnique, LHS)
         # Define the lower limits of each strata:
-        LowerLimits = collect(range(0, (NumSamples - 1) / NumSamples, NumSamples))
+        LowerLimits = collect(0:(1/NumSamples):((NumSamples-1)/NumSamples))
 
         if NumDims == 1
             # Generate samples from a uniform distributions:
