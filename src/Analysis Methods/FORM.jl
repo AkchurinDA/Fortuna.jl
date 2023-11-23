@@ -1,4 +1,9 @@
 # First-Order Reliability Method:
+"""
+    analyze(Problem::ReliabilityProblem, AnalysisMethod::FORM)
+
+The function solves the provided reliability problem using any submethod that falls under a broader category of First-Order Reliability Methods (FORM).
+"""
 function analyze(Problem::ReliabilityProblem, AnalysisMethod::FORM)
     # Extract the analysis method:
     Submethod = AnalysisMethod.Submethod

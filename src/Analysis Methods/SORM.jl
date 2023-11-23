@@ -1,4 +1,9 @@
 # Second-Order Reliability Method:
+"""
+    analyze(Problem::ReliabilityProblem, AnalysisMethod::SORM)
+
+The function solves the provided reliability problem using any submethod that falls under a broader category of Second-Order Reliability Methods (SORM).
+"""
 function analyze(Problem::ReliabilityProblem, AnalysisMethod::SORM)
     # Extract the analysis method:
     Submethod = AnalysisMethod.Submethod

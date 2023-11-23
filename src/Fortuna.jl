@@ -1,9 +1,9 @@
 module Fortuna
+# Reexport Distributions package:
+using Reexport
+@reexport using Distributions
+
 # Load dependencies:
-using Distributions: Distribution
-using Distributions: MvNormal
-using Distributions: Exponential, Gamma, Gumbel, LogNormal, Normal, Poisson, Uniform, Weibull
-using Distributions: mean, std, pdf, cdf, quantile, cor
 using FastGaussQuadrature: gausslegendre
 using ForwardDiff: gradient, hessian
 using LinearAlgebra
@@ -12,14 +12,20 @@ using NonlinearSolve: NonlinearProblem, IntervalNonlinearProblem
 using NonlinearSolve: NewtonRaphson, Bisection
 using NonlinearSolve: solve
 using SpecialFunctions: gamma
+using DocStringExtensions
 
 # Include the following files into the scope of the module:
-include("Structures.jl")
+include("Types.jl")
+export AbstractTransformation
 export NatafTransformation, RosenblattTransformation
+export AbstractSamplingTechnique
 export ITS, LHS
+export AbstractReliabilityProblem
 export ReliabilityProblem
-export FORM, MCFOSM, HLRF, iHLRF
-export SORM, CF, PF
+export AbstractReliabililyAnalysisMethod
+export FORMSubmethod, SORMSubmethod
+export FORM, MCFOSM, HLRF, iHLRF, MCFOSMCache, HLRFCache, iHLRFCache
+export SORM, CF, PF, CFCache, PFCache
 include("GenerateRandomVariables.jl")
 export generaterv
 include("SampleRandomVariables.jl")

@@ -1,0 +1,59 @@
+# Overview
+
+## Defining Reliability Problems
+
+Generally, 3 main "items" are always need to fully define a reliability problem and sucessfully analyze it to find the associated probability of failure ``P_{f}`` and reliability index ``\beta``:
+
+| Item | Description |
+| :--- | :--- |
+| ``\vec{X}`` | Random vector with correlated non-normal marginal random variables |
+| ``\rho^{X}`` | Correlation matrix |
+| ``g(\vec{X})`` | Limit state function |
+
+`Fortuna.jl` package uses these 3 "items" to fully define reliability problems using a custom `ReliabilityProblem()` type as shown in the example below.
+
+```@setup 1
+using Fortuna
+```
+
+```@example 1
+# Generate a random vector X with correlated marginal random variables X₁ and X₂:
+X₁ = generaterv("Normal", "Moments", [10, 2])
+X₂ = generaterv("Normal", "Moments", [20, 5])
+X = [X₁, X₂]
+
+# Define a correlation matrix for the random vector X:
+ρˣ = [1 0.5; 0.5 1]
+
+# Define a limit state function:
+g(x::Vector) = x[1]^2 - 2 * x[2]
+
+# Define a reliability problem using the provided information:
+Problem = ReliabilityProblem(X, ρˣ, g)
+
+nothing # hide
+```
+
+!!! note
+    The definition of the limit state function ``g(\vec{X})`` in `Fortuna.jl` package only pertains to its form (e.g., whether it is linear, square, exponential, etc. in each variable). The information about the random variables involved in the reliability problem is carried in the random vector ``\vec{X}`` and its correlation matrix ``\rho^{X}``, that you use when defining a reliability problem using a custom `ReliabilityProblem()` type.
+
+## Analyzing Reliability Problems
+
+After defining the reliability problem, `Fortuna.jl` allows to easily solve it using a whole suite of First- and Second-Order Reliability Methods through a single `analyze()` function as shown in the example below.
+
+```@example 1
+# Solve the reliability problem using an imporved Hasofer-Lind-Rackwitz-Fiessler method:
+Solution = analyze(Problem, FORM(iHLRF()))
+println("PoF = $(Solution.PoF)")
+println("β = $(Solution.β)")
+```
+
+Descriptions of all First- and Second-Order Reliability Methods implemented in `Fortuna.jl` can be found on [First-Order Reliability Methods](@ref) and [Second-Order Reliability Methods](@ref) pages.
+
+## Associated Types and Functions
+
+```@docs
+ReliabilityProblem
+analyze(Problem::ReliabilityProblem, AnalysisMethod::FORM)
+analyze(Problem::ReliabilityProblem, AnalysisMethod::SORM)
+```

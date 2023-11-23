@@ -1,5 +1,10 @@
 # News
 
+# Release V0.3.4
+- General housekeeping and bug hunting.
+- Added a simple documentation describing the basic functionality of the package.
+- `Fortuna.jl` package now reexports `Distributions.jl` package. This allows to access basic functions, like `mean()`, `std()`, `params()`, etc., without loading `Distributions.jl` package separately.
+
 # Release V0.3.3
 - Removed `println()` statement from `samplerv()` function that was left there by accident.
 

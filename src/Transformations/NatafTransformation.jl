@@ -1,7 +1,7 @@
 """
     getdistortedcorrelation(X::Vector{<:Distribution}, ρˣ::Matrix{<:Real})
 
-Returns a distorted correlation matrix ``\\underline{\\underline{\\rho}}^{Z}`` of correlated standard normal random variables ``\\underline{Z}``.
+The function returns the distorted correlation matrix ``\\rho^{Z}`` of the correlated standard normal random variables ``\\vec{Z}``. Additionally, the function returns the lower triangular matrix of the Cholesky decomposition of the distorted correlation matrix ``L`` and its inverse ``L^{-1}``.
 """
 function getdistortedcorrelation(X::Vector{<:Distribution}, ρˣ::Matrix{<:Real})
     # Compute the number of marginal distributions:
@@ -80,6 +80,13 @@ function getdistortedcorrelation(X::Vector{<:Distribution}, ρˣ::Matrix{<:Real}
     return ρᶻ, L, L⁻¹
 end
 
+"""
+    transformsamples(Object::NatafTransformation, Samples::Union{Vector{<:Real},Matrix{<:Real}}, TransformationDirection::String)
+
+The function transforms samples from ``X``- to ``U``-space and vice versa.
+- If `TransformationDirection = "X2U"`, the function transforms samples ``\\vec{x}`` from ``X``- to ``U``-space. \\
+- If `TransformationDirection = "U2X"`, the function transforms samples ``\\vec{u}`` from ``U``- to ``X``-space.
+"""
 function transformsamples(Object::NatafTransformation, Samples::Union{Vector{<:Real},Matrix{<:Real}}, TransformationDirection::String)
     # Convert strings to lowercase:
     TransformationDirection = lowercase(TransformationDirection)
@@ -153,6 +160,13 @@ function transformsamples(Object::NatafTransformation, Samples::Union{Vector{<:R
     end
 end
 
+"""
+    getjacobian(Object::NatafTransformation, Samples::Union{Vector{<:Real},Matrix{<:Real}}, TransformationDirection::String)
+
+The function returns the Jacobians of the transformations of samples from ``X``- to ``U``-space and vice versa.
+- If `TransformationDirection = "X2U"`, the function returns the Jacobians of the transformations of samples ``\\vec{x}`` from ``X``- to ``U``-space. \\
+- If `TransformationDirection = "U2X"`, the function returns the Jacobians of the transformations of samples ``\\vec{u}`` from ``U``- to ``X``-space.
+"""
 function getjacobian(Object::NatafTransformation, Samples::Union{Vector{<:Real},Matrix{<:Real}}, TransformationDirection::String)
     # Convert strings to lowercase:
     TransformationDirection = lowercase(TransformationDirection)
@@ -249,39 +263,39 @@ function getjacobian(Object::NatafTransformation, Samples::Union{Vector{<:Real},
 end
 
 """
-    jointpdf(Object::NatafTransformation, XSamples::Union{Vector{<:Real},Matrix{<:Real}})
+    jointpdf(Object::NatafTransformation, x::Union{Vector{<:Real},Matrix{<:Real}})
 
-Returns values of joint probability density functions ``f_{\\underline{X}}(\\undeline{x})`` of non-normal correlated random variables ``\\underline{X}`` evaluated at given points.
+The function returns the values of the joint probability density functions ``f_{\\vec{X}}(\\vec{x})`` evaluated at points ``\\vec{x}``.
 """
-function jointpdf(Object::NatafTransformation, XSamples::Union{Vector{<:Real},Matrix{<:Real}})
+function jointpdf(Object::NatafTransformation, x::Union{Vector{<:Real},Matrix{<:Real}})
     # Extract data:
     X = Object.X
     ρᶻ = Object.ρᶻ
 
     # Check if the samples are passed as a vector or matrix:
-    if typeof(XSamples) <: Vector
+    if typeof(x) <: Vector
         # Convert column vector into row vector:
-        XSamples = transpose(XSamples)
+        x = transpose(x)
     end
 
     # Compute the number of samples and number of marginal distributions:
-    NumSamples = size(XSamples, 1)
-    NumDims = size(XSamples, 2)
+    NumSamples = size(x, 1)
+    NumDims = size(x, 2)
 
     # Preallocate:
-    ZSamples = Matrix{Float64}(undef, NumSamples, NumDims)
+    z = Matrix{Float64}(undef, NumSamples, NumDims)
     f = Matrix{Float64}(undef, NumSamples, NumDims)
     ϕ = Matrix{Float64}(undef, NumSamples, NumDims)
 
     # Convert samples to the space of correlated standard normal random variables Z:
     for i in 1:NumDims
-        ZSamples[:, i] = quantile(Normal(0, 1), cdf(X[i], XSamples[:, i]))
-        f[:, i] = pdf.(X[i], XSamples[:, i])
-        ϕ[:, i] = pdf.(Normal(0, 1), ZSamples[:, i])
+        z[:, i] = quantile(Normal(0, 1), cdf(X[i], x[:, i]))
+        f[:, i] = pdf.(X[i], x[:, i])
+        ϕ[:, i] = pdf.(Normal(0, 1), z[:, i])
     end
 
     # Compute the joint PDF of samples in the space of correlated standard normal random variables Z: 
-    JointPDFZ = pdf(MvNormal(ρᶻ), transpose(ZSamples))
+    JointPDFZ = pdf(MvNormal(ρᶻ), transpose(z))
 
     # Compute the joint PDF:
     JointPDFX = JointPDFZ .* (prod(f, dims=2) ./ prod(ϕ, dims=2))

@@ -1,30 +1,58 @@
 #= Transformations =#
+"""
+    AbstractTransformation
+
+A custom abstract supertype used by `Fortuna.jl` to define various types of isoprobabilistic transformations.
+"""
 abstract type AbstractTransformation end
 
+"""
+    mutable struct NatafTransformation <: AbstractTransformation
+
+A custom type used by `Fortuna.jl` to perform Nataf Transformation.
+
+$(TYPEDFIELDS)
+"""
 mutable struct NatafTransformation <: AbstractTransformation
-    # Marginal distributions:
+    "Random vector with correlated non-normal marginal random variables"
     X::Vector{<:Distribution}
-    # Correlation matrix:
+    "Correlation matrix of the random vector ``\\vec{X}``"
     ρˣ::Matrix{<:Real}
-    # Distorted correlation matrix:
+    "Distorted correlation matrix the random vector ``\\vec{Z}``"
     ρᶻ::Matrix{Float64}
-    # Lower triangular matrix of the Cholesky decomposition of the distorted correlation matrix:
+    "Lower triangular matrix of the Cholesky decomposition of the distorted correlation matrix ``\\rho^{Z}``"
     L::LinearAlgebra.LowerTriangular{Float64,Matrix{Float64}}
-    # Inverse of the lower triangular matrix of the Cholesky decomposition of the distorted correlation matrix:
+    "Inverse of the lower triangular matrix of the Cholesky decomposition of the distorted correlation matrix ``\\rho^{Z}``"
     L⁻¹::LinearAlgebra.LowerTriangular{Float64,Matrix{Float64}}
 
-    # Constructor:
-    function NatafTransformation(X, ρˣ)
+    @doc """
+        NatafTransformation(X::Vector{<:Distribution}, ρˣ::Matrix{<:Real})
+
+    An inner constructor used to create a `NatafTransformation` object.
+
+    $(TYPEDFIELDS)
+    """
+    function NatafTransformation(X::Vector{<:Distribution}, ρˣ::Matrix{<:Real})
         ρᶻ, L, L⁻¹ = getdistortedcorrelation(X, ρˣ)
         new(X, ρˣ, ρᶻ, L, L⁻¹)
     end
 end
 
+"""
+    mutable struct RosenblattTransformation <: AbstractTransformation
+
+A custom type used by `Fortuna.jl` to perform Rosenblatt Transformation.
+"""
 mutable struct RosenblattTransformation <: AbstractTransformation
 
 end
 
 #= Sampling Techniques =#
+"""
+    AbstractSamplingTechnique
+
+A custom abstract supertype used by `Fortuna.jl` to define various types of sampling techniques.
+"""
 abstract type AbstractSamplingTechnique end
 
 # Inverse Transform Sampling:
@@ -38,18 +66,35 @@ struct LHS <: AbstractSamplingTechnique
 end
 
 #= Reliability Analysis =#
+"""
+    AbstractReliabilityProblem
+
+A custom abstract supertype used by `Fortuna.jl` to define various types of reliability problems.
+"""
 abstract type AbstractReliabilityProblem end
 
+"""
+    AbstractReliabililyAnalysisMethod
+
+A custom abstract supertype used by `Fortuna.jl` to define various types of reliability analysis methods.
+"""
 abstract type AbstractReliabililyAnalysisMethod end
 abstract type FORMSubmethod end
 abstract type SORMSubmethod end
 
+"""
+    mutable struct ReliabilityProblem <: AbstractReliabilityProblem
+
+A custom type used by `Fortuna.jl` to define reliability problems.
+
+$(TYPEDFIELDS)
+"""
 mutable struct ReliabilityProblem <: AbstractReliabilityProblem
-    # Marginal random variables:
+    "Random vector with correlated non-normal marginal random variables"
     X::Vector{<:Distribution}
-    # Correlation matrix:
+    "Correlation matrix"
     ρˣ::Matrix{<:Real}
-    # Limit state function:
+    "Limit state function"
     g::Function
 end
 

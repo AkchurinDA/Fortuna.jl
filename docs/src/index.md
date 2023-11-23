@@ -1,12 +1,12 @@
-# Fortuna.jl
+# Fortuna
 
 ## Description
 
-`Fortuna.jl` is general-purpose Julia package for structural and system reliability analysis.
+`Fortuna.jl` is a general-purpose Julia package for structural and system reliability analysis.
 
 ## Installation
 
-To install `Fortuna.jl` package, type `]` in Julia REPL to enter package manager mode and execute the following command:
+To install `Fortuna.jl` package, type `]` in Julia REPL to enter the built-in Julia package manager and execute the following command:
 
 ```
 pkg> add Fortuna
@@ -22,4 +22,4 @@ For assistance with the package, please raise an issue on the Github Issues page
 
 ## Acknowledgements
 
-The author thanks the academic and industrial partners of the Cold-Formed Steel Research Consortium’s “Reliability 2030” initiative for their financial support. The author also thanks Dr. Armen Der Kiureghian for his book "Structural and System Reliability" [DerKiureghian2022](@cite) that was a major inspiration for the development of this package.
+The author thanks the academic and industrial partners of the Cold-Formed Steel Research Consortium’s [“Reliability 2030”](https://cfsrc.org/2023/01/01/reliability-2030-design-of-steel-as-a-system/) initiative for their financial support.

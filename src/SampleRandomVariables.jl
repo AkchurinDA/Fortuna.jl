@@ -1,5 +1,12 @@
-# Sample uncorrelated random variables:
-function samplerv(Samplers::Union{<:Distribution,Vector{<:Distribution}}, NumSamples::Integer, SamplingTechnique::ITS)
+# Sample random vectors with uncorrelated marginal random variables:
+"""
+    samplerv(Samplers::Union{<:Distribution,Vector{<:Distribution}}, NumSamples::Integer, SamplingTechnique::AbstractSamplingTechnique)
+
+The function returns samples of random variables and random vectors with uncorrelated marginal random variables using various sampling techniques.
+- If `SamplingTechnique = ITS()`, the function generates samples using Inverse Transform Sampling technique.
+- If `SamplingTechnique = LHS()`, the function generates samples using Latin Hypercube Sampling technique.
+"""
+function samplerv(Samplers::Union{<:Distribution,Vector{<:Distribution}}, NumSamples::Integer, SamplingTechnique::AbstractSamplingTechnique)
     # Compute the number of distributions:
     NumDims = length(Samplers)
 
@@ -10,48 +17,20 @@ function samplerv(Samplers::Union{<:Distribution,Vector{<:Distribution}}, NumSam
         Samples = Matrix{Float64}(undef, NumSamples, NumDims)
     end
 
-    # Generate samples for each distribution:
-    if NumDims == 1
-        Samples = rand(Samplers, NumSamples)
-    else
-        for i = 1:NumDims
-            Samples[:, i] = rand(Samplers[i], NumSamples)
+    if isa(SamplingTechnique, ITS)
+        # Generate samples for each distribution:
+        if NumDims == 1
+            Samples = rand(Samplers, NumSamples)
+        else
+            for i = 1:NumDims
+                Samples[:, i] = rand(Samplers[i], NumSamples)
+            end
         end
-    end
+    elseif isa(SamplingTechnique, LHS)
+        # Define the lower limits of each strata:
+        LowerLimits = collect(range(0, (NumSamples - 1) / NumSamples, NumSamples))
 
-    # Convert vector to scalar if only one sample if requested:
-    if NumDims == 1 && NumSamples == 1
-        Samples = Samples[1]
-    end
-
-    return Samples
-end
-
-function samplerv(Samplers::Union{<:Distribution,Vector{<:Distribution}}, NumSamples::Integer, SamplingTechnique::LHS)
-    # Compute the number of distributions:
-    NumDims = length(Samplers)
-
-    # Preallocate:
-    if NumDims == 1
-        Samples = Vector{Float64}(undef, NumSamples)
-    else
-        Samples = Matrix{Float64}(undef, NumSamples, NumDims)
-    end
-
-    # Define the lower limits of each strata:
-    LowerLimits = collect(range(0, (NumSamples - 1) / NumSamples, NumSamples))
-
-    if NumDims == 1
-        # Generate samples from a uniform distributions:
-        UniformSamples = LowerLimits + rand(Uniform(0, 1 / NumSamples), NumSamples)
-
-        # Shuffle samples from a uniform distributions:
-        UniformSamples = shuffle(UniformSamples)
-
-        # Generate samples:
-        Samples = quantile.(Samplers, UniformSamples)
-    else
-        for i = 1:NumDims
+        if NumDims == 1
             # Generate samples from a uniform distributions:
             UniformSamples = LowerLimits + rand(Uniform(0, 1 / NumSamples), NumSamples)
 
@@ -59,8 +38,21 @@ function samplerv(Samplers::Union{<:Distribution,Vector{<:Distribution}}, NumSam
             UniformSamples = shuffle(UniformSamples)
 
             # Generate samples:
-            Samples[:, i] = quantile.(Samplers[i], UniformSamples)
+            Samples = quantile.(Samplers, UniformSamples)
+        else
+            for i = 1:NumDims
+                # Generate samples from a uniform distributions:
+                UniformSamples = LowerLimits + rand(Uniform(0, 1 / NumSamples), NumSamples)
+
+                # Shuffle samples from a uniform distributions:
+                UniformSamples = shuffle(UniformSamples)
+
+                # Generate samples:
+                Samples[:, i] = quantile.(Samplers[i], UniformSamples)
+            end
         end
+    else
+        error("Provided sampling technique is not supported.")
     end
 
     # Convert vector to scalar if only one sample if requested:
@@ -71,7 +63,15 @@ function samplerv(Samplers::Union{<:Distribution,Vector{<:Distribution}}, NumSam
     return Samples
 end
 
-# Sample correlated random variables:
+# Sample random vectors with correlated marginal random variables:
+"""
+    samplerv(Object::NatafTransformation, NumSamples::Integer)
+
+This function generates samples of random variables in ``X``-, ``Z``-, and ``U``-spaces using a `NatafTransformation` object.
+- ``X``-space - space of correlated non-normal random variables
+- ``Z``-space - space of correlated standard normal random variables
+- ``U``-space - space of uncorrelated standard normal random variables
+"""
 function samplerv(Object::NatafTransformation, NumSamples::Integer)
     # Extract data:
     X = Object.X
