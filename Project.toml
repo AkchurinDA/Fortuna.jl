@@ -16,6 +16,7 @@ SpecialFunctions = "276daf66-3868-5448-9aa4-cd146d93841b"
 
 [compat]
 Distributions = "0.25"
+DocStringExtensions = "0.9"
 FastGaussQuadrature = "0.5, 1"
 ForwardDiff = "0.10"
 NonlinearSolve = "1, 2"
