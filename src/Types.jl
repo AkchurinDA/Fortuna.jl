@@ -9,7 +9,7 @@ abstract type AbstractTransformation end
 """
     mutable struct NatafTransformation <: AbstractTransformation
 
-A custom type used by `Fortuna.jl` to perform Nataf Transformation.
+A custom type used by `Fortuna.jl` to perform the Nataf Transformation.
 
 $(TYPEDFIELDS)
 """
@@ -41,7 +41,7 @@ end
 """
     mutable struct RosenblattTransformation <: AbstractTransformation
 
-A custom type used by `Fortuna.jl` to perform Rosenblatt Transformation.
+A custom type used by `Fortuna.jl` to perform the Rosenblatt Transformation.
 """
 mutable struct RosenblattTransformation <: AbstractTransformation
 
@@ -108,7 +108,7 @@ struct MCFOSM <: FORMSubmethod # Mean-Centered First-Order Second-Moment method
 end
 
 struct MCFOSMCache
-    β::Number
+    β::Float64
 end
 
 Base.@kwdef struct HL <: FORMSubmethod # Hasofer-Lind method
@@ -137,8 +137,8 @@ Base.@kwdef struct HLRF <: FORMSubmethod # Hasofer-Lind Rackwitz-Fiessler method
 end
 
 struct HLRFCache
-    β::Number
-    PoF::Number
+    β::Float64
+    PoF::Float64
     x::Matrix{Float64}
     u::Matrix{Float64}
     G::Vector{Float64}
@@ -157,8 +157,8 @@ Base.@kwdef struct iHLRF <: FORMSubmethod # Improved Hasofer-Lind Rackwitz-Fiess
 end
 
 struct iHLRFCache
-    β::Number
-    PoF::Number
+    β::Float64
+    PoF::Float64
     x::Matrix{Float64}
     u::Matrix{Float64}
     G::Vector{Float64}
@@ -181,8 +181,8 @@ Base.@kwdef struct CF <: SORMSubmethod # Curve-Fitting method
 end
 
 struct CFCache
-    β₁::Number
-    PoF₁::Number
+    β₁::Float64
+    PoF₁::Float64
     β₂::Vector{Float64}
     PoF₂::Vector{Float64}
     H::Matrix{Float64}
@@ -199,3 +199,39 @@ struct PFCache
 
 end
 
+# Subset Simulation Method:
+"""
+    Base.@kwdef struct SSM <: AbstractReliabililyAnalysisMethod
+
+A custom type used by `Fortuna.jl` to perform the Subset Siumlation Method.
+
+$(TYPEDFIELDS)
+"""
+Base.@kwdef struct SSM <: AbstractReliabililyAnalysisMethod
+    "Target conditional probability"
+    P₀::Float64 = 0.1
+    "Number of samples to generate for each subset"
+    NumSamples::Integer = 1000
+    "Maximum number of subsets"
+    MaxNumSubsets::Integer = 10
+end
+
+"""
+    struct SSMCache
+
+A custom type used by `Fortuna.jl` to store the results of the analysis performed using the Subset Siumlation Method.
+
+$(TYPEDFIELDS)
+"""
+struct SSMCache
+    "Samples generated within each subset in X-space"
+    XSamplesSubset::Vector{Matrix{Float64}}
+    "Samples generated within each subset in U-space"
+    USamplesSubset::Vector{Matrix{Float64}}
+    "Thresholds for each subset"
+    CSubset::Vector{Float64}
+    "Probabilities of failure for each subset"
+    PoFSubset::Vector{Float64}
+    "Probabilities of failure"
+    PoF::Float64
+end

@@ -108,3 +108,24 @@ println("PoF from FORM: $(Solution.PoF₁)")
 println("PoF from SORM: $(Solution.PoF₂[1]) (Hohenbichler and Rackwitz)")
 println("PoF from SORM: $(Solution.PoF₂[2]) (Breitung)")
 ```
+
+## Example #4: Reliability Analysis (SSM)
+
+```@example 1
+# Define a random vector of uncorrelated marginal distributions:
+X₁ = generaterv("Exponential", "P", 1)
+X₂ = generaterv("Exponential", "P", 1)
+X = [X₁, X₂]
+ρˣ = [1 0; 0 1]
+
+# Define a limit state function:
+g(x::Vector) = 10 - x[1] - x[2]
+
+# Define reliability problems:
+Problem = ReliabilityProblem(X, ρˣ, g)
+
+# Perform the reliability analysis using SSM:
+Solution = analyze(Problem, SSM())
+println("SSM")
+println("PoF from SSM: $(Solution.PoF)")
+```

@@ -4,6 +4,7 @@ using Reexport
 @reexport using Distributions
 
 # Load dependencies:
+using DocStringExtensions
 using FastGaussQuadrature: gausslegendre
 using ForwardDiff: gradient, hessian
 using LinearAlgebra
@@ -12,7 +13,6 @@ using NonlinearSolve: NonlinearProblem, IntervalNonlinearProblem
 using NonlinearSolve: NewtonRaphson, Bisection
 using NonlinearSolve: solve
 using SpecialFunctions: gamma
-using DocStringExtensions
 
 # Include the following files into the scope of the module:
 include("Types.jl")
@@ -26,6 +26,7 @@ export AbstractReliabililyAnalysisMethod
 export FORMSubmethod, SORMSubmethod
 export FORM, MCFOSM, HLRF, iHLRF, MCFOSMCache, HLRFCache, iHLRFCache
 export SORM, CF, PF, CFCache, PFCache
+export SSM, SSMCache
 include("GenerateRandomVariables.jl")
 export generaterv
 include("SampleRandomVariables.jl")
