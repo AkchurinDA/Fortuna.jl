@@ -54,5 +54,5 @@ The following functionality is planned to be added:
     - [x] Curve-Fitting Method
     - [ ] Gradient-Free Method
     - [ ] Point-Fitting Method
-  - [ ] Subset Simulation Method
+  - [x] Subset Simulation Method
 - [ ] Sensitivity Analysis

@@ -1,5 +1,8 @@
 # News
 
+# Release V0.4.0
+- Added Subset Simulation Method to compute probabilities of rare failure events.
+
 # Release V0.3.4
 - General housekeeping and bug hunting.
 - Added a simple documentation describing the basic functionality of the package.
