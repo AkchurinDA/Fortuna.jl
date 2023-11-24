@@ -58,7 +58,7 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::FORM)
         α = Matrix{Float64}(undef, NumDims, MaxNumIterations)
         d = Matrix{Float64}(undef, NumDims, MaxNumIterations)
 
-        # Perform Nataf transformation:
+        # Perform the Nataf Transformation:
         NatafObject = NatafTransformation(X, ρˣ)
 
         # Initialize the design point in X-space:
@@ -155,7 +155,7 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::FORM)
         m = Vector{Float64}(undef, MaxNumIterations)
         λ = Vector{Float64}(undef, MaxNumIterations)
 
-        # Perform Nataf transformation:
+        # Perform the Nataf Transformation:
         NatafObject = NatafTransformation(X, ρˣ)
 
         # Initialize the design point in X-space:
