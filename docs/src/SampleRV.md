@@ -30,6 +30,8 @@ XSamplesLHS = samplerv(X, 3, LHS())
 ```
 
 ```@docs
+ITS
+LHS
 samplerv(Samplers::Union{<:Distribution,Vector{<:Distribution}}, NumSamples::Integer, SamplingTechnique::AbstractSamplingTechnique)
 ```
 

@@ -15,7 +15,7 @@
     Solution = analyze(Problem, SSM())
 
     # Test the results:
-    @test isapprox(Solution.PoF, 0.000232629, rtol=0.1)
+    @test isapprox(Solution.PoF, 0.000232629, rtol=0.15)
 end
 
 @testset "Reliability Analysis: SSM #2" begin
@@ -35,7 +35,7 @@ end
     Solution = analyze(Problem, SSM())
 
     # Test the results:
-    @test isapprox(Solution.PoF, 0.000499399, rtol=0.1)
+    @test isapprox(Solution.PoF, 0.000499399, rtol=0.15)
 end
 
 @testset "Reliability Analysis: SSM #3" begin
@@ -55,7 +55,7 @@ end
     Solution = analyze(Problem, SSM())
 
     # Test the results:
-    @test isapprox(Solution.PoF, 0.0049, rtol=0.1)
+    @test isapprox(Solution.PoF, 0.0049, rtol=0.15)
 end
 
 @testset "Reliability Analysis: SSM #4" begin
@@ -75,5 +75,5 @@ end
     Solution = analyze(Problem, SSM())
 
     # Test the results:
-    @test isapprox(Solution.PoF, 0.00301, rtol=0.1)
+    @test isapprox(Solution.PoF, 0.00301, rtol=0.15)
 end

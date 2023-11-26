@@ -54,6 +54,4 @@ Descriptions of all First- and Second-Order Reliability Methods implemented in `
 
 ```@docs
 ReliabilityProblem
-analyze(Problem::ReliabilityProblem, AnalysisMethod::FORM)
-analyze(Problem::ReliabilityProblem, AnalysisMethod::SORM)
 ```

@@ -46,9 +46,7 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::SSM)
         end
 
         # Evaluate the limit state function at the generated samples:
-        XSamples = transformsamples(NatafObject, USamples, "U2X")
-        XSamples = Vector.(eachrow(XSamples))
-        gSamples = g.(XSamples)
+        gSamples = TransformedLSF(g, USamples, NatafObject)
 
         # Sort the values of the limit state function:
         gSamplesSorted = sort(gSamples)
@@ -126,7 +124,7 @@ function ModifiedMH(StartingPoint::Vector{Float64}, CurrentThreshold::Float64, N
             IF = 0
         end
 
-        # Stage #1: Accept/Reject:
+        # Accept or reject the :
         α = (pdf(MVN, ProposedState) * IF) / pdf(MVN, ChainSamples[i, :]) # Acceptance ratio
         if U[i] <= α # Accept
             ChainSamples[i+1, :] = ProposedState
@@ -137,4 +135,18 @@ function ModifiedMH(StartingPoint::Vector{Float64}, CurrentThreshold::Float64, N
 
     # Return the result:
     return ChainSamples
+end
+
+function TransformedLSF(g::Function, USamples::Matrix{Float64}, NatafObject::NatafTransformation)
+    # Transform samples:
+    XSamples = transformsamples(NatafObject, USamples, "U2X")
+
+    # Clean up the transformed samples:
+    XSamples = Vector.(eachrow(XSamples))
+
+    # Evaluate the limit state function at the transform samples:
+    gSamples = g.(XSamples)
+
+    # Return the result:
+    return gSamples
 end

@@ -11,7 +11,7 @@ abstract type AbstractTransformation end
 
 A custom type used by `Fortuna.jl` to perform the Nataf Transformation.
 
-$(TYPEDFIELDS)
+$(FIELDS)
 """
 mutable struct NatafTransformation <: AbstractTransformation
     "Random vector with correlated non-normal marginal random variables"
@@ -25,16 +25,9 @@ mutable struct NatafTransformation <: AbstractTransformation
     "Inverse of the lower triangular matrix of the Cholesky decomposition of the distorted correlation matrix ``\\rho^{Z}``"
     L⁻¹::LinearAlgebra.LowerTriangular{Float64,Matrix{Float64}}
 
-    @doc """
-        NatafTransformation(X::Vector{<:Distribution}, ρˣ::Matrix{<:Real})
-
-    An inner constructor used to create a `NatafTransformation` object.
-
-    $(TYPEDFIELDS)
-    """
     function NatafTransformation(X::Vector{<:Distribution}, ρˣ::Matrix{<:Real})
         ρᶻ, L, L⁻¹ = getdistortedcorrelation(X, ρˣ)
-        new(X, ρˣ, ρᶻ, L, L⁻¹)
+        return new(X, ρˣ, ρᶻ, L, L⁻¹)
     end
 end
 
@@ -56,11 +49,21 @@ A custom abstract supertype used by `Fortuna.jl` to define various types of samp
 abstract type AbstractSamplingTechnique end
 
 # Inverse Transform Sampling:
+"""
+    struct ITS <: AbstractSamplingTechnique
+
+A custom type used by `Fortuna.jl` to perform the Inverse Transform Sampling.
+"""
 struct ITS <: AbstractSamplingTechnique
 
 end
 
 # Latin Hypercube Sampling:
+"""
+    struct LHS <: AbstractSamplingTechnique
+
+A custom type used by `Fortuna.jl` to perform the Latin Hypercube Sampling.
+"""
 struct LHS <: AbstractSamplingTechnique
 
 end
@@ -74,20 +77,11 @@ A custom abstract supertype used by `Fortuna.jl` to define various types of reli
 abstract type AbstractReliabilityProblem end
 
 """
-    AbstractReliabililyAnalysisMethod
-
-A custom abstract supertype used by `Fortuna.jl` to define various types of reliability analysis methods.
-"""
-abstract type AbstractReliabililyAnalysisMethod end
-abstract type FORMSubmethod end
-abstract type SORMSubmethod end
-
-"""
     mutable struct ReliabilityProblem <: AbstractReliabilityProblem
 
 A custom type used by `Fortuna.jl` to define reliability problems.
 
-$(TYPEDFIELDS)
+$(FIELDS)
 """
 mutable struct ReliabilityProblem <: AbstractReliabilityProblem
     "Random vector with correlated non-normal marginal random variables"
@@ -98,8 +92,37 @@ mutable struct ReliabilityProblem <: AbstractReliabilityProblem
     g::Function
 end
 
+"""
+    AbstractReliabililyAnalysisMethod
+
+A custom abstract supertype used by `Fortuna.jl` to define various types of reliability analysis methods.
+"""
+abstract type AbstractReliabililyAnalysisMethod end
+
+"""
+    abstract type FORMSubmethod end
+
+A custom abstract supertype used by `Fortuna.jl` to define various types of First-Order Reliability Methods.
+"""
+abstract type FORMSubmethod end
+
+"""
+    abstract type SORMSubmethod end
+
+A custom abstract supertype used by `Fortuna.jl` to define various types of Second-Order Reliability Methods.
+"""
+abstract type SORMSubmethod end
+
 # First-Order Reliability Method:
+"""
+    Base.@kwdef struct FORM <: AbstractReliabililyAnalysisMethod
+
+A custom type used by `Fortuna.jl` to perform reliability analysis using the First-Order Reliability Methods.
+
+$(FIELDS)
+"""
 Base.@kwdef struct FORM <: AbstractReliabililyAnalysisMethod
+    "Analysis method that falls under the category of the First-Order Reliability Methods."
     Submethod::FORMSubmethod = iHLRF()
 end
 
@@ -172,7 +195,15 @@ end
 
 
 # Second-Order Reliability Method:
+"""
+    Base.@kwdef struct SORM <: AbstractReliabililyAnalysisMethod
+
+A custom type used by `Fortuna.jl` to perform reliability analysis using the Second-Order Reliability Methods.
+
+$(FIELDS)
+"""
 Base.@kwdef struct SORM <: AbstractReliabililyAnalysisMethod
+    "Analysis method that falls under the category of the Second-Order Reliability Methods."
     Submethod::SORMSubmethod = CF()
 end
 
@@ -205,15 +236,15 @@ end
 
 A custom type used by `Fortuna.jl` to perform the Subset Siumlation Method.
 
-$(TYPEDFIELDS)
+$(FIELDS)
 """
 Base.@kwdef struct SSM <: AbstractReliabililyAnalysisMethod
     "Target conditional probability"
     P₀::Float64 = 0.1
     "Number of samples to generate for each subset"
-    NumSamples::Integer = 1000
+    NumSamples::Integer = 2500
     "Maximum number of subsets"
-    MaxNumSubsets::Integer = 10
+    MaxNumSubsets::Integer = 25
 end
 
 """
@@ -221,12 +252,12 @@ end
 
 A custom type used by `Fortuna.jl` to store the results of the analysis performed using the Subset Siumlation Method.
 
-$(TYPEDFIELDS)
+$(FIELDS)
 """
 struct SSMCache
-    "Samples generated within each subset in X-space"
+    "Samples generated within each subset in ``X``-space"
     XSamplesSubset::Vector{Matrix{Float64}}
-    "Samples generated within each subset in U-space"
+    "Samples generated within each subset in ``U``-space"
     USamplesSubset::Vector{Matrix{Float64}}
     "Thresholds for each subset"
     CSubset::Vector{Float64}

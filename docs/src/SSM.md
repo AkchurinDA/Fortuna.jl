@@ -13,7 +13,7 @@ The threshold for the first failure event ``b_{1}`` is computed using the Monte 
 ## Associated Types and Functions
 
 ```@docs
-analyze(Problem::ReliabilityProblem, AnalysisMethod::SSM)
 SSM
 SSMCache
+analyze(Problem::ReliabilityProblem, AnalysisMethod::SSM)
 ```
