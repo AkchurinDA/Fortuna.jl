@@ -6,5 +6,5 @@ A comprehensive list of all academic publications that have used `Fortuna.jl`:
 Pages = []
 Canonical = false
 
-Akchurin2023
+Akchurin2024
 ```
