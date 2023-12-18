@@ -240,9 +240,9 @@ $(FIELDS)
 """
 Base.@kwdef struct SSM <: AbstractReliabililyAnalysisMethod
     "Target conditional probability"
-    P₀::Float64 = 0.1
+    P₀::Float64 = 0.10
     "Number of samples to generate for each subset"
-    NumSamples::Integer = 2500
+    NumSamples::Integer = 10000
     "Maximum number of subsets"
     MaxNumSubsets::Integer = 25
 end

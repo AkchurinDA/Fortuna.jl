@@ -18,8 +18,11 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::SSM)
     # Compute the number of marginal distributions:
     NumDims = length(X)
 
-    # Compute the number of samples to keep:
+    # Compute the number of samples to keep within each subset:
     NumSamplesKeep = floor(Integer, P₀ * NumSamples)
+
+    # Compute the number of samples to generate within each chain:
+    NumSamplesChain = floor(Integer, NumSamples / NumSamplesKeep)
 
     # Preallocate:
     USamplesSubset = Vector{Matrix{Float64}}()
@@ -37,11 +40,11 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::SSM)
             USamples = randn(NumSamples, NumDims)
         else
             # Preallocate:
-            USamples = zeros(NumSamples * NumSamplesKeep, NumDims)
+            USamples = zeros(NumSamplesKeep * NumSamplesChain, NumDims)
 
             # Generate MCMCs according to the modified Metropolis-Hastings algorithm:
             for j in 1:NumSamplesKeep
-                USamples[(NumSamples*(j-1)+1):(NumSamples*j), :] = ModifiedMH(USamplesSubset[i-1][j, :], CSubset[i-1], NumDims, NumSamples, NatafObject, g)
+                USamples[(NumSamplesChain*(j-1)+1):(NumSamplesChain*j), :] = ModifiedMH(USamplesSubset[i-1][j, :], CSubset[i-1], NumDims, NumSamplesChain, NatafObject, g)
             end
         end
 
@@ -124,7 +127,7 @@ function ModifiedMH(StartingPoint::Vector{Float64}, CurrentThreshold::Float64, N
             IF = 0
         end
 
-        # Accept or reject the :
+        # Accept or reject the proposed state:
         α = (pdf(MVN, ProposedState) * IF) / pdf(MVN, ChainSamples[i, :]) # Acceptance ratio
         if U[i] <= α # Accept
             ChainSamples[i+1, :] = ProposedState
