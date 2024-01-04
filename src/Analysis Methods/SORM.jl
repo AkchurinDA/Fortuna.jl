@@ -124,7 +124,7 @@ function getorthonormal(α, NumDims)
     Q, _ = qr(A)
 
     # Clean up the result:
-    R = transpose(reverse(Q, dims=2))
+    R = transpose(reverse(Matrix(Q), dims=2))
 
     return R
 end
