@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="assets/logo.svg" alt = "Logo" width="50%">
+  <img src="assets/logo.svg" alt = "Logo" width="35%">
 
   | Contributors | [Damir Akchurin](https://scholar.google.com/citations?user=chYaDcIAAAAJ&hl=en) |
   | :---: | :---: |
