@@ -1,9 +1,5 @@
 <div align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="assets/logo-dark.svg">
-    <source media="(prefers-color-scheme: light)" srcset="assets/logo.svg">
-    <img src="assets/logo.svg" alt="Fortuna" width="75%">
-  </picture>
+  <img src="assets/Logo.svg" alt = "Logo" width="50%">
 
   | Contributors | [Damir Akchurin](https://scholar.google.com/citations?user=chYaDcIAAAAJ&hl=en) |
   | :---: | :---: |
