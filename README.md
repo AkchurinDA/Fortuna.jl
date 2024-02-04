@@ -32,7 +32,7 @@ For assistance with the package, please raise an issue on the Github Issues page
 
 ## Acknowledgements
 
-The author thanks the academic and industrial partners of the Cold-Formed Steel Research Consortium’s [“Reliability 2030”](https://cfsrc.org/2023/01/01/reliability-2030-design-of-steel-as-a-system/) initiative for their financial support.
+The author thanks the academic and industrial partners of the [“Reliability 2030”](https://cfsrc.org/2023/01/01/reliability-2030-design-of-steel-as-a-system/) initiative for their financial support.
 
 ## Roadmap
 
