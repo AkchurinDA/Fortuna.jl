@@ -10,7 +10,8 @@ makedocs(
     sitename="Fortuna.jl",
     authors="Damir Akchurin, AkchurinDA@gmail.com",
     format=Documenter.HTML(
-        sidebar_sitename=false
+        sidebar_sitename=false,
+        assets=["assets/favicon.ico"]
     ),
     pages=[
         "Home" => "index.md",

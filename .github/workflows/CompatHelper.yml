@@ -2,7 +2,6 @@ name: CompatHelper
 on:
   schedule:
     - cron: 0 0 * * *
-    - cron: 0 12 * * *
   workflow_dispatch:
 permissions:
   contents: write
@@ -18,16 +17,16 @@ jobs:
       - name: Install Julia, but only if it is not already available in the PATH
         uses: julia-actions/setup-julia@v1
         with:
-          version: "1"
+          version: '1'
           arch: ${{ runner.arch }}
         if: steps.julia_in_path.outcome != 'success'
-      - name: Add the General registry via Git
+      - name: "Add the General registry via Git"
         run: |
           import Pkg
           ENV["JULIA_PKG_SERVER"] = ""
           Pkg.Registry.add("General")
         shell: julia --color=yes {0}
-      - name: Install CompatHelper
+      - name: "Install CompatHelper"
         run: |
           import Pkg
           name = "CompatHelper"
@@ -35,7 +34,7 @@ jobs:
           version = "3"
           Pkg.add(; name, uuid, version)
         shell: julia --color=yes {0}
-      - name: Run CompatHelper
+      - name: "Run CompatHelper"
         run: |
           import CompatHelper
           CompatHelper.main()
