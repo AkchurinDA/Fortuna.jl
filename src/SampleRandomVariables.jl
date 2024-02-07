@@ -72,7 +72,7 @@ This function generates samples of random variables in ``X``-, ``Z``-, and ``U``
 - ``Z``-space - space of correlated standard normal random variables
 - ``U``-space - space of uncorrelated standard normal random variables
 """
-function samplerv(Object::NatafTransformation, NumSamples::Integer)
+function samplerv(Object::NatafTransformation, NumSamples::Integer, SamplingTechnique::AbstractSamplingTechnique)
     # Extract data:
     X = Object.X
     L = Object.L
@@ -80,10 +80,13 @@ function samplerv(Object::NatafTransformation, NumSamples::Integer)
     # Compute the number of marginal distributions:
     NumDims = length(X)
 
+    # Define a standard normal random variable:
+    U = generaterv("Normal", "M", [0, 1])
+
     # Generate samples of uncorrelated normal random variables U:
     USamples = Matrix{Float64}(undef, NumSamples, NumDims)
     for i in 1:NumDims
-        USamples[:, i] = randn(NumSamples)
+        USamples[:, i] = samplerv(U, NumSamples, SamplingTechnique)
     end
 
     # Generate samples of correlated normal random variables Z:
