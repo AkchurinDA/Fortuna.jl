@@ -113,16 +113,35 @@ A custom abstract supertype used by `Fortuna.jl` to define various types of Seco
 """
 abstract type SORMSubmethod end
 
+# Monte Carlo Simulations:
+"""
+    Base.@kwdef struct MCS <: AbstractReliabililyAnalysisMethod
+
+A custom type used by `Fortuna.jl` to perform reliability analysis using Monte Carlo simulations.
+
+$(FIELDS)
+"""
+Base.@kwdef struct MCS <: AbstractReliabililyAnalysisMethod
+    "Number of samples used in Monte Carlo simulations"
+    NumSamples::Integer = 10^6
+    "Sampling technique used to generate samples"
+    SamplingTechnique::AbstractSamplingTechnique = LHS()
+end
+
+struct MCSCache
+    PoF::Float64
+end
+
 # First-Order Reliability Method:
 """
     Base.@kwdef struct FORM <: AbstractReliabililyAnalysisMethod
 
-A custom type used by `Fortuna.jl` to perform reliability analysis using the First-Order Reliability Methods.
+A custom type used by `Fortuna.jl` to perform reliability analysis using First-Order Reliability Methods.
 
 $(FIELDS)
 """
 Base.@kwdef struct FORM <: AbstractReliabililyAnalysisMethod
-    "Analysis method that falls under the category of the First-Order Reliability Methods."
+    "Analysis method that falls under the category of First-Order Reliability Methods."
     Submethod::FORMSubmethod = iHLRF()
 end
 
@@ -198,12 +217,12 @@ end
 """
     Base.@kwdef struct SORM <: AbstractReliabililyAnalysisMethod
 
-A custom type used by `Fortuna.jl` to perform reliability analysis using the Second-Order Reliability Methods.
+A custom type used by `Fortuna.jl` to perform reliability analysis using Second-Order Reliability Methods.
 
 $(FIELDS)
 """
 Base.@kwdef struct SORM <: AbstractReliabililyAnalysisMethod
-    "Analysis method that falls under the category of the Second-Order Reliability Methods."
+    "Analysis method that falls under the category of Second-Order Reliability Methods."
     Submethod::SORMSubmethod = CF()
 end
 
