@@ -43,16 +43,18 @@ The following functionality is planned to be added:
 - [x] Sampling Techniques
   - [x] Inverse Transform Sampling
   - [x] Latin Hypercube Sampling
-- [ ] Reliability Methods
-  - [ ] First-Order Reliability Method
+- [ ] Reliability Analysis Methods
+  - [x] Monte Carlo Simulations
+  - [x] First-Order Reliability Method
     - [x] Mean-Centered First-Order Second-Moment Method
     - [ ] Hasofer-Lind Method
     - [ ] Rackwitz-Fiessler Method
     - [x] Hasofer-Lind Rackwitz-Fiessler Method
     - [x] Improved Hasofer-Lind Rackwitz-Fiessler Method
-  - [ ] Second-Order Reliability Method
+  - [x] Second-Order Reliability Method
     - [x] Curve-Fitting Method
     - [ ] Gradient-Free Method
     - [ ] Point-Fitting Method
   - [x] Subset Simulation Method
 - [ ] Sensitivity Analysis
+- [ ] Inverse Reliability Problems
