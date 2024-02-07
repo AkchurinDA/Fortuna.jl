@@ -65,7 +65,7 @@ end
 
 # Sample random vectors with correlated marginal random variables:
 """
-    samplerv(Object::NatafTransformation, NumSamples::Integer)
+    samplerv(Object::NatafTransformation, NumSamples::Integer, SamplingTechnique::AbstractSamplingTechnique)
 
 This function generates samples of random variables in ``X``-, ``Z``-, and ``U``-spaces using a `NatafTransformation` object.
 - ``X``-space - space of correlated non-normal random variables
