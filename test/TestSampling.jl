@@ -32,12 +32,18 @@ end
 
     # Generate samples:
     NumSamples = 5 * 10^6
-    XSamples, ZSamples, USamples = samplerv(NatafObject, NumSamples)
+    XSamplesITS, _, _ = samplerv(NatafObject, NumSamples, ITS())
+    XSamplesLHS, _, _ = samplerv(NatafObject, NumSamples, LHS())
 
     # Test the results:
-    @test isapprox(mean(XSamples[:, 1]), 10, rtol=0.01)
-    @test isapprox(mean(XSamples[:, 2]), 15, rtol=0.01)
-    @test isapprox(std(XSamples[:, 1]), 1.5, rtol=0.01)
-    @test isapprox(std(XSamples[:, 2]), 2.5, rtol=0.01)
-    @test isapprox(cor(XSamples, dims=1), [1 0.75; 0.75 1], rtol=0.01)
+    @test isapprox(mean(XSamplesITS[:, 1]), 10, rtol=0.01)
+    @test isapprox(mean(XSamplesITS[:, 2]), 15, rtol=0.01)
+    @test isapprox(std(XSamplesITS[:, 1]), 1.5, rtol=0.01)
+    @test isapprox(std(XSamplesITS[:, 2]), 2.5, rtol=0.01)
+    @test isapprox(cor(XSamplesITS, dims=1), [1 0.75; 0.75 1], rtol=0.01)
+    @test isapprox(mean(XSamplesLHS[:, 1]), 10, rtol=0.01)
+    @test isapprox(mean(XSamplesLHS[:, 2]), 15, rtol=0.01)
+    @test isapprox(std(XSamplesLHS[:, 1]), 1.5, rtol=0.01)
+    @test isapprox(std(XSamplesLHS[:, 2]), 2.5, rtol=0.01)
+    @test isapprox(cor(XSamplesLHS, dims=1), [1 0.75; 0.75 1], rtol=0.01)
 end

@@ -50,7 +50,7 @@ X = [X₁, X₂]
 NatafObject = NatafTransformation(X, ρˣ)
 
 # Generate 1000 samples of the random vector X in X-, Z-, and U-spaces:
-XSamples, USamples, ZSamples = samplerv(NatafObject, 1000)
+XSamples, USamples, ZSamples = samplerv(NatafObject, 1000, ITS())
 
 nothing # hide
 ```
@@ -58,5 +58,5 @@ nothing # hide
 ![Nataf Transformation](./assets/NatafTransformation.svg)
 
 ```@docs
-samplerv(Object::NatafTransformation, NumSamples::Integer)
+samplerv(Object::NatafTransformation, NumSamples::Integer, SamplingTechnique::AbstractSamplingTechnique)
 ```
