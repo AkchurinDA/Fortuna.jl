@@ -32,11 +32,12 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::MCS)
         end
     end
 
+    # Clean up the generated samples:
+    XSamples = eachrow(XSamples)
+    XSamples = Vector.(XSamples)
+
     # Evaluate the limit state function at the generate samples:
-    gSamples = Vector{Float64}(undef, NumSamples)
-    for i in 1:NumSamples
-        gSamples[i] = g(XSamples[i, :])
-    end
+    gSamples = g.(XSamples)
 
     # Compute the probability of failure:
     PoF = count(x -> x ≤ 0, gSamples) / NumSamples

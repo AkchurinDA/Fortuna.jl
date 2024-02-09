@@ -2,8 +2,8 @@
     # Test from UQPy package (https://github.com/SURGroup/UQpy/tree/master)
 
     # Define a random vector of correlated marginal distributions:
-    X₁ = generaterv("Normal", "Moments", [0, 1])
-    X₂ = generaterv("Normal", "Moments", [0, 1])
+    X₁ = generaterv("Normal", "M", [0, 1])
+    X₂ = generaterv("Normal", "M", [0, 1])
     X = [X₁, X₂]
     ρˣ = [1 0; 0 1]
 
@@ -19,8 +19,8 @@ end
     # Test from UQPy package (https://github.com/SURGroup/UQpy/tree/master)
 
     # Define a random vector of correlated marginal distributions:
-    X₁ = generaterv("Uniform", "Parameters", [0, 1])
-    X₂ = generaterv("Uniform", "Parameters", [0, 1])
+    X₁ = generaterv("Uniform", "P", [0, 1])
+    X₂ = generaterv("Uniform", "P", [0, 1])
     X = [X₁, X₂]
     ρˣ = [1 0; 0 1]
 
@@ -36,8 +36,8 @@ end
     # Test from UQPy package (https://github.com/SURGroup/UQpy/tree/master)
 
     # Define a random vector of correlated marginal distributions:
-    X₁ = generaterv("Normal", "Moments", [0, 1])
-    X₂ = generaterv("Normal", "Moments", [0, 1])
+    X₁ = generaterv("Normal", "M", [0, 1])
+    X₂ = generaterv("Normal", "M", [0, 1])
     X = [X₁, X₂]
     ρˣ = [1 0.8; 0.8 1]
 
@@ -53,8 +53,8 @@ end
     # Test from UQPy package (https://github.com/SURGroup/UQpy/tree/master)
 
     # Define a random vector of correlated marginal distributions:
-    X₁ = generaterv("Uniform", "Parameters", [0, 1])
-    X₂ = generaterv("Uniform", "Parameters", [0, 1])
+    X₁ = generaterv("Uniform", "P", [0, 1])
+    X₂ = generaterv("Uniform", "P", [0, 1])
     X = [X₁, X₂]
     ρˣ = [1 0.8; 0.8 1]
 

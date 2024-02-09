@@ -8,14 +8,14 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::FORM)
     # Extract the analysis method:
     Submethod = AnalysisMethod.Submethod
 
+    # Extract the problem data:
+    g = Problem.g
+    X = Problem.X
+    ρˣ = Problem.ρˣ
+
     if !isa(Submethod, MCFOSM) && !isa(Submethod, HL) && !isa(Submethod, RF) && !isa(Submethod, HLRF) && !isa(Submethod, iHLRF)
         error("Invalid FORM submethod.")
     elseif isa(Submethod, MCFOSM)
-        # Extract data:
-        X = Problem.X
-        ρˣ = Problem.ρˣ
-        g = Problem.g
-
         # Compute the means of marginal distrbutions:
         Mˣ = mean.(X)
 
@@ -41,11 +41,6 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::FORM)
         MaxNumIterations = Submethod.MaxNumIterations
         ϵ₁ = Submethod.ϵ₁
         ϵ₂ = Submethod.ϵ₂
-
-        # Extract data:
-        g = Problem.g
-        X = Problem.X
-        ρˣ = Problem.ρˣ
 
         # Compute the number of marginal distributions:
         NumDims = length(X)

@@ -16,16 +16,16 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::SORM)
     ∇G = FORMSolution.∇G[:, end]
     α = FORMSolution.α[:, end]
 
-    if !isa(Submethod, CF) && !isa(Submethod, PF)
+    # Extract the problem data:
+    g = Problem.g
+    X = Problem.X
+    ρˣ = Problem.ρˣ
+
+    if !isa(Submethod, CF) && !isa(Submethod, GF) && !isa(Submethod, PF)
         error("Invalid SORM submethod.")
     elseif isa(Submethod, CF)
         # Extract the analysis details:
         ϵ = Submethod.ϵ
-
-        # Extract data:
-        g = Problem.g
-        X = Problem.X
-        ρˣ = Problem.ρˣ
 
         # Compute the number of marginal distributions:
         NumDims = length(X)
@@ -71,8 +71,10 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::SORM)
 
         # Return results:
         return CFCache(β₁, PoF₁, β₂, PoF₂, H, R, A, κ)
+    elseif isa(Submethod, GF)
+        # Not yet implemented
     elseif isa(Submethod, PF)
-
+        # Not yet implemented
     end
 end
 
@@ -122,10 +124,11 @@ function getorthonormal(α, NumDims)
 
     # Perform QR factorization:
     Q, _ = qr(A)
+    Q = Matrix(Q)
 
     # Clean up the result:
-    Q = Matrix(Q)
     R = transpose(reverse(Q, dims=2))
+    R = Matrix(R)
 
     return R
 end

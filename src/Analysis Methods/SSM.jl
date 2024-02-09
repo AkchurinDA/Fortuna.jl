@@ -44,39 +44,39 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::SSM)
 
             # Generate MCMCs according to the modified Metropolis-Hastings algorithm:
             for j in 1:NumSamplesKeep
-                USamples[(NumSamplesChain*(j-1)+1):(NumSamplesChain*j), :] = ModifiedMH(USamplesSubset[i-1][j, :], CSubset[i-1], NumDims, NumSamplesChain, NatafObject, g)
+                USamples[(NumSamplesChain*(j-1)+1):(NumSamplesChain*j), :] = MMH(USamplesSubset[i-1][j, :], CSubset[i-1], NumDims, NumSamplesChain, NatafObject, g)
             end
         end
 
         # Evaluate the limit state function at the generated samples:
-        gSamples = TransformedLSF(g, USamples, NatafObject)
+        GSamples = G(g, NatafObject, USamples)
 
         # Sort the values of the limit state function:
-        gSamplesSorted = sort(gSamples)
+        GSamplesSorted = sort(GSamples)
 
         # Compute the threshold:
-        CSubset[i] = quantile(gSamplesSorted, P₀)
+        CSubset[i] = quantile(GSamplesSorted, P₀)
 
         # Check for convergance:
         if CSubset[i] > 0
             # Retain samples below the threshold:
-            Indices = findall(x -> x ≤ CSubset[i], gSamples)
+            Indices = findall(x -> x ≤ CSubset[i], GSamples)
             push!(USamplesSubset, USamples[Indices, :])
             push!(XSamplesSubset, transformsamples(NatafObject, USamples[Indices, :], "U2X"))
 
             # Compute the probability of failure:
-            PoFSubset[i] = length(Indices) / size(gSamples)[1]
+            PoFSubset[i] = length(Indices) / size(GSamples)[1]
         else
             # Redefine the threshold:
             CSubset[i] = 0
 
             # Retain samples below the threshold:
-            Indices = findall(x -> x ≤ CSubset[i], gSamples)
+            Indices = findall(x -> x ≤ CSubset[i], GSamples)
             push!(USamplesSubset, USamples[Indices, :])
             push!(XSamplesSubset, transformsamples(NatafObject, USamples[Indices, :], "U2X"))
 
             # Compute the probability of failure:
-            PoFSubset[i] = length(Indices) / size(gSamples)[1]
+            PoFSubset[i] = length(Indices) / size(GSamples)[1]
 
             # Clean up the result:
             CSubset = CSubset[1:i]
@@ -94,7 +94,7 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::SSM)
     return SSMCache(XSamplesSubset, USamplesSubset, CSubset, PoFSubset, PoF)
 end
 
-function ModifiedMH(StartingPoint::Vector{Float64}, CurrentThreshold::Float64, NumDims::Integer, NumSamples::Integer, NatafObject::NatafTransformation, g::Function)
+function MMH(StartingPoint::Vector{Float64}, CurrentThreshold::Float64, NumDims::Integer, NumSamples::Integer, NatafObject::NatafTransformation, g::Function)
     # Preallocate:
     ChainSamples = zeros(NumSamples, NumDims)
     ChainSamples[1, :] = StartingPoint
@@ -140,16 +140,17 @@ function ModifiedMH(StartingPoint::Vector{Float64}, CurrentThreshold::Float64, N
     return ChainSamples
 end
 
-function TransformedLSF(g::Function, USamples::Matrix{Float64}, NatafObject::NatafTransformation)
+function G(g::Function, NatafObject::NatafTransformation, USamples::Matrix{Float64})
     # Transform samples:
     XSamples = transformsamples(NatafObject, USamples, "U2X")
 
     # Clean up the transformed samples:
-    XSamples = Vector.(eachrow(XSamples))
+    XSamples = eachrow(XSamples)
+    XSamples = Vector.(XSamples)
 
     # Evaluate the limit state function at the transform samples:
-    gSamples = g.(XSamples)
+    GSamples = g.(XSamples)
 
     # Return the result:
-    return gSamples
+    return GSamples
 end
