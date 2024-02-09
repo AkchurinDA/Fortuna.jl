@@ -11,29 +11,28 @@ makedocs(
     authors="Damir Akchurin, AkchurinDA@gmail.com",
     format=Documenter.HTML(
         sidebar_sitename=false,
-        assets=["assets/favicon.ico"]
-    ),
+        assets=["assets/favicon.ico"]),
     pages=[
-        "Home" => "index.md",
-        "Random Variables" => [
-            "Generating Random Variables" => "GenerateRV.md",
-            "Sampling Random Variables" => "SampleRV.md"
+        "Home"                  => "index.md",
+        "Random Variables"      => [
+            "Generating Random Variables"       => "RandomVariables/GenerateRV.md",
+            "Sampling Random Variables"         => "RandomVariables/SampleRV.md"
         ],
         "Isoprobabilistic Transformations" => [
-            "Nataf Transformation" => "NatafTransformation.md",
-            "Rosenblatt Transformation" => "RosenblattTransformation.md",
+            "Nataf Transformation"              => "IsoprobabilisticTransformations/NatafTransformation.md",
+            "Rosenblatt Transformation"         => "IsoprobabilisticTransformations/RosenblattTransformation.md"
         ],
-        "Reliability Analysis" => [
-            "Overview" => "Overview.md",
-            "First-Order Reliability Methods" => "FORM.md",
-            "Second-Order Reliability Methods" => "SORM.md",
-            "Subset Simulation Method" => "SSM.md"
+        "Reliability Problems"  => [
+            "Defining Reliability Problems"     => "SolvingReliabilityProblems/DefiningReliabilityProblems.md",
+            "Monte Carlo Simulations"           => "SolvingReliabilityProblems/MCS.md",
+            "First-Order Reliability Methods"   => "SolvingReliabilityProblems/FORM.md",
+            "Second-Order Reliability Methods"  => "SolvingReliabilityProblems/SORM.md",
+            "Subset Simulation Method"          => "SolvingReliabilityProblems/SSM.md"
         ],
-        "Sensitivity Analysis" => "SensitivityAnalysis.md",
-        "Examples" => "Examples.md",
-        "Showcases" => "Showcases.md",
-        "References" => "References.md"
-    ],
+        "Sensitivity Analysis"  => "SensitivityAnalysis.md",
+        "Examples"              => "Examples.md",
+        "Showcases"             => "Showcases.md",
+        "References"            => "References.md"],
     plugins=[Bibliography]
 )
 

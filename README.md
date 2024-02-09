@@ -33,28 +33,3 @@ For assistance with the package, please raise an issue on the Github Issues page
 ## Acknowledgements
 
 The author thanks the academic and industrial partners of the [“Reliability 2030”](https://cfsrc.org/2023/01/01/reliability-2030-design-of-steel-as-a-system/) initiative for their financial support.
-
-## Roadmap
-
-The following functionality is planned to be added:
-- [x] Sampling Techniques
-  - [x] Inverse Transform Sampling
-  - [x] Latin Hypercube Sampling
-- [x] Isoprobabilistic Transformations
-  - [x] Nataf Transformation
-  - [ ] Rosennblatt Transformation
-- [x] Reliability Analysis Methods
-  - [x] Monte Carlo Simulations
-  - [x] First-Order Reliability Method
-    - [x] Mean-Centered First-Order Second-Moment Method
-    - [ ] Hasofer-Lind Method
-    - [ ] Rackwitz-Fiessler Method
-    - [x] Hasofer-Lind Rackwitz-Fiessler Method
-    - [x] Improved Hasofer-Lind Rackwitz-Fiessler Method
-  - [x] Second-Order Reliability Method
-    - [x] Curve-Fitting Method
-    - [ ] Point-Fitting Method
-    - [ ] Gradient-Free Method
-  - [x] Subset Simulation Method
-- [ ] Sensitivity Analysis
-- [ ] Inverse Reliability Problems

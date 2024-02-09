@@ -2,10 +2,6 @@
 
 `Fortuna.jl` package builds its capacity to generate random variables using `generaterv()` function by utilizing the widely-adopted [`Distributions.jl`](https://github.com/JuliaStats/Distributions.jl) package, enabling seamless integration with other probabilistic programming Julia packages such as [`Turing.jl`](https://github.com/TuringLang/Turing.jl) and [`RxInfer.jl`](https://github.com/biaslab/RxInfer.jl). However, unlike [`Distributions.jl`](https://github.com/JuliaStats/Distributions.jl) package, `Fortuna.jl` allows you to generate random variables not only using their *parameters*, but also using their *moments*, which often useful in the field of Structural and System Reliability Analysis.
 
-```@docs
-generaterv(DistributionName::String, DefineBy::String, Values::Union{Real,Vector{<:Real}})
-```
-
 ```@setup GenerateRV
 using Fortuna
 ```
@@ -32,6 +28,9 @@ println("θ = $(params(Q)[2])")
 
 ## Supported Random Variables
 
+!!! note
+    If you want to define a random variable that is not supported by Fortuna.jl package, please raise an issue on the Github Issues page.
+
 `Fortuna.jl` package currently supports the following distributions:
 - Exponential
 - Gamma
@@ -42,5 +41,8 @@ println("θ = $(params(Q)[2])")
 - Uniform
 - Weibull
 
-!!! tip
-    If you want to define a random variable that is not supported by Fortuna.jl package, please raise an issue on the Github Issues page.
+## API
+
+```@docs
+generaterv(DistributionName::String, DefineBy::String, Values::Union{Real, Vector{<:Real}})
+```

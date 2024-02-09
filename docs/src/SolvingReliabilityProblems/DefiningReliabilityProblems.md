@@ -50,7 +50,7 @@ println("β = $(Solution.β)")
 
 Descriptions of all First- and Second-Order Reliability Methods implemented in `Fortuna.jl` can be found on [First-Order Reliability Methods](@ref) and [Second-Order Reliability Methods](@ref) pages.
 
-## Associated Types and Functions
+## API
 
 ```@docs
 ReliabilityProblem
