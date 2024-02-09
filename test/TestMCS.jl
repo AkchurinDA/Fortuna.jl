@@ -1,9 +1,9 @@
 @testset "Reliability Analysis: MCS" begin
     # Define a random vector of correlated marginal distributions:
-    M₁ = generaterv("Normal", "Moments", [250, 250 * 0.3])
-    M₂ = generaterv("Normal", "Moments", [125, 125 * 0.3])
-    P = generaterv("Gumbel", "Moments", [2500, 2500 * 0.2])
-    Y = generaterv("Weibull", "Moments", [40000, 40000 * 0.1])
+    M₁ = generaterv("Normal", "M", [250, 250 * 0.3])
+    M₂ = generaterv("Normal", "M", [125, 125 * 0.3])
+    P = generaterv("Gumbel", "M", [2500, 2500 * 0.2])
+    Y = generaterv("Weibull", "M", [40000, 40000 * 0.1])
     X = [M₁, M₂, P, Y]
     ρˣ = [1 0.5 0.3 0; 0.5 1 0.3 0; 0.3 0.3 1 0; 0 0 0 1]
 

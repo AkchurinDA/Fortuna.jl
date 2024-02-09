@@ -37,13 +37,13 @@ The author thanks the academic and industrial partners of the [“Reliability 20
 ## Roadmap
 
 The following functionality is planned to be added:
-- [x] Isoprobabilistic Transformations
-  - [x] Nataf Transformation
-  - [ ] Rosennblatt Transformation
 - [x] Sampling Techniques
   - [x] Inverse Transform Sampling
   - [x] Latin Hypercube Sampling
-- [ ] Reliability Analysis Methods
+- [x] Isoprobabilistic Transformations
+  - [x] Nataf Transformation
+  - [ ] Rosennblatt Transformation
+- [x] Reliability Analysis Methods
   - [x] Monte Carlo Simulations
   - [x] First-Order Reliability Method
     - [x] Mean-Centered First-Order Second-Moment Method
@@ -53,8 +53,8 @@ The following functionality is planned to be added:
     - [x] Improved Hasofer-Lind Rackwitz-Fiessler Method
   - [x] Second-Order Reliability Method
     - [x] Curve-Fitting Method
-    - [ ] Gradient-Free Method
     - [ ] Point-Fitting Method
+    - [ ] Gradient-Free Method
   - [x] Subset Simulation Method
 - [ ] Sensitivity Analysis
 - [ ] Inverse Reliability Problems

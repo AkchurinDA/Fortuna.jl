@@ -1,7 +1,8 @@
 module Fortuna
-# Reexport Distributions package:
+# Reexport some package and their functionalities:
 using Reexport
-@reexport using Distributions
+@reexport using Distributions # General statistical operations on random variables
+@reexport using LinearAlgebra: I # Defining correlations matricies without loading LinearAlgebra separaterly
 
 # Load dependencies:
 using DocStringExtensions
