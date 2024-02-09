@@ -25,10 +25,10 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::SSM)
     NumSamplesChain = floor(Integer, NumSamples / NumSamplesKeep)
 
     # Preallocate:
-    USamplesSubset = Vector{Matrix{Float64}}()
-    XSamplesSubset = Vector{Matrix{Float64}}()
-    CSubset = Vector{Float64}(undef, MaxNumSubsets)
-    PoFSubset = Vector{Float64}(undef, MaxNumSubsets)
+    USamplesSubset  = Vector{Matrix{Float64}}()
+    XSamplesSubset  = Vector{Matrix{Float64}}()
+    CSubset         = Vector{Float64}(undef, MaxNumSubsets)
+    PoFSubset       = Vector{Float64}(undef, MaxNumSubsets)
 
     # Perform the Nataf Transformation:
     NatafObject = NatafTransformation(X, ρˣ)
@@ -96,13 +96,13 @@ end
 
 function MMH(StartingPoint::Vector{Float64}, CurrentThreshold::Float64, NumDims::Integer, NumSamples::Integer, NatafObject::NatafTransformation, g::Function)
     # Preallocate:
-    ChainSamples = zeros(NumSamples, NumDims)
-    ChainSamples[1, :] = StartingPoint
+    ChainSamples        = zeros(NumSamples, NumDims)
+    ChainSamples[1, :]  = StartingPoint
 
     # Define a standard multivariate normal PDF:
-    M = zeros(NumDims)
-    Σ = I(NumDims)
-    MVN = MvNormal(M, Σ)
+    M       = zeros(NumDims)
+    Σ       = I(NumDims)
+    MVN     = MvNormal(M, Σ)
 
     # Pregenerate uniformly-distributed samples:
     U = rand(NumSamples)

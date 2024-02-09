@@ -9,17 +9,17 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::SORM)
     Submethod = AnalysisMethod.Submethod
 
     # Determine the design point using FORM:
-    FORMSolution = analyze(Problem, FORM(iHLRF()))
-    β₁ = FORMSolution.β
-    PoF₁ = FORMSolution.PoF
-    u = FORMSolution.u[:, end]
-    ∇G = FORMSolution.∇G[:, end]
-    α = FORMSolution.α[:, end]
+    FORMSolution    = analyze(Problem, FORM(iHLRF()))
+    β₁              = FORMSolution.β
+    PoF₁            = FORMSolution.PoF
+    u               = FORMSolution.u[:, end]
+    ∇G              = FORMSolution.∇G[:, end]
+    α               = FORMSolution.α[:, end]
 
     # Extract the problem data:
-    g = Problem.g
-    X = Problem.X
-    ρˣ = Problem.ρˣ
+    g   = Problem.g
+    X   = Problem.X
+    ρˣ  = Problem.ρˣ
 
     if !isa(Submethod, CF) && !isa(Submethod, GF) && !isa(Submethod, PF)
         error("Invalid SORM submethod.")
@@ -34,7 +34,7 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::SORM)
         NatafObject = NatafTransformation(X, ρˣ)
 
         # Compute the Hessian at the design point in U-space:
-        H = gethessian(NatafObject, g, u, ϵ, NumDims)
+        H = gethessian(g, NatafObject, NumDims, u, ϵ)
 
         # Compute the orthonomal matrix:
         R = getorthonormal(α, NumDims)
@@ -78,7 +78,7 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::SORM)
     end
 end
 
-function gethessian(NatafObject, g, u, ϵ, NumDims)
+function gethessian(g::Function, NatafObject::NatafTransformation, NumDims::Integer, u::Vector{Float64}, ϵ::Real)
     # Preallocate:
     H = Matrix{Float64}(undef, NumDims, NumDims)
 
@@ -116,7 +116,7 @@ function gethessian(NatafObject, g, u, ϵ, NumDims)
     return H
 end
 
-function getorthonormal(α, NumDims)
+function getorthonormal(α::Vector{Float64}, NumDims::Integer)
     # Initilize the matrix:
     A = Matrix(1.0 * I, NumDims, NumDims)
     A = reverse(A, dims=2)
