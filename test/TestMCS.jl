@@ -18,5 +18,5 @@
 
     # Perform the reliability analysis using Monte Carlo simulations:
     Solution = analyze(Problem, MCS())
-    @test isapprox(Solution.PoF, 0.00930, rtol = 0.05)
+    @test isapprox(Solution.PoF, 0.00931, rtol = 0.05)
 end
