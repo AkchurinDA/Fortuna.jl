@@ -5,7 +5,7 @@ The function generates random variables given the distribution name and either i
 - If `DefineBy = "M"`, moments of the random variable must be provided in `Values`.
 - If `DefineBy = "P"`, parameters of the random variable must be provided in `Values`.
 """
-function generaterv(DistributionName::String, DefineBy::String, Values::Union{Real,Vector{<:Real}})
+function generaterv(DistributionName::String, DefineBy::String, Values::Union{Real, Vector{<:Real}})
     # Convert strings to lowercase:
     DistributionName = lowercase(DistributionName)
     DefineBy = lowercase(DefineBy)
@@ -44,7 +44,7 @@ function generaterv(DistributionName::String, DefineBy::String, Values::Union{Re
     return RV
 end
 
-function convertmoments(DistributionName::String, Moments::Union{Real,Vector{<:Real}})
+function convertmoments(DistributionName::String, Moments::Union{Real, Vector{<:Real}})
     # Convert strings to lowercase:
     DistributionName = lowercase(DistributionName)
 

@@ -6,7 +6,7 @@ The function returns samples of random variables and random vectors with uncorre
 - If `SamplingTechnique = ITS()`, the function generates samples using Inverse Transform Sampling technique.
 - If `SamplingTechnique = LHS()`, the function generates samples using Latin Hypercube Sampling technique.
 """
-function samplerv(Samplers::Union{<:Distribution,Vector{<:Distribution}}, NumSamples::Integer, SamplingTechnique::AbstractSamplingTechnique)
+function samplerv(Samplers::Union{<:Distribution, Vector{<:Distribution}}, NumSamples::Integer, SamplingTechnique::AbstractSamplingTechnique)
     # Compute the number of distributions:
     NumDims = length(Samplers)
 
