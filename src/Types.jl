@@ -244,12 +244,27 @@ struct CFCache
     κ       ::Vector{Float64}
 end
 
+Base.@kwdef struct GF <: SORMSubmethod # Gradient-Free method
+
+end
+
+struct GFCache
+
+end
+
 Base.@kwdef struct PF <: SORMSubmethod # Point-Fitting method
 
 end
 
 struct PFCache
-
+    β₁              ::Float64
+    PoF₁            ::Float64
+    β₂              ::Vector{Float64}
+    PoF₂            ::Vector{Float64}
+    FittingPoints⁻  ::Matrix{Float64}
+    FittingPoints⁺  ::Matrix{Float64}
+    κ₁              ::Matrix{Float64}
+    κ₂              ::Matrix{Float64}
 end
 
 # Subset Simulation Method:

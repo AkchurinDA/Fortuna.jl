@@ -5,6 +5,7 @@ using Reexport
 @reexport using LinearAlgebra: I
 
 # Load dependencies:
+using Base.Iterators:       product, repeated
 using DocStringExtensions
 using FastGaussQuadrature:  gausslegendre
 using ForwardDiff:          gradient, hessian
