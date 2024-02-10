@@ -1,6 +1,6 @@
-# Overview
+# Defining Reliability Problems
 
-## Defining Reliability Problems
+## Overview
 
 Generally, 3 main "items" are always need to fully define a reliability problem and sucessfully analyze it to find the associated probability of failure ``P_{f}`` and reliability index ``\beta``:
 
@@ -50,7 +50,7 @@ println("β = $(Solution.β)")
 
 Descriptions of all First- and Second-Order Reliability Methods implemented in `Fortuna.jl` can be found on [First-Order Reliability Methods](@ref) and [Second-Order Reliability Methods](@ref) pages.
 
-## API
+### API
 
 ```@docs
 ReliabilityProblem

@@ -18,7 +18,7 @@ The MCFOSM method is the simplest and least computationally expensive type of re
 
 The HLRF method overcomes the invariance problem faced by the MCFOSM method by using the first-order Taylor expansion of the limit state function at a point known as the *design point* ``\vec{x}^{*}`` that lies on the failure boundary given by ``g(\vec{X}) = 0``. Since the design point is not known a priori, the HLRF method is inherently an iterative method. `Fortuna.jl` implements two versions of HLRF method: plain HLRF method where the step size in the negative gradient descent is always set to unity and improved HLRF (iHLRF) method where the step size is determined using a line search algorithm.
 
-## API
+### API
 
 ```@docs
 FORM

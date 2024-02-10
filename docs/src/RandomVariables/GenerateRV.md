@@ -41,7 +41,7 @@ println("θ = $(params(Q)[2])")
 - Uniform
 - Weibull
 
-## API
+### API
 
 ```@docs
 generaterv(DistributionName::String, DefineBy::String, Values::Union{Real, Vector{<:Real}})

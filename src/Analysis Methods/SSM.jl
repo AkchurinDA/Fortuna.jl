@@ -2,7 +2,7 @@
 """
     analyze(Problem::ReliabilityProblem, AnalysisMethod::SSM)
 
-The function estimates small probabilities of failure using Subset Simulation Method (SSM).
+The function solves the provided reliability problem using the Subset Simulation Method (SSM).
 """
 function analyze(Problem::ReliabilityProblem, AnalysisMethod::SSM)
     # Extract the analysis method:

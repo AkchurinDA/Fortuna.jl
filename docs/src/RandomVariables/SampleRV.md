@@ -44,14 +44,14 @@ X   = [X₁, X₂]
 NatafObject = NatafTransformation(X, ρˣ)
 
 # Generate 1000 samples of the random vector X in X-, Z-, and U-spaces using Inverse Transform Sampling technqiue:
-XSamples, USamples, ZSamples = samplerv(NatafObject, 1000, ITS())
+XSamples, ZSamples, USamples = samplerv(NatafObject, 1000, ITS())
 
 nothing # hide
 ```
 
 ![Nataf Transformation](../assets/NatafTransformation.svg)
 
-## API
+### API
 
 ```@docs
 ITS

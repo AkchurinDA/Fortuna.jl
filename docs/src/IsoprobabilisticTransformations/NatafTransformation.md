@@ -30,7 +30,7 @@ The first transformation ``\vec{Z} = T_{1}^{N}(\vec{X})`` causes so-called *corr
 
 where ``\phi_2(\cdot)`` is the bivariate standard normal probability density function. Generally, this integral cannot be inverted analytically to solve for the coefficients of the correlation matrix ``\rho^{Z}``. In order to compute these coefficients, `Fortuna.jl` package (1) employs a two-dimensions Gauss-Legendre quadrature implemented in [`FastGaussQuadrature.jl`](https://github.com/JuliaApproximation/FastGaussQuadrature.jl) package to expand the integral into  and (2) utilizes [`NonlinearSolve.jl`](https://github.com/SciML/NonlinearSolve.jl) package to find values of the coefficients of the correlation matrix ``\rho^{Z}`` that satisfy the resulting expression.
 
-## Associated Types and Functions
+### API
 
 ```@docs
 NatafTransformation

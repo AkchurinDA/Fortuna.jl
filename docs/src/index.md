@@ -27,24 +27,24 @@ The author thanks the academic and industrial partners of the Cold-Formed Steel 
 ## Roadmap
 
 The following functionality is planned to be added:
-- ☒ Sampling Techniques
-    - ☒ Inverse Transform Sampling
-    - ☒ Latin Hypercube Sampling
-- ☒ Isoprobabilistic Transformations
+- [x] Sampling Techniques
+    - [x] Inverse Transform Sampling
+    - [x] Latin Hypercube Sampling
+- [x] Isoprobabilistic Transformations
     - Nataf Transformation
     - Rosennblatt Transformation
-- ☒ Reliability Analysis Methods
-    - ☒ Monte Carlo Simulations
-    - ☒ First-Order Reliability Method
-        - ☒ Mean-Centered First-Order Second-Moment Method
-        - ☐ Hasofer-Lind Method
-        - ☐ Rackwitz-Fiessler Method
-        - ☒ Hasofer-Lind Rackwitz-Fiessler Method
-        - ☒ Improved Hasofer-Lind Rackwitz-Fiessler Method
-    - ☒ Second-Order Reliability Method
-        - ☒ Curve-Fitting Method
-        - ☐ Gradient-Free Method
-        - ☒ Point-Fitting Method
-    - ☒ Subset Simulation Method
-- ☐ Inverse Reliability Analysis Methods
-- ☐ Sensitivity Analysis
+- [x] Reliability Analysis Methods
+    - [x] Monte Carlo Simulations
+    - [x] First-Order Reliability Method
+        - [x] Mean-Centered First-Order Second-Moment Method
+        - [ ] Hasofer-Lind Method
+        - [ ] Rackwitz-Fiessler Method
+        - [x] Hasofer-Lind Rackwitz-Fiessler Method
+        - [x] Improved Hasofer-Lind Rackwitz-Fiessler Method
+    - [x] Second-Order Reliability Method
+        - [x] Curve-Fitting Method
+        - [ ] Gradient-Free Method
+        - [x] Point-Fitting Method
+    - [x] Subset Simulation Method
+- [ ] Inverse Reliability Analysis Methods
+- [ ] Sensitivity Analysis
