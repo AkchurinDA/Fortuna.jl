@@ -1,5 +1,7 @@
 # Fortuna
 
+> **Audentes Fortuna Iuvat**
+
 ## Description
 
 `Fortuna.jl` is a general-purpose Julia package for structural and system reliability analysis.
