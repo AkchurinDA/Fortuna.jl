@@ -1,7 +1,14 @@
-> Fortune favors the bold.
-
 <div align="center">
   <img src="assets/logo.svg" alt = "Logo" width="35%">
+</div>
+
+<div align="center">
+
+  > Audentes Fortuna Iuvat
+
+</div>
+
+<div align="center">
 
   | Contributors | [Damir Akchurin](https://scholar.google.com/citations?user=chYaDcIAAAAJ&hl=en) |
   | :---: | :---: |
@@ -10,6 +17,7 @@
   | Latest Release | [![Latest Release](https://juliahub.com/docs/Fortuna/version.svg)](https://github.com/AkchurinDA/Fortuna.jl/releases) |
   | Downloads | [![Downloads](https://shields.io/endpoint?url=https://pkgs.genieframework.com/api/v1/badge/Fortuna&label=Downloads)](https://pkgs.genieframework.com?packages=Fortuna) |
   | License | [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/AkchurinDA/Fortuna.jl/blob/main/LICENSE.md) |
+
 </div>
 
 ## Description
@@ -39,6 +47,7 @@ The author thanks the academic and industrial partners of the [“Reliability 20
 ## Roadmap
 
 The following functionality is planned to be added:
+
 - [x] Sampling Techniques
   - [x] Inverse Transform Sampling
   - [x] Latin Hypercube Sampling
@@ -55,7 +64,7 @@ The following functionality is planned to be added:
     - [x] Improved Hasofer-Lind Rackwitz-Fiessler Method
   - [x] Second-Order Reliability Method
     - [x] Curve-Fitting Method
-    - [ ] Point-Fitting Method
+    - [x] Point-Fitting Method
     - [ ] Gradient-Free Method
   - [x] Subset Simulation Method
 - [ ] Sensitivity Analysis
