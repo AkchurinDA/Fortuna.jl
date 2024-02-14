@@ -118,7 +118,7 @@ abstract type SORMSubmethod end
 
 # Monte Carlo Simulations:
 """
-    Base.@kwdef struct MCS <: AbstractReliabililyAnalysisMethod
+    struct MCS <: AbstractReliabililyAnalysisMethod
 
 A custom type used by `Fortuna.jl` to perform reliability analysis using Monte Carlo simulations.
 
@@ -137,7 +137,7 @@ end
 
 # First-Order Reliability Method:
 """
-    Base.@kwdef struct FORM <: AbstractReliabililyAnalysisMethod
+    struct FORM <: AbstractReliabililyAnalysisMethod
 
 A custom type used by `Fortuna.jl` to perform reliability analysis using First-Order Reliability Methods.
 
@@ -218,7 +218,7 @@ end
 
 # Second-Order Reliability Method:
 """
-    Base.@kwdef struct SORM <: AbstractReliabililyAnalysisMethod
+    struct SORM <: AbstractReliabililyAnalysisMethod
 
 A custom type used by `Fortuna.jl` to perform reliability analysis using Second-Order Reliability Methods.
 
@@ -269,7 +269,7 @@ end
 
 # Subset Simulation Method:
 """
-    Base.@kwdef struct SSM <: AbstractReliabililyAnalysisMethod
+    struct SSM <: AbstractReliabililyAnalysisMethod
 
 A custom type used by `Fortuna.jl` to perform the Subset Siumlation Method.
 

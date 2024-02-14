@@ -1,6 +1,6 @@
 # Rosenblatt Transformation
 
-!!! note
+!!! warning
     This feature is currently under development.
 
 ## Overview
@@ -25,7 +25,7 @@ The Nataf Transformation ``\vec{U} = T^{R}(\vec{X})`` is composed of two transfo
 \vec{U} = T_{2}^{R}(\vec{Z}) = \begin{bmatrix} \Phi^{-1}(Z_{1}) \\ \vdots \\ \Phi^{-1}(Z_{n}) \end{bmatrix}
 ```
 
-## Associated Types and Functions
+## API
 
 ```@docs
 RosenblattTransformation

@@ -1,5 +1,5 @@
 """
-    getdistortedcorrelation(X::Vector{<:Distribution}, ρˣ::Matrix{<:Real})
+    getdistortedcorrelation(X::AbstractVector{<:Distribution}, ρˣ::AbstractMatrix{<:Real})
 
 The function returns the distorted correlation matrix ``\\rho^{Z}`` of the correlated standard normal random variables ``\\vec{Z}``. Additionally, the function returns the lower triangular matrix of the Cholesky decomposition of the distorted correlation matrix ``L`` and its inverse ``L^{-1}``.
 """
@@ -81,11 +81,12 @@ function getdistortedcorrelation(X::AbstractVector{<:Distribution}, ρˣ::Abstra
 end
 
 """
-    transformsamples(Object::NatafTransformation, Samples::Union{Vector{<:Real},Matrix{<:Real}}, TransformationDirection::String)
+    transformsamples(Object::NatafTransformation, Samples::Union{AbstractVector, AbstractMatrix}, TransformationDirection::String)
 
-The function transforms samples from ``X``- to ``U``-space and vice versa.
-- If `TransformationDirection = "X2U"`, the function transforms samples ``\\vec{x}`` from ``X``- to ``U``-space. \\
-- If `TransformationDirection = "U2X"`, the function transforms samples ``\\vec{u}`` from ``U``- to ``X``-space.
+The function transforms samples from ``X``- to ``U``-space and vice versa. \\
+If `TransformationDirection is:
+- `"X2U"`, then the function transforms samples ``\\vec{x}`` from ``X``- to ``U``-space.
+- `"U2X"`, then the function transforms samples ``\\vec{u}`` from ``U``- to ``X``-space.
 """
 function transformsamples(Object::NatafTransformation, Samples::Union{AbstractVector, AbstractMatrix}, TransformationDirection::String)
     # Convert strings to lowercase:
@@ -161,11 +162,12 @@ function transformsamples(Object::NatafTransformation, Samples::Union{AbstractVe
 end
 
 """
-    getjacobian(Object::NatafTransformation, Samples::Union{Vector{<:Real},Matrix{<:Real}}, TransformationDirection::String)
+    getjacobian(Object::NatafTransformation, Samples::Union{AbstractVector{<:Real}, AbstractMatrix{<:Real}}, TransformationDirection::String)
 
-The function returns the Jacobians of the transformations of samples from ``X``- to ``U``-space and vice versa.
-- If `TransformationDirection = "X2U"`, the function returns the Jacobians of the transformations of samples ``\\vec{x}`` from ``X``- to ``U``-space. \\
-- If `TransformationDirection = "U2X"`, the function returns the Jacobians of the transformations of samples ``\\vec{u}`` from ``U``- to ``X``-space.
+The function returns the Jacobians of the transformations of samples from ``X``- to ``U``-space and vice versa. \\
+If `TransformationDirection` is:
+- `"X2U"`, then the function returns the Jacobians of the transformations of samples ``\\vec{x}`` from ``X``- to ``U``-space.
+- `"U2X"`, then the function returns the Jacobians of the transformations of samples ``\\vec{u}`` from ``U``- to ``X``-space.
 """
 function getjacobian(Object::NatafTransformation, Samples::Union{AbstractVector{<:Real}, AbstractMatrix{<:Real}}, TransformationDirection::String)
     # Convert strings to lowercase:
@@ -263,7 +265,7 @@ function getjacobian(Object::NatafTransformation, Samples::Union{AbstractVector{
 end
 
 """
-    jointpdf(Object::NatafTransformation, x::Union{Vector{<:Real},Matrix{<:Real}})
+    jointpdf(Object::NatafTransformation, x::Union{AbstractVector{<:Real}, AbstractMatrix{<:Real}})
 
 The function returns the values of the joint probability density functions ``f_{\\vec{X}}(\\vec{x})`` evaluated at points ``\\vec{x}``.
 """

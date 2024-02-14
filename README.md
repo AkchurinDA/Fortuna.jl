@@ -31,7 +31,7 @@ pkg> add Fortuna
 
 ## Help and Support
 
-For assistance with the package, please raise an issue on the Github Issues page. Please use the appropriate labels to indicate the specific functionality you are inquiring about. Alternatively, contact the author directly.
+For assistance with the package, please raise an issue on the [Github Issues](https://github.com/AkchurinDA/Fortuna.jl/issues) page. Please use the appropriate labels to indicate the specific functionality you are inquiring about. Alternatively, contact the author directly at [AkchurinDA@gmail.com](mailto:AkchurinDA@gmail.com?subject=Fortuna.jl).
 
 ## Acknowledgements
 
@@ -42,11 +42,11 @@ The author thanks the academic and industrial partners of the [“Reliability 20
 The following functionality is planned to be added:
 
 - [x] Sampling Techniques
-  - [x] Inverse Transform Sampling
-  - [x] Latin Hypercube Sampling
+    - [x] Inverse Transform Sampling
+    - [x] Latin Hypercube Sampling
 - [x] Isoprobabilistic Transformations
-  - [x] Nataf Transformation
-  - [ ] Rosennblatt Transformation
+    - [x] Nataf Transformation
+    - [ ] Rosennblatt Transformation
 - [x] Reliability Analysis Methods
   - [x] Monte Carlo Simulations
   - [x] First-Order Reliability Method
@@ -57,8 +57,8 @@ The following functionality is planned to be added:
     - [x] Improved Hasofer-Lind Rackwitz-Fiessler Method
   - [x] Second-Order Reliability Method
     - [x] Curve-Fitting Method
-    - [x] Point-Fitting Method
     - [ ] Gradient-Free Method
+    - [x] Point-Fitting Method
   - [x] Subset Simulation Method
+- [ ] Inverse Reliability Analysis Methods
 - [ ] Sensitivity Analysis
-- [ ] Inverse Reliability Problems

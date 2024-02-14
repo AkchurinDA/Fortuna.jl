@@ -3,40 +3,39 @@ using Documenter, DocumenterCitations
 
 Bibliography = CitationBibliography(
     joinpath(@__DIR__, "src/References.bib"),
-    style=:authoryear
-)
+    style=:authoryear)
 
 makedocs(
     sitename="Fortuna.jl",
     authors="Damir Akchurin, AkchurinDA@gmail.com",
     format=Documenter.HTML(
         sidebar_sitename=false,
-        assets=["assets/favicon.ico"]
-    ),
+        assets=[
+            "assets/Favicon.ico",
+            "assets/Custom.css"]),
     pages=[
         "Home" => "index.md",
         "Random Variables" => [
-            "Generating Random Variables" => "GenerateRV.md",
-            "Sampling Random Variables" => "SampleRV.md"
+            "Generating Random Variables" => "RandomVariables/GenerateRV.md",
+            "Sampling Random Variables" => "RandomVariables/SampleRV.md"
         ],
         "Isoprobabilistic Transformations" => [
-            "Nataf Transformation" => "NatafTransformation.md",
-            "Rosenblatt Transformation" => "RosenblattTransformation.md",
+            "Nataf Transformation" => "IsoprobabilisticTransformations/NatafTransformation.md",
+            "Rosenblatt Transformation" => "IsoprobabilisticTransformations/RosenblattTransformation.md"
         ],
-        "Reliability Analysis" => [
-            "Overview" => "Overview.md",
-            "First-Order Reliability Methods" => "FORM.md",
-            "Second-Order Reliability Methods" => "SORM.md",
-            "Subset Simulation Method" => "SSM.md"
+        "Reliability Problems" => [
+            "Defining Reliability Problems" => "ReliabilityProblems/DefiningReliabilityProblems.md",
+            "Monte Carlo Simulations" => "ReliabilityProblems/MCS.md",
+            "First-Order Reliability Methods" => "ReliabilityProblems/FORM.md",
+            "Second-Order Reliability Methods" => "ReliabilityProblems/SORM.md",
+            "Subset Simulation Method" => "ReliabilityProblems/SSM.md"
         ],
+        "Inverse Reliability Problems" => "InverseReliabilityProblems.md",
         "Sensitivity Analysis" => "SensitivityAnalysis.md",
         "Examples" => "Examples.md",
         "Showcases" => "Showcases.md",
-        "References" => "References.md"
-    ],
-    plugins=[Bibliography]
-)
+        "References" => "References.md"],
+    plugins=[Bibliography])
 
 deploydocs(
-    repo="github.com/AkchurinDA/Fortuna.jl.git"
-)
+    repo="github.com/AkchurinDA/Fortuna.jl.git")
