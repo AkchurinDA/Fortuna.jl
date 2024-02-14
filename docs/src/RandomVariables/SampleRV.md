@@ -8,10 +8,39 @@ using Random
 Random.seed!(1)
 ```
 
-## Sampling Random Vectors with Uncorrelated Marginal Random Variables 
+## Sampling Random Variables
+
+To generate samples of a random variable:
+
+- Generate a random variable (`X`).
 
 ```@example 1
-# Generate a random vector X with uncorrelated marginal random variables X₁ and X₂:
+X = generaterv("Gamma", "M", [10, 1.5])
+
+nothing # hide
+```
+
+- Sample the generated random variable using a sampling technique of your choice.
+
+```@example 1
+XSamples = samplerv(X, 5000, ITS())
+
+nothing # hide
+```
+
+```@raw html
+<img src="../Sample-RVariable.svg" class="center" style="width:400px; border-radius:10px;"/>
+```
+
+## Sampling Random Vectors with Uncorrelated Marginals
+
+To generate samples of a random vector with *uncorrelated* marginals:
+
+- Generate random variables (`X₁` and `X₂`).
+- Define a random vector (`X`) with the generated random variables as marginals.
+
+```@example 1
+# Generate a random vector X with uncorrelated marginals X₁ and X₂:
 X₁  = generaterv("Gamma", "M", [10, 1.5])
 X₂  = generaterv("Gumbel", "M", [15, 2.5])
 X   = [X₁, X₂]
@@ -19,37 +48,60 @@ X   = [X₁, X₂]
 nothing # hide
 ```
 
-```@example 1
-# Generate 3 samples of the random vector X using Inverse Transform Sampling technique:
-XSamplesITS = samplerv(X, 3, ITS())
-```
+- Sample the defined random vector using a sampling technique of your choice.
 
 ```@example 1
-# Generate 3 samples of the random vector X using Latin Hypercube Sampling technique:
-XSamplesLHS = samplerv(X, 3, LHS())
+# Generate 5000 samples of the random vector X using Inverse Transform Sampling technique:
+XSamples = samplerv(X, 5000, ITS())
+
+nothing # hide
+```
+
+```@raw html
+<img src="../Sample-RVector-U.svg" class="center" style="width:300px; border-radius:10px;"/>
 ```
 
 ## Sampling Random Vectors with Correlated Marginal Random Variables
 
+To generate samples of a random vector with *correlated* marginals:
+
+- Generate random variables (`X₁` and `X₂`).
+- Define a random vector (`X`) with the generated random variables as marginals.
+
 ```@example 1
-# Generate a random vector X with correlated marginal random variables X₁ and X₂:
+# Define a random vector X with correlated marginals X₁ and X₂:
 X₁  = generaterv("Gamma", "M", [10, 1.5])
 X₂  = generaterv("Gumbel", "M", [15, 2.5])
 X   = [X₁, X₂]
 
-# Define the correlation matrix:
+nothing # hide
+```
+
+- Define a correlated matrix (`ρˣ`) for the defined random vector.
+- Define a transformation object that hold all information about the define random vector.
+
+```@example 1
+# Define a correlation matrix:
 ρˣ = [1 0.90; 0.90 1]
 
-# Perform the Nataf Transformation by defining a "NatafTransformation" object:
-NatafObject = NatafTransformation(X, ρˣ)
-
-# Generate 1000 samples of the random vector X in X-, Z-, and U-spaces using Inverse Transform Sampling technqiue:
-XSamples, ZSamples, USamples = samplerv(NatafObject, 1000, ITS())
+# Define a transformation object:
+TransformationObject = NatafTransformation(X, ρˣ)
 
 nothing # hide
 ```
 
-![Nataf Transformation](../assets/NatafTransformation.svg)
+Sample the defined random vector using a sampling technique of your choice.
+
+```@example 1
+# Generate 5000 samples of the random vector X in X-, Z-, and U-spaces using Inverse Transform Sampling technique:
+XSamples, ZSamples, USamples = samplerv(TransformationObject, 5000, ITS())
+
+nothing # hide
+```
+
+```@raw html
+<img src="../Sample-RVector-C.svg" class="center" style="width:300px; border-radius:10px;"/>
+```
 
 ### API
 

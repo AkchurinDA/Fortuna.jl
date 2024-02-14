@@ -1,6 +1,6 @@
 # Rosenblatt Transformation
 
-!!! note
+!!! warning
     This feature is currently under development.
 
 ## Overview

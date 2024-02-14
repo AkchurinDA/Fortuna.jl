@@ -3,8 +3,8 @@
 
 The function generates random variables given the distribution name and either its moments or parameters. \\
 If `DefineBy` is:
-- `"M"`, moments of the random variable must be provided in `Values`.
-- `"P"`, parameters of the random variable must be provided in `Values`.
+- `"M"` or `"Moments"`, then moments of a random variable must be provided in `Values`.
+- `"P"` or `"Parameters"`, then parameters of a random variable must be provided in `Values`.
 """
 function generaterv(DistributionName::String, DefineBy::String, Values::Union{Real, Vector{<:Real}})
     # Convert strings to lowercase:

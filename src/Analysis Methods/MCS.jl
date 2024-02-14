@@ -1,6 +1,6 @@
 # First-Order Reliability Method:
 """
-    analyze(Problem::ReliabilityProblem, AnalysisMethod::MC)
+    analyze(Problem::ReliabilityProblem, AnalysisMethod::MCS)
 
 The function solves the provided reliability problem using Monte Carlo simulations.
 """

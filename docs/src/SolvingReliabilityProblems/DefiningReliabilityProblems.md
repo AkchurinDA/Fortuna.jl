@@ -2,13 +2,11 @@
 
 ## Overview
 
-Generally, 3 main "items" are always need to fully define a reliability problem and sucessfully analyze it to find the associated probability of failure ``P_{f}`` and reliability index ``\beta``:
+In generally, 3 main "items" are always need to fully define a reliability problem and successfully analyze it to find the associated probability of failure ``P_{f}`` and reliability index ``\beta``:
 
-| Item | Description |
-| :--- | :--- |
-| ``\vec{X}`` | Random vector with correlated non-normal marginal random variables |
-| ``\rho^{X}`` | Correlation matrix |
-| ``g(\vec{X})`` | Limit state function |
+- ``\vec{X}`` - Random vector with correlated non-normal marginals
+- ``\rho^{X}`` - Correlation matrix
+- ``g(\vec{X})`` - Limit state function
 
 `Fortuna.jl` package uses these 3 "items" to fully define reliability problems using a custom `ReliabilityProblem()` type as shown in the example below.
 
@@ -18,9 +16,9 @@ using Fortuna
 
 ```@example 1
 # Generate a random vector X with correlated marginal random variables X₁ and X₂:
-X₁ = generaterv("Normal", "Moments", [10, 2])
-X₂ = generaterv("Normal", "Moments", [20, 5])
-X = [X₁, X₂]
+X₁  = generaterv("Normal", "Moments", [10, 2])
+X₂  = generaterv("Normal", "Moments", [20, 5])
+X   = [X₁, X₂]
 
 # Define a correlation matrix for the random vector X:
 ρˣ = [1 0.5; 0.5 1]

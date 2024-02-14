@@ -6,12 +6,12 @@ The MCFOSM method is the simplest and least computationally expensive type of re
 
 ## Hasofer-Lind Method
 
-!!! note
+!!! warning
     This feature is currently under development.
 
 ## Rackwitz-Fiessler Method
 
-!!! note
+!!! warning
     This feature is currently under development.
 
 ## Plain and Improved Hasofer-Lind-Rackwitz-Fiessler Method

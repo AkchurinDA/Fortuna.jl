@@ -19,3 +19,7 @@ P_{f}^{MCS} = \dfrac{1}{N} \sum_{i = 1}^{N} \mathbb{I}(\vec{x}_{i})
 ```
 
 ### API
+```@docs
+MCS
+analyze(Problem::ReliabilityProblem, AnalysisMethod::MCS)
+```

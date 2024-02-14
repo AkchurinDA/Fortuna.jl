@@ -5,3 +5,9 @@ html.theme--documenter-dark body div#documenter nav.docs-sidebar a.docs-logo img
 html.theme--documenter-light body div#documenter nav.docs-sidebar a.docs-logo img {
     max-height: 12.5rem;
 }
+
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}

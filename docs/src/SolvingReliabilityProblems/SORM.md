@@ -8,13 +8,13 @@ The SORM is an improvement over the FORM by accounting for the curved nature of 
 
 ## Gradient-Free Method
 
-!!! note
+!!! warning
     This feature is currently under development.
 
 
 ## Point-Fitting Method
 
-!!! note
+!!! warning
     This feature is currently under development.
 
 ### API
