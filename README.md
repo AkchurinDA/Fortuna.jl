@@ -1,6 +1,8 @@
 <div align="center">
   <img src="assets/logo.svg" alt = "Logo" width="35%">
 
+  > **Audentes Fortuna Iuvat**
+
   | Contributors | [Damir Akchurin](https://scholar.google.com/citations?user=chYaDcIAAAAJ&hl=en) |
   | :---: | :---: |
   | Build Status | [![Build Status](https://github.com/AkchurinDA/Fortuna.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/AkchurinDA/Fortuna.jl/actions/workflows/CI.yml) |
@@ -8,6 +10,7 @@
   | Latest Release | [![Latest Release](https://juliahub.com/docs/Fortuna/version.svg)](https://github.com/AkchurinDA/Fortuna.jl/releases) |
   | Downloads | [![Downloads](https://shields.io/endpoint?url=https://pkgs.genieframework.com/api/v1/badge/Fortuna&label=Downloads)](https://pkgs.genieframework.com?packages=Fortuna) |
   | License | [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/AkchurinDA/Fortuna.jl/blob/main/LICENSE.md) |
+
 </div>
 
 ## Description
@@ -37,24 +40,25 @@ The author thanks the academic and industrial partners of the [“Reliability 20
 ## Roadmap
 
 The following functionality is planned to be added:
+
 - [x] Sampling Techniques
     - [x] Inverse Transform Sampling
     - [x] Latin Hypercube Sampling
 - [x] Isoprobabilistic Transformations
-    - Nataf Transformation
-    - Rosennblatt Transformation
+    - [x] Nataf Transformation
+    - [ ] Rosennblatt Transformation
 - [x] Reliability Analysis Methods
-    - [x] Monte Carlo Simulations
-    - [x] First-Order Reliability Method
-        - [x] Mean-Centered First-Order Second-Moment Method
-        - [ ] Hasofer-Lind Method
-        - [ ] Rackwitz-Fiessler Method
-        - [x] Hasofer-Lind Rackwitz-Fiessler Method
-        - [x] Improved Hasofer-Lind Rackwitz-Fiessler Method
-    - [x] Second-Order Reliability Method
-        - [x] Curve-Fitting Method
-        - [ ] Gradient-Free Method
-        - [x] Point-Fitting Method
-    - [x] Subset Simulation Method
+  - [x] Monte Carlo Simulations
+  - [x] First-Order Reliability Method
+    - [x] Mean-Centered First-Order Second-Moment Method
+    - [ ] Hasofer-Lind Method
+    - [ ] Rackwitz-Fiessler Method
+    - [x] Hasofer-Lind Rackwitz-Fiessler Method
+    - [x] Improved Hasofer-Lind Rackwitz-Fiessler Method
+  - [x] Second-Order Reliability Method
+    - [x] Curve-Fitting Method
+    - [ ] Gradient-Free Method
+    - [x] Point-Fitting Method
+  - [x] Subset Simulation Method
 - [ ] Inverse Reliability Analysis Methods
 - [ ] Sensitivity Analysis
