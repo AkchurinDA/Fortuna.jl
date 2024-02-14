@@ -1,3 +1,5 @@
+> Fortune favors the bold.
+
 <div align="center">
   <img src="assets/logo.svg" alt = "Logo" width="35%">
 
