@@ -38,19 +38,19 @@ X   = [X₁, X₂]
 ρˣ  = [1 0.5; 0.5 1]
 
 # Define two equivalent limit state functions:
-G₁(x::Vector) = x[1] ^ 2 - 2 * x[2]
-G₂(x::Vector) = 1 - 2 * x[2] / x[1] ^ 2
+g₁(x) = x[1] ^ 2 - 2 * x[2]
+g₂(x) = 1 - 2 * x[2] / x[1] ^ 2
 
 # Define reliability problems:
-Problem₁ = ReliabilityProblem(X, ρˣ, G₁)
-Problem₂ = ReliabilityProblem(X, ρˣ, G₂)
+Problem₁ = ReliabilityProblem(X, ρˣ, g₁)
+Problem₂ = ReliabilityProblem(X, ρˣ, g₂)
 
 # Perform the reliability analysis:
 Solution₁ = analyze(Problem₁, FORM(MCFOSM()))
 Solution₂ = analyze(Problem₂, FORM(MCFOSM()))
 println("MCFOSM:")
-println("β from G₁: $(Solution₁.β)")
-println("β from G₂: $(Solution₂.β)")
+println("β from g₁: $(Solution₁.β)")
+println("β from g₂: $(Solution₂.β)")
 ```
 
 ## Example #4: Reliability Analysis (FORM - iHLRF)
@@ -63,19 +63,19 @@ X   = [X₁, X₂]
 ρˣ  = [1 0.5; 0.5 1]
 
 # Define two equivalent limit state functions:
-G₁(x::Vector) = x[1] ^ 2 - 2 * x[2]
-G₂(x::Vector) = 1 - 2 * x[2] / x[1] ^ 2
+g₁(x) = x[1] ^ 2 - 2 * x[2]
+g₂(x) = 1 - 2 * x[2] / x[1] ^ 2
 
 # Define reliability problems:
-Problem₁ = ReliabilityProblem(X, ρˣ, G₁)
-Problem₂ = ReliabilityProblem(X, ρˣ, G₂)
+Problem₁ = ReliabilityProblem(X, ρˣ, g₁)
+Problem₂ = ReliabilityProblem(X, ρˣ, g₂)
 
 # Perform the reliability analysis:
 Solution₁ = analyze(Problem₁, FORM(iHLRF()))
 Solution₂ = analyze(Problem₂, FORM(iHLRF()))
 println("FORM:")
-println("β from G₁: $(Solution₁.β)")
-println("β from G₂: $(Solution₂.β)")
+println("β from g₁: $(Solution₁.β)")
+println("β from g₂: $(Solution₂.β)")
 
 ```
 
@@ -94,10 +94,10 @@ X   = [M₁, M₂, P, Y]
 a   = 0.190
 s₁  = 0.030
 s₂  = 0.015
-G(x::Vector) = 1 - x[1] / (s₁ * x[4]) - x[2] / (s₂ * x[4]) - (x[3] / (a * x[4])) ^ 2
+g(x) = 1 - x[1] / (s₁ * x[4]) - x[2] / (s₂ * x[4]) - (x[3] / (a * x[4])) ^ 2
 
 # Define a reliability problem:
-Problem = ReliabilityProblem(X, ρˣ, G)
+Problem = ReliabilityProblem(X, ρˣ, g)
 
 # Perform the reliability analysis using curve-fitting SORM:
 Solution = analyze(Problem, MCS())
@@ -120,10 +120,10 @@ X   = [M₁, M₂, P, Y]
 a   = 0.190
 s₁  = 0.030
 s₂  = 0.015
-G(x::Vector) = 1 - x[1] / (s₁ * x[4]) - x[2] / (s₂ * x[4]) - (x[3] / (a * x[4])) ^ 2
+g(x) = 1 - x[1] / (s₁ * x[4]) - x[2] / (s₂ * x[4]) - (x[3] / (a * x[4])) ^ 2
 
 # Define a reliability problem:
-Problem = ReliabilityProblem(X, ρˣ, G)
+Problem = ReliabilityProblem(X, ρˣ, g)
 
 # Perform the reliability analysis using curve-fitting SORM:
 Solution = analyze(Problem, SORM(CF()))
@@ -151,10 +151,10 @@ X   = [M₁, M₂, P, Y]
 a   = 0.190
 s₁  = 0.030
 s₂  = 0.015
-G(x::Vector) = 1 - x[1] / (s₁ * x[4]) - x[2] / (s₂ * x[4]) - (x[3] / (a * x[4])) ^ 2
+g(x) = 1 - x[1] / (s₁ * x[4]) - x[2] / (s₂ * x[4]) - (x[3] / (a * x[4])) ^ 2
 
 # Define a reliability problem:
-Problem = ReliabilityProblem(X, ρˣ, G)
+Problem = ReliabilityProblem(X, ρˣ, g)
 
 # Perform the reliability analysis using curve-fitting SORM:
 Solution = analyze(Problem, SORM(PF()))
@@ -176,7 +176,7 @@ X   = [X₁, X₂]
 ρˣ  = [1 0; 0 1]
 
 # Define a limit state function:
-g(x::Vector) = 10 - x[1] - x[2]
+g(x) = 10 - x[1] - x[2]
 
 # Define reliability problems:
 Problem = ReliabilityProblem(X, ρˣ, g)

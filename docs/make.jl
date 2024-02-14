@@ -24,15 +24,13 @@ makedocs(
             "Rosenblatt Transformation" => "IsoprobabilisticTransformations/RosenblattTransformation.md"
         ],
         "Reliability Problems" => [
-            "Defining Reliability Problems" => "SolvingReliabilityProblems/DefiningReliabilityProblems.md",
-            "Monte Carlo Simulations" => "SolvingReliabilityProblems/MCS.md",
-            "First-Order Reliability Methods" => "SolvingReliabilityProblems/FORM.md",
-            "Second-Order Reliability Methods" => "SolvingReliabilityProblems/SORM.md",
-            "Subset Simulation Method" => "SolvingReliabilityProblems/SSM.md"
+            "Defining Reliability Problems" => "ReliabilityProblems/DefiningReliabilityProblems.md",
+            "Monte Carlo Simulations" => "ReliabilityProblems/MCS.md",
+            "First-Order Reliability Methods" => "ReliabilityProblems/FORM.md",
+            "Second-Order Reliability Methods" => "ReliabilityProblems/SORM.md",
+            "Subset Simulation Method" => "ReliabilityProblems/SSM.md"
         ],
-        "Inverse Reliability Problems" => [
-            "Defining Inverse Reliability Problems" => "SolvingInverseReliabilityProblems/DefiningInverseReliabilityProblems.md"
-        ],
+        "Inverse Reliability Problems" => "InverseReliabilityProblems.md",
         "Sensitivity Analysis" => "SensitivityAnalysis.md",
         "Examples" => "Examples.md",
         "Showcases" => "Showcases.md",

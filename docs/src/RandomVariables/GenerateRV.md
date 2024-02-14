@@ -45,7 +45,7 @@ println("θ = $(params(Q)[2])")
 - [Uniform](https://juliastats.org/Distributions.jl/latest/univariate/#Distributions.Uniform)
 - [Weibull](https://juliastats.org/Distributions.jl/latest/univariate/#Distributions.Weibull)
 
-### API
+## API
 
 ```@docs
 generaterv(DistributionName::String, DefineBy::String, Values::Union{Real, Vector{<:Real}})

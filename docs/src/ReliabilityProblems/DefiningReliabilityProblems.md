@@ -24,7 +24,7 @@ X   = [X₁, X₂]
 ρˣ = [1 0.5; 0.5 1]
 
 # Define a limit state function:
-g(x::Vector) = x[1]^2 - 2 * x[2]
+g(x) = x[1]^2 - 2 * x[2]
 
 # Define a reliability problem using the provided information:
 Problem = ReliabilityProblem(X, ρˣ, g)
@@ -48,7 +48,7 @@ println("β = $(Solution.β)")
 
 Descriptions of all First- and Second-Order Reliability Methods implemented in `Fortuna.jl` can be found on [First-Order Reliability Methods](@ref) and [Second-Order Reliability Methods](@ref) pages.
 
-### API
+## API
 
 ```@docs
 ReliabilityProblem

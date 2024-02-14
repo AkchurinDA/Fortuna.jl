@@ -10,7 +10,7 @@ P_{f} = P(\Omega_{f}) = P(\cap_{i = 1}^{M} \Omega_{f_{i}}) = P(\Omega_{f_{1}}) \
 
 The threshold for the first failure event ``b_{1}`` is computed using the Monte Carlo simulations. The thresholds for the following intermediate failure events ``b_{i}`` are computed using the Monte Carlo Markov Chain samples generated from the conditional probability density functions ``f_{\vec{X}}(\vec{x} | \Omega_{f_{i}})``.
 
-### API
+## API
 
 ```@docs
 SSM

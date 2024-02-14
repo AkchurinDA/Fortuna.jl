@@ -11,11 +11,12 @@ XSamples = samplerv(X, 5000, ITS())
 begin
     F = Figure(size = 72 .* (8, 6), fonts = (; regular = texfont()), fontsize = 14)
     A = Axis(F[1, 1], 
+            xminorticks = IntervalsBetween(5), yminorticks = IntervalsBetween(5),
+            xminorticksvisible = true, yminorticksvisible = true,
             xgridvisible = true, ygridvisible = true,
             xminorgridvisible = true, yminorgridvisible = true,
-            xminorticks = IntervalsBetween(5), yminorticks = IntervalsBetween(5),
             xlabel = L"$x$", ylabel = "PDF",
-            limits = (nothing, nothing, 0, nothing))
+            limits = (5.0, 17.5, 0, nothing))
 
     hist!(XSamples,
         color = :steelblue,
@@ -36,10 +37,12 @@ XSamples = samplerv(X, 5000, ITS())
 begin
     F = Figure(size = 72 .* (6, 6), fonts = (; regular = texfont()), fontsize = 14)
     A = Axis(F[1, 1], 
+            xminorticks = IntervalsBetween(5), yminorticks = IntervalsBetween(5),
+            xminorticksvisible = true, yminorticksvisible = true,
             xgridvisible = true, ygridvisible = true,
             xminorgridvisible = true, yminorgridvisible = true,
-            xminorticks = IntervalsBetween(5), yminorticks = IntervalsBetween(5),
             xlabel = L"$x_{1}$", ylabel = L"$x_{2}$",
+            limits = (5.0, 17.5, 7.5, 30.0),
             aspect = 1)
 
     scatter!(XSamples[:, 1], XSamples[:, 2],
@@ -65,10 +68,12 @@ XSamples, ZSamples, USamples = samplerv(TransformationObject, 5000, ITS())
 begin
     F = Figure(size = 72 .* (6, 6), fonts = (; regular = texfont()), fontsize = 14)
     A = Axis(F[1, 1], 
+            xminorticks = IntervalsBetween(5), yminorticks = IntervalsBetween(5),
+            xminorticksvisible = true, yminorticksvisible = true,
             xgridvisible = true, ygridvisible = true,
             xminorgridvisible = true, yminorgridvisible = true,
-            xminorticks = IntervalsBetween(5), yminorticks = IntervalsBetween(5),
             xlabel = L"$x_{1}$", ylabel = L"$x_{2}$",
+            limits = (5.0, 17.5, 7.5, 30.0),
             aspect = 1)
 
     scatter!(XSamples[:, 1], XSamples[:, 2],

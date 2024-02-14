@@ -29,7 +29,7 @@ nothing # hide
 ```
 
 ```@raw html
-<img src="../Sample-RVariable.svg" class="center" style="width:400px; border-radius:10px;"/>
+<img src="../Sample-RVariable.svg" class="center" style="width:600px; border-radius:5px;"/>
 ```
 
 ## Sampling Random Vectors with Uncorrelated Marginals
@@ -58,10 +58,10 @@ nothing # hide
 ```
 
 ```@raw html
-<img src="../Sample-RVector-U.svg" class="center" style="width:300px; border-radius:10px;"/>
+<img src="../Sample-RVector-U.svg" class="center" style="width:450px; border-radius:5px;"/>
 ```
 
-## Sampling Random Vectors with Correlated Marginal Random Variables
+## Sampling Random Vectors with Correlated Marginals
 
 To generate samples of a random vector with *correlated* marginals:
 
@@ -100,10 +100,10 @@ nothing # hide
 ```
 
 ```@raw html
-<img src="../Sample-RVector-C.svg" class="center" style="width:300px; border-radius:10px;"/>
+<img src="../Sample-RVector-C.svg" class="center" style="width:450px; border-radius:5px;"/>
 ```
 
-### API
+## API
 
 ```@docs
 ITS
