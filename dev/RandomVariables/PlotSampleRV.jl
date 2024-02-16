@@ -10,6 +10,7 @@ XSamples = samplerv(X, 5000, ITS())
 
 begin
     F = Figure(size = 72 .* (8, 6), fonts = (; regular = texfont()), fontsize = 14)
+    
     A = Axis(F[1, 1], 
             xminorticks = IntervalsBetween(5), yminorticks = IntervalsBetween(5),
             xminorticksvisible = true, yminorticksvisible = true,
