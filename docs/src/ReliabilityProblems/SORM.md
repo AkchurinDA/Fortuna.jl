@@ -1,4 +1,4 @@
-# Second-Order Reliability Methods
+# [Second-Order Reliability Methods](@id SORMPage)
 
 The SORM is an improvement over the FORM by accounting for the curved nature of the failure boundary given by ``g(\vec{X}) = 0`` around the design point ``\vec{x}^{*}``; thus, providing a better approximation of the probability of failure ``P_{f}``.
 

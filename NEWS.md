@@ -1,24 +1,38 @@
 # News
 
+## Release V0.5.1
+
+- Added measure of importance of random variables $\gamma$ to FORM. Note that the importance vector $\gamma$ is only available is analysis was conducted using HLRF or iHLRF methods.
+
+```julia
+# Plain Hasofer-Lind-Rackwitz-Fiessler method:
+FORMSolution = analyze(Problem, FORM(HLRF()))
+FORMSolution.γ
+
+# Improved Hasofer-Lind-Rackwitz-Fiessler method:
+FORMSolution = analyze(Problem, FORM(iHLRF()))
+FORMSolution.γ
+```
+
 ## Release V0.5.0
 
 - Added functionality to probabilities of failure by means of Monte Carlo Simulations.
 
 ```julia
-MCSolution = analyze(Problme, MCS())
+MCSSolution = analyze(Problem, MCS())
 ```
 
 - Added Point-Fitting method that falls within a broader class of the Second-Order Reliability Methods (SORM).
 
 ```julia
-SORMSolution = analyze(Problme, SORM(PF()))
+SORMSolution = analyze(Problem, SORM(PF()))
 ```
 
 - Added an option to sample random variables with correlated marginal random variables $\vec{X}$ using any implemented sampling technique. Note that your choice of the sampling technique pertains to the sampling technique that is used to generate samples in the space of uncorrelated standard normal random variables $\vec{U}$. The generated samples are then transformed from $\vec{U}$- to $\vec{X}$-space according to transformation you use to define a random vector with correlated marginal random variables $\vec{X}$, i.e., either Nataf or Rosennblatt (not yet implemented) transformation.
 
 ```julia
-XSamples, ZSamples, USamples = samplerv(TransformationObject, N, ITS())
-XSamples, ZSamples, USamples = samplerv(TransformationObject, N, LHS())
+XSamples, ZSamples, USamples = samplerv(TransformationObject, 1000, ITS())
+XSamples, ZSamples, USamples = samplerv(TransformationObject, 1000, LHS())
 ```
 
 - Updated the documentation.
@@ -29,7 +43,7 @@ XSamples, ZSamples, USamples = samplerv(TransformationObject, N, LHS())
 - Accelerate the Subset Simulation Method.
 - 
 ```julia
-SSMSolution = analyze(Problme, SSM())
+SSMSolution = analyze(Problem, SSM())
 ```
 
 ## Release V0.4.0

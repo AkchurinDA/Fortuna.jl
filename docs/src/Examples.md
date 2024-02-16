@@ -6,7 +6,9 @@ using Random
 Random.seed!(1)
 ```
 
-## Example #1: Perform Nataf Transformation
+## Isoprobabilistic Transformation
+
+### Nataf Transformation
 
 ```@example 1
 # Generate a random vector X with correlated marginal random variables X₁ and X₂:
@@ -26,60 +28,11 @@ XSamples, USamples, ZSamples = samplerv(NatafObject, 1000, ITS())
 nothing # hide
 ```
 
-![Nataf Transformation](./assets/NatafTransformation.svg)
-
-## Example #3: Reliability Analysis (FORM - MCFOSM)
-
-```@example 1
-# Generate a random vector X with correlated marginal random variables:
-X₁  = generaterv("Normal", "Moments", [10, 2])
-X₂  = generaterv("Normal", "Moments", [20, 5])
-X   = [X₁, X₂]
-ρˣ  = [1 0.5; 0.5 1]
-
-# Define two equivalent limit state functions:
-g₁(x) = x[1] ^ 2 - 2 * x[2]
-g₂(x) = 1 - 2 * x[2] / x[1] ^ 2
-
-# Define reliability problems:
-Problem₁ = ReliabilityProblem(X, ρˣ, g₁)
-Problem₂ = ReliabilityProblem(X, ρˣ, g₂)
-
-# Perform the reliability analysis:
-Solution₁ = analyze(Problem₁, FORM(MCFOSM()))
-Solution₂ = analyze(Problem₂, FORM(MCFOSM()))
-println("MCFOSM:")
-println("β from g₁: $(Solution₁.β)")
-println("β from g₂: $(Solution₂.β)")
+```@raw html
+<img src="../assets/NatafTransformation.svg" class="center" style="border-radius:5px;"/>
 ```
 
-## Example #4: Reliability Analysis (FORM - iHLRF)
-
-```@example 1
-# Generate a random vector X with correlated marginal random variables:
-X₁  = generaterv("Normal", "Moments", [10, 2])
-X₂  = generaterv("Normal", "Moments", [20, 5])
-X   = [X₁, X₂]
-ρˣ  = [1 0.5; 0.5 1]
-
-# Define two equivalent limit state functions:
-g₁(x) = x[1] ^ 2 - 2 * x[2]
-g₂(x) = 1 - 2 * x[2] / x[1] ^ 2
-
-# Define reliability problems:
-Problem₁ = ReliabilityProblem(X, ρˣ, g₁)
-Problem₂ = ReliabilityProblem(X, ρˣ, g₂)
-
-# Perform the reliability analysis:
-Solution₁ = analyze(Problem₁, FORM(iHLRF()))
-Solution₂ = analyze(Problem₂, FORM(iHLRF()))
-println("FORM:")
-println("β from g₁: $(Solution₁.β)")
-println("β from g₂: $(Solution₂.β)")
-
-```
-
-## Example #5: Reliability Analysis (MCS)
+## Monte Carlo Simulations
 
 ```@example 1
 # Generate a random vector X with correlated marginal random variables:
@@ -105,7 +58,61 @@ println("MCS:")
 println("PoF: $(Solution.PoF)")
 ```
 
-## Example #5: Reliability Analysis (SORM - CF)
+## First-Order Reliability Methods
+
+### Mean-Centered First-Order Second-Moment Method
+
+```@example 1
+# Generate a random vector X with correlated marginal random variables:
+X₁  = generaterv("Normal", "Moments", [10, 2])
+X₂  = generaterv("Normal", "Moments", [20, 5])
+X   = [X₁, X₂]
+ρˣ  = [1 0.5; 0.5 1]
+
+# Define two equivalent limit state functions:
+g₁(x) = x[1] ^ 2 - 2 * x[2]
+g₂(x) = 1 - 2 * x[2] / x[1] ^ 2
+
+# Define reliability problems:
+Problem₁ = ReliabilityProblem(X, ρˣ, g₁)
+Problem₂ = ReliabilityProblem(X, ρˣ, g₂)
+
+# Perform the reliability analysis:
+Solution₁ = analyze(Problem₁, FORM(MCFOSM()))
+Solution₂ = analyze(Problem₂, FORM(MCFOSM()))
+println("MCFOSM:")
+println("β from g₁: $(Solution₁.β)")
+println("β from g₂: $(Solution₂.β)")
+```
+
+### Improved Hasofer-Lind-Rackwitz-Fiessler Method
+
+```@example 1
+# Generate a random vector X with correlated marginal random variables:
+X₁  = generaterv("Normal", "Moments", [10, 2])
+X₂  = generaterv("Normal", "Moments", [20, 5])
+X   = [X₁, X₂]
+ρˣ  = [1 0.5; 0.5 1]
+
+# Define two equivalent limit state functions:
+g₁(x) = x[1] ^ 2 - 2 * x[2]
+g₂(x) = 1 - 2 * x[2] / x[1] ^ 2
+
+# Define reliability problems:
+Problem₁ = ReliabilityProblem(X, ρˣ, g₁)
+Problem₂ = ReliabilityProblem(X, ρˣ, g₂)
+
+# Perform the reliability analysis:
+Solution₁ = analyze(Problem₁, FORM(iHLRF()))
+Solution₂ = analyze(Problem₂, FORM(iHLRF()))
+println("FORM:")
+println("β from g₁: $(Solution₁.β)")
+println("β from g₂: $(Solution₂.β)")
+```
+
+## Second-Order Reliability Methods
+
+### Curve-Fitting Method
 
 ```@example 1
 # Generate a random vector X with correlated marginal random variables:
@@ -136,7 +143,7 @@ println("PoF from SORM: $(Solution.PoF₂[1]) (Hohenbichler and Rackwitz)")
 println("PoF from SORM: $(Solution.PoF₂[2]) (Breitung)")
 ```
 
-## Example #6: Reliability Analysis (SORM - PF)
+### Point-Fitting Method
 
 ```@example 1
 # Generate a random vector X with correlated marginal random variables:
@@ -167,7 +174,8 @@ println("PoF from SORM: $(Solution.PoF₂[1]) (Hohenbichler and Rackwitz)")
 println("PoF from SORM: $(Solution.PoF₂[2]) (Breitung)")
 ```
 
-## Example #7: Reliability Analysis (SSM)
+## Subset Simulation Method
+
 ```@example 1
 # Define a random vector of uncorrelated marginal distributions:
 X₁  = generaterv("Exponential", "P", 1)
