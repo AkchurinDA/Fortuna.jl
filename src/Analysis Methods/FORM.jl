@@ -8,14 +8,14 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::FORM)
     # Extract the analysis method:
     Submethod = AnalysisMethod.Submethod
 
+    # Extract the problem data:
+    g = Problem.g
+    X = Problem.X
+    ρˣ = Problem.ρˣ
+
     if !isa(Submethod, MCFOSM) && !isa(Submethod, HL) && !isa(Submethod, RF) && !isa(Submethod, HLRF) && !isa(Submethod, iHLRF)
         error("Invalid FORM submethod.")
     elseif isa(Submethod, MCFOSM)
-        # Extract data:
-        X = Problem.X
-        ρˣ = Problem.ρˣ
-        g = Problem.g
-
         # Compute the means of marginal distrbutions:
         Mˣ = mean.(X)
 
@@ -42,21 +42,16 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::FORM)
         ϵ₁ = Submethod.ϵ₁
         ϵ₂ = Submethod.ϵ₂
 
-        # Extract data:
-        g = Problem.g
-        X = Problem.X
-        ρˣ = Problem.ρˣ
-
         # Compute the number of marginal distributions:
         NumDims = length(X)
 
         # Preallocate:
-        x = Matrix{Float64}(undef, NumDims, MaxNumIterations)
-        u = Matrix{Float64}(undef, NumDims, MaxNumIterations)
-        G = Vector{Float64}(undef, MaxNumIterations)
-        ∇G = Matrix{Float64}(undef, NumDims, MaxNumIterations)
-        α = Matrix{Float64}(undef, NumDims, MaxNumIterations)
-        d = Matrix{Float64}(undef, NumDims, MaxNumIterations)
+        x   = Matrix{Float64}(undef, NumDims, MaxNumIterations)
+        u   = Matrix{Float64}(undef, NumDims, MaxNumIterations)
+        G   = Vector{Float64}(undef, MaxNumIterations)
+        ∇G  = Matrix{Float64}(undef, NumDims, MaxNumIterations)
+        α   = Matrix{Float64}(undef, NumDims, MaxNumIterations)
+        d   = Matrix{Float64}(undef, NumDims, MaxNumIterations)
 
         # Perform the Nataf Transformation:
         NatafObject = NatafTransformation(X, ρˣ)
@@ -102,8 +97,8 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::FORM)
             u[:, i+1] = u[:, i] + λ * d[:, i]
 
             # Check for convergance:
-            Criterion₁ = abs(g(x[:, i]) / G₀) # Check if the design point is on the failure boundary.
-            Criterion₂ = norm(u[:, i] - dot(α[:, i], u[:, i]) * α[:, i]) # Check if the design point is on the failure boundary.
+            Criterion₁ = abs(g(x[:, i]) / G₀)                               # Check if the value of the limit state function is close to zero.
+            Criterion₂ = norm(u[:, i] - dot(α[:, i], u[:, i]) * α[:, i])    # Check if the design point is on the failure boundary.
             if Criterion₁ < ϵ₁ && Criterion₂ < ϵ₂
                 # Compute the reliability index:
                 β = dot(α[:, i], u[:, i])
@@ -145,15 +140,15 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::FORM)
         NumDims = length(X)
 
         # Preallocate:
-        x = Matrix{Float64}(undef, NumDims, MaxNumIterations)
-        u = Matrix{Float64}(undef, NumDims, MaxNumIterations)
-        G = Vector{Float64}(undef, MaxNumIterations)
-        ∇G = Matrix{Float64}(undef, NumDims, MaxNumIterations)
-        α = Matrix{Float64}(undef, NumDims, MaxNumIterations)
-        d = Matrix{Float64}(undef, NumDims, MaxNumIterations)
-        c = Vector{Float64}(undef, MaxNumIterations)
-        m = Vector{Float64}(undef, MaxNumIterations)
-        λ = Vector{Float64}(undef, MaxNumIterations)
+        x   = Matrix{Float64}(undef, NumDims, MaxNumIterations)
+        u   = Matrix{Float64}(undef, NumDims, MaxNumIterations)
+        G   = Vector{Float64}(undef, MaxNumIterations)
+        ∇G  = Matrix{Float64}(undef, NumDims, MaxNumIterations)
+        α   = Matrix{Float64}(undef, NumDims, MaxNumIterations)
+        d   = Matrix{Float64}(undef, NumDims, MaxNumIterations)
+        c   = Vector{Float64}(undef, MaxNumIterations)
+        m   = Vector{Float64}(undef, MaxNumIterations)
+        λ   = Vector{Float64}(undef, MaxNumIterations)
 
         # Perform the Nataf Transformation:
         NatafObject = NatafTransformation(X, ρˣ)
@@ -205,8 +200,10 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::FORM)
             Gₜ = g(xₜ)
             mₜ = 0.5 * norm(uₜ)^2 + c[i] * abs(Gₜ)
             while mₜ ≥ m[i]
-                # Update the step size and merit function:
+                # Update the step size:
                 λₜ = λₜ / 2
+
+                # Update the merit function:
                 m[i] = mₜ
 
                 # Recalculate the merit function:
@@ -226,8 +223,8 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::FORM)
             x[:, i+1] = transformsamples(NatafObject, u[:, i+1], "U2X")
 
             # Check for convergance:
-            Criterion₁ = abs(g(x[:, i]) / G₀) # Check if the design point is on the failure boundary.
-            Criterion₂ = norm(u[:, i] - dot(α[:, i], u[:, i]) * α[:, i]) # Check if the design point is on the failure boundary.
+            Criterion₁ = abs(g(x[:, i]) / G₀)                               # Check if the limit state function is close to zero.
+            Criterion₂ = norm(u[:, i] - dot(α[:, i], u[:, i]) * α[:, i])    # Check if the design point is on the failure boundary.
             if Criterion₁ < ϵ₁ && Criterion₂ < ϵ₂
                 # Compute the reliability index:
                 β = dot(α[:, i], u[:, i])
@@ -236,15 +233,15 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::FORM)
                 PoF = cdf(Normal(0, 1), -β)
 
                 # Clean up the results:
-                x = x[:, 1:i]
-                u = u[:, 1:i]
-                G = G[1:i]
-                ∇G = ∇G[:, 1:i]
-                α = α[:, 1:i]
-                d = d[:, 1:i]
-                c = c[1:i]
-                m = m[1:i]
-                λ = λ[1:i]
+                x   = x[:, 1:i]
+                u   = u[:, 1:i]
+                G   = G[1:i]
+                ∇G  = ∇G[:, 1:i]
+                α   = α[:, 1:i]
+                d   = d[:, 1:i]
+                c   = c[1:i]
+                m   = m[1:i]
+                λ   = λ[1:i]
 
                 # Return results:
                 return iHLRFCache(β, PoF, x, u, G, ∇G, α, d, c, m, λ)

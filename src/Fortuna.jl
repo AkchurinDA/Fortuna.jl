@@ -1,18 +1,20 @@
 module Fortuna
-# Reexport Distributions package:
+# Reexport some package and their functionalities:
 using Reexport
 @reexport using Distributions
+@reexport using LinearAlgebra: I
 
 # Load dependencies:
+using Base.Iterators:       product, repeated
 using DocStringExtensions
-using FastGaussQuadrature: gausslegendre
-using ForwardDiff: gradient, hessian
+using FastGaussQuadrature:  gausslegendre
+using ForwardDiff:          gradient, hessian
 using LinearAlgebra
-using Random: rand, randn, shuffle
-using NonlinearSolve: NonlinearProblem, IntervalNonlinearProblem
-using NonlinearSolve: NewtonRaphson, Bisection
-using NonlinearSolve: solve
-using SpecialFunctions: gamma
+using Random:               rand, randn, shuffle
+using NonlinearSolve:       NonlinearProblem, IntervalNonlinearProblem
+using NonlinearSolve:       NewtonRaphson, Bisection
+using NonlinearSolve:       solve
+using SpecialFunctions:     gamma
 
 # Include the following files into the scope of the module:
 include("Types.jl")

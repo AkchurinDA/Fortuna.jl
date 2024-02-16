@@ -1,12 +1,13 @@
 # Sample random vectors with uncorrelated marginal random variables:
 """
-    samplerv(Samplers::Union{<:Distribution,Vector{<:Distribution}}, NumSamples::Integer, SamplingTechnique::AbstractSamplingTechnique)
+    Samples = samplerv(Samplers::Union{<:Distribution, Vector{<:Distribution}}, NumSamples::Integer, SamplingTechnique::AbstractSamplingTechnique)
 
-The function returns samples of random variables and random vectors with uncorrelated marginal random variables using various sampling techniques.
-- If `SamplingTechnique = ITS()`, the function generates samples using Inverse Transform Sampling technique.
-- If `SamplingTechnique = LHS()`, the function generates samples using Latin Hypercube Sampling technique.
+The function returns samples of random variables and random vectors with uncorrelated marginal random variables using various sampling techniques. \\
+If `SamplingTechnique is:
+- `ITS()` samples are generated using Inverse Transform Sampling technique.
+- `LHS()` samples are generated using Latin Hypercube Sampling technique.
 """
-function samplerv(Samplers::Union{<:Distribution,Vector{<:Distribution}}, NumSamples::Integer, SamplingTechnique::AbstractSamplingTechnique)
+function samplerv(Samplers::Union{<:Distribution, Vector{<:Distribution}}, NumSamples::Integer, SamplingTechnique::AbstractSamplingTechnique)
     # Compute the number of distributions:
     NumDims = length(Samplers)
 
@@ -17,7 +18,9 @@ function samplerv(Samplers::Union{<:Distribution,Vector{<:Distribution}}, NumSam
         Samples = Matrix{Float64}(undef, NumSamples, NumDims)
     end
 
-    if isa(SamplingTechnique, ITS)
+    if !isa(SamplingTechnique, ITS) && !isa(SamplingTechnique, LHS)
+        error("Provided sampling technique is not supported.")
+    elseif isa(SamplingTechnique, ITS)
         # Generate samples for each distribution:
         if NumDims == 1
             Samples = rand(Samplers, NumSamples)
@@ -51,8 +54,6 @@ function samplerv(Samplers::Union{<:Distribution,Vector{<:Distribution}}, NumSam
                 Samples[:, i] = quantile.(Samplers[i], UniformSamples)
             end
         end
-    else
-        error("Provided sampling technique is not supported.")
     end
 
     # Convert vector to scalar if only one sample if requested:
@@ -65,7 +66,7 @@ end
 
 # Sample random vectors with correlated marginal random variables:
 """
-    samplerv(Object::NatafTransformation, NumSamples::Integer, SamplingTechnique::AbstractSamplingTechnique)
+    XSamples, ZSamples, USamples = samplerv(Object::NatafTransformation, NumSamples::Integer, SamplingTechnique::AbstractSamplingTechnique)
 
 This function generates samples of random variables in ``X``-, ``Z``-, and ``U``-spaces using a `NatafTransformation` object.
 - ``X``-space - space of correlated non-normal random variables

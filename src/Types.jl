@@ -15,18 +15,21 @@ $(FIELDS)
 """
 mutable struct NatafTransformation <: AbstractTransformation
     "Random vector with correlated non-normal marginal random variables"
-    X::Vector{<:Distribution}
+    X   ::AbstractVector{<:Distribution}
     "Correlation matrix of the random vector ``\\vec{X}``"
-    ρˣ::Matrix{<:Real}
+    ρˣ  ::AbstractMatrix{<:Real}
     "Distorted correlation matrix the random vector ``\\vec{Z}``"
-    ρᶻ::Matrix{Float64}
+    ρᶻ  ::AbstractMatrix{Float64}
     "Lower triangular matrix of the Cholesky decomposition of the distorted correlation matrix ``\\rho^{Z}``"
-    L::LinearAlgebra.LowerTriangular{Float64,Matrix{Float64}}
+    L   ::AbstractMatrix{Float64}
     "Inverse of the lower triangular matrix of the Cholesky decomposition of the distorted correlation matrix ``\\rho^{Z}``"
-    L⁻¹::LinearAlgebra.LowerTriangular{Float64,Matrix{Float64}}
+    L⁻¹ ::AbstractMatrix{Float64}
 
-    function NatafTransformation(X::Vector{<:Distribution}, ρˣ::Matrix{<:Real})
+    function NatafTransformation(X::AbstractVector{<:Distribution}, ρˣ::AbstractMatrix{<:Real})
+        # Compute the distorted correlation matrix:
         ρᶻ, L, L⁻¹ = getdistortedcorrelation(X, ρˣ)
+
+        # Return the Nataf Transformation object with the computed distorted correlation matrix:
         return new(X, ρˣ, ρᶻ, L, L⁻¹)
     end
 end
@@ -85,11 +88,11 @@ $(FIELDS)
 """
 mutable struct ReliabilityProblem <: AbstractReliabilityProblem
     "Random vector with correlated non-normal marginal random variables"
-    X::Vector{<:Distribution}
+    X   ::AbstractVector{<:Distribution}
     "Correlation matrix"
-    ρˣ::Matrix{<:Real}
+    ρˣ  ::AbstractMatrix{<:Real}
     "Limit state function"
-    g::Function
+    g   ::Function
 end
 
 """
@@ -115,7 +118,7 @@ abstract type SORMSubmethod end
 
 # Monte Carlo Simulations:
 """
-    Base.@kwdef struct MCS <: AbstractReliabililyAnalysisMethod
+    struct MCS <: AbstractReliabililyAnalysisMethod
 
 A custom type used by `Fortuna.jl` to perform reliability analysis using Monte Carlo simulations.
 
@@ -123,9 +126,9 @@ $(FIELDS)
 """
 Base.@kwdef struct MCS <: AbstractReliabililyAnalysisMethod
     "Number of samples used in Monte Carlo simulations"
-    NumSamples::Integer = 10^6
+    NumSamples          ::Integer = 10^6
     "Sampling technique used to generate samples"
-    SamplingTechnique::AbstractSamplingTechnique = LHS()
+    SamplingTechnique   ::AbstractSamplingTechnique = LHS()
 end
 
 struct MCSCache
@@ -134,7 +137,7 @@ end
 
 # First-Order Reliability Method:
 """
-    Base.@kwdef struct FORM <: AbstractReliabililyAnalysisMethod
+    struct FORM <: AbstractReliabililyAnalysisMethod
 
 A custom type used by `Fortuna.jl` to perform reliability analysis using First-Order Reliability Methods.
 
@@ -171,51 +174,51 @@ end
 
 Base.@kwdef struct HLRF <: FORMSubmethod # Hasofer-Lind Rackwitz-Fiessler method
     # Maximum number of iterations allowed:
-    MaxNumIterations::Integer = 100
+    MaxNumIterations    ::Integer = 100
     # Criterion #1:
-    ϵ₁::Number = 10^(-9)
+    ϵ₁                  ::Real = 10^(-9)
     # Criterion #2:
-    ϵ₂::Number = 10^(-9)
+    ϵ₂                  ::Real = 10^(-9)
 end
 
 struct HLRFCache
-    β::Float64
-    PoF::Float64
-    x::Matrix{Float64}
-    u::Matrix{Float64}
-    G::Vector{Float64}
-    ∇G::Matrix{Float64}
-    α::Matrix{Float64}
-    d::Matrix{Float64}
+    β   ::Float64
+    PoF ::Float64
+    x   ::Matrix{Float64}
+    u   ::Matrix{Float64}
+    G   ::Vector{Float64}
+    ∇G  ::Matrix{Float64}
+    α   ::Matrix{Float64}
+    d   ::Matrix{Float64}
 end
 
 Base.@kwdef struct iHLRF <: FORMSubmethod # Improved Hasofer-Lind Rackwitz-Fiessler method
     # Maximum number of iterations allowed:
-    MaxNumIterations::Integer = 100
+    MaxNumIterations    ::Integer = 100
     # Criterion #1:
-    ϵ₁::Number = 10^(-9)
+    ϵ₁                  ::Real = 10^(-9)
     # Criterion #2:
-    ϵ₂::Number = 10^(-9)
+    ϵ₂                  ::Real = 10^(-9)
 end
 
 struct iHLRFCache
-    β::Float64
-    PoF::Float64
-    x::Matrix{Float64}
-    u::Matrix{Float64}
-    G::Vector{Float64}
-    ∇G::Matrix{Float64}
-    α::Matrix{Float64}
-    d::Matrix{Float64}
-    c::Vector{Float64}
-    m::Vector{Float64}
-    λ::Vector{Float64}
+    β   ::Float64
+    PoF ::Float64
+    x   ::Matrix{Float64}
+    u   ::Matrix{Float64}
+    G   ::Vector{Float64}
+    ∇G  ::Matrix{Float64}
+    α   ::Matrix{Float64}
+    d   ::Matrix{Float64}
+    c   ::Vector{Float64}
+    m   ::Vector{Float64}
+    λ   ::Vector{Float64}
 end
 
 
 # Second-Order Reliability Method:
 """
-    Base.@kwdef struct SORM <: AbstractReliabililyAnalysisMethod
+    struct SORM <: AbstractReliabililyAnalysisMethod
 
 A custom type used by `Fortuna.jl` to perform reliability analysis using Second-Order Reliability Methods.
 
@@ -227,18 +230,26 @@ Base.@kwdef struct SORM <: AbstractReliabililyAnalysisMethod
 end
 
 Base.@kwdef struct CF <: SORMSubmethod # Curve-Fitting method
-    ϵ::Number = 1 / 1000
+    ϵ::Real = 1 / 1000
 end
 
 struct CFCache
-    β₁::Float64
-    PoF₁::Float64
-    β₂::Vector{Float64}
-    PoF₂::Vector{Float64}
-    H::Matrix{Float64}
-    R::Matrix{Float64}
-    A::Matrix{Float64}
-    κ::Vector{Float64}
+    β₁      ::Float64
+    PoF₁    ::Float64
+    β₂      ::Vector{Float64}
+    PoF₂    ::Vector{Float64}
+    H       ::Matrix{Float64}
+    R       ::Matrix{Float64}
+    A       ::Matrix{Float64}
+    κ       ::Vector{Float64}
+end
+
+Base.@kwdef struct GF <: SORMSubmethod # Gradient-Free method
+
+end
+
+struct GFCache
+
 end
 
 Base.@kwdef struct PF <: SORMSubmethod # Point-Fitting method
@@ -246,12 +257,19 @@ Base.@kwdef struct PF <: SORMSubmethod # Point-Fitting method
 end
 
 struct PFCache
-
+    β₁              ::Float64
+    PoF₁            ::Float64
+    β₂              ::Vector{Float64}
+    PoF₂            ::Vector{Float64}
+    FittingPoints⁻  ::Matrix{Float64}
+    FittingPoints⁺  ::Matrix{Float64}
+    κ₁              ::Matrix{Float64}
+    κ₂              ::Matrix{Float64}
 end
 
 # Subset Simulation Method:
 """
-    Base.@kwdef struct SSM <: AbstractReliabililyAnalysisMethod
+    struct SSM <: AbstractReliabililyAnalysisMethod
 
 A custom type used by `Fortuna.jl` to perform the Subset Siumlation Method.
 
@@ -259,11 +277,11 @@ $(FIELDS)
 """
 Base.@kwdef struct SSM <: AbstractReliabililyAnalysisMethod
     "Target conditional probability"
-    P₀::Float64 = 0.10
+    P₀              ::Float64 = 0.10
     "Number of samples to generate for each subset"
-    NumSamples::Integer = 10000
+    NumSamples      ::Integer = 10000
     "Maximum number of subsets"
-    MaxNumSubsets::Integer = 25
+    MaxNumSubsets   ::Integer = 25
 end
 
 """
@@ -275,13 +293,13 @@ $(FIELDS)
 """
 struct SSMCache
     "Samples generated within each subset in ``X``-space"
-    XSamplesSubset::Vector{Matrix{Float64}}
+    XSamplesSubset  ::Vector{Matrix{Float64}}
     "Samples generated within each subset in ``U``-space"
-    USamplesSubset::Vector{Matrix{Float64}}
+    USamplesSubset  ::Vector{Matrix{Float64}}
     "Thresholds for each subset"
-    CSubset::Vector{Float64}
+    CSubset         ::Vector{Float64}
     "Probabilities of failure for each subset"
-    PoFSubset::Vector{Float64}
+    PoFSubset       ::Vector{Float64}
     "Probabilities of failure"
-    PoF::Float64
+    PoF             ::Float64
 end

@@ -1,5 +1,7 @@
 # Fortuna
 
+> **Audentes Fortuna Iuvat**
+
 ## Description
 
 `Fortuna.jl` is a general-purpose Julia package for structural and system reliability analysis.
@@ -18,7 +20,7 @@ pkg> add Fortuna
 
 ## Help and Support
 
-For assistance with the package, please raise an issue on the Github Issues page. Please use the appropriate labels to indicate the specific functionality you are inquiring about. Alternatively, contact the author directly.
+For assistance with the package, please raise an issue on the [Github Issues](https://github.com/AkchurinDA/Fortuna.jl/issues) page. Please use the appropriate labels to indicate the specific functionality you are inquiring about. Alternatively, contact the author directly at [AkchurinDA@gmail.com](mailto:AkchurinDA@gmail.com?subject=Fortuna.jl).
 
 ## Acknowledgements
 

@@ -1,6 +1,8 @@
 <div align="center">
   <img src="assets/logo.svg" alt = "Logo" width="35%">
 
+  > **Audentes Fortuna Iuvat**
+
   | Contributors | [Damir Akchurin](https://scholar.google.com/citations?user=chYaDcIAAAAJ&hl=en) |
   | :---: | :---: |
   | Build Status | [![Build Status](https://github.com/AkchurinDA/Fortuna.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/AkchurinDA/Fortuna.jl/actions/workflows/CI.yml) |
@@ -8,6 +10,7 @@
   | Latest Release | [![Latest Release](https://juliahub.com/docs/Fortuna/version.svg)](https://github.com/AkchurinDA/Fortuna.jl/releases) |
   | Downloads | [![Downloads](https://shields.io/endpoint?url=https://pkgs.genieframework.com/api/v1/badge/Fortuna&label=Downloads)](https://pkgs.genieframework.com?packages=Fortuna) |
   | License | [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/AkchurinDA/Fortuna.jl/blob/main/LICENSE.md) |
+
 </div>
 
 ## Description
@@ -28,7 +31,7 @@ pkg> add Fortuna
 
 ## Help and Support
 
-For assistance with the package, please raise an issue on the Github Issues page. Please use the appropriate labels to indicate the specific functionality you are inquiring about. Alternatively, contact the author directly.
+For assistance with the package, please raise an issue on the [Github Issues](https://github.com/AkchurinDA/Fortuna.jl/issues) page. Please use the appropriate labels to indicate the specific functionality you are inquiring about. Alternatively, contact the author directly at [AkchurinDA@gmail.com](mailto:AkchurinDA@gmail.com?subject=Fortuna.jl).
 
 ## Acknowledgements
 
@@ -37,13 +40,14 @@ The author thanks the academic and industrial partners of the [“Reliability 20
 ## Roadmap
 
 The following functionality is planned to be added:
-- [x] Isoprobabilistic Transformations
-  - [x] Nataf Transformation
-  - [ ] Rosennblatt Transformation
+
 - [x] Sampling Techniques
-  - [x] Inverse Transform Sampling
-  - [x] Latin Hypercube Sampling
-- [ ] Reliability Analysis Methods
+    - [x] Inverse Transform Sampling
+    - [x] Latin Hypercube Sampling
+- [x] Isoprobabilistic Transformations
+    - [x] Nataf Transformation
+    - [ ] Rosennblatt Transformation
+- [x] Reliability Analysis Methods
   - [x] Monte Carlo Simulations
   - [x] First-Order Reliability Method
     - [x] Mean-Centered First-Order Second-Moment Method
@@ -54,7 +58,7 @@ The following functionality is planned to be added:
   - [x] Second-Order Reliability Method
     - [x] Curve-Fitting Method
     - [ ] Gradient-Free Method
-    - [ ] Point-Fitting Method
+    - [x] Point-Fitting Method
   - [x] Subset Simulation Method
+- [ ] Inverse Reliability Analysis Methods
 - [ ] Sensitivity Analysis
-- [ ] Inverse Reliability Problems
