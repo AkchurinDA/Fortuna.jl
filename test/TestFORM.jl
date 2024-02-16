@@ -105,6 +105,7 @@ end
     @test isapprox(Solution.PoF, 0.00682, rtol = 0.01)
     @test isapprox(Solution.x[:, end], [341, 170, 3223, 31770], rtol = 0.01)
     @test isapprox(Solution.u[:, end], [1.210, 0.699, 0.941, -1.80], rtol = 0.01)
+    @test isapprox(Solution.γ, [0.269, 0.269, 0.451, -0.808], rtol = 0.01)
     # Note: There is a typo in the book for this example. The last coordinate of the design point in U-space must be -1.80.
 end
 
@@ -189,4 +190,6 @@ end
     @test isapprox(Solution.PoF, 0.00682, rtol = 0.01)
     @test isapprox(Solution.x[:, end], [341, 170, 3223, 31770], rtol = 0.01)
     @test isapprox(Solution.u[:, end], [1.210, 0.699, 0.941, -1.80], rtol = 0.01)
+    @test isapprox(Solution.γ, [0.269, 0.269, 0.451, -0.808], rtol = 0.01)
+    # Note: There is a typo in the book for this example. The last coordinate of the design point in U-space must be -1.80.
 end
