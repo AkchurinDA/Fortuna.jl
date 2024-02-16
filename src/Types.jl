@@ -190,6 +190,7 @@ struct HLRFCache
     ∇G  ::Matrix{Float64}
     α   ::Matrix{Float64}
     d   ::Matrix{Float64}
+    γ   ::Vector{Float64}
 end
 
 Base.@kwdef struct iHLRF <: FORMSubmethod # Improved Hasofer-Lind Rackwitz-Fiessler method
@@ -213,6 +214,7 @@ struct iHLRFCache
     c   ::Vector{Float64}
     m   ::Vector{Float64}
     λ   ::Vector{Float64}
+    γ   ::Vector{Float64}
 end
 
 

@@ -106,6 +106,10 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::FORM)
                 # Compute the probability of failure:
                 PoF = cdf(Normal(0, 1), -β)
 
+                # Compute the importance vector:
+                L⁻¹ = NatafObject.L⁻¹
+                γ   = vec((L⁻¹ * α[:, i]) / norm(L⁻¹ * α[:, i]))
+
                 # Clean up the results:
                 x = x[:, 1:i]
                 u = u[:, 1:i]
@@ -115,7 +119,7 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::FORM)
                 d = d[:, 1:i]
 
                 # Return results:
-                return HLRFCache(β, PoF, x, u, G, ∇G, α, d)
+                return HLRFCache(β, PoF, x, u, G, ∇G, α, d, γ)
 
                 # Break out:
                 continue
@@ -232,6 +236,10 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::FORM)
                 # Compute the probability of failure:
                 PoF = cdf(Normal(0, 1), -β)
 
+                # Compute the importance vector:
+                L⁻¹ = NatafObject.L⁻¹
+                γ   = vec((L⁻¹ * α[:, i]) / norm(L⁻¹ * α[:, i]))
+
                 # Clean up the results:
                 x   = x[:, 1:i]
                 u   = u[:, 1:i]
@@ -244,7 +252,7 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::FORM)
                 λ   = λ[1:i]
 
                 # Return results:
-                return iHLRFCache(β, PoF, x, u, G, ∇G, α, d, c, m, λ)
+                return iHLRFCache(β, PoF, x, u, G, ∇G, α, d, c, m, λ, γ)
 
                 # Break out:
                 continue
