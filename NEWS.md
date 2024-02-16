@@ -2,7 +2,7 @@
 
 ## Release V0.5.1
 
-- Added measure of importance of random variables $\gamma$ to FORM. Note that the importance vector $\gamma$ is only available is analysis was conducted using HLRF or iHLRF methods.
+- Added measure of importance of random variables $\gamma$ to FORM. Note that the importance vector $\gamma$ is only available if the reliability analysis was carried out using HLRF or iHLRF methods.
 
 ```julia
 # Plain Hasofer-Lind-Rackwitz-Fiessler method:
@@ -88,7 +88,7 @@ SORMSolution = analyze(Problem, SORM())
 - Added `analyze()` function that replaces `MCFOSM()` and `FORM()` functions. The deprecated functions `MCFOSM()` and `FORM()` are now `AnalysisMethod` argument's options in `analyze()` function with their own types. For example, to perform reliability analysis using FORM use the following syntax:
 
 ```julia
-β = analyze(Problem, FORM(MCFOSM()))
+β       = analyze(Problem, FORM(MCFOSM()))
 β, x, u = analyze(Problem, FORM(HLRF()))
 β, x, u = analyze(Problem, FORM(iHLRF()))
 ```
