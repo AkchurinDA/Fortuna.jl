@@ -18,27 +18,31 @@ using SpecialFunctions:     gamma
 
 # Include the following files into the scope of the module:
 include("Types.jl")
-export AbstractTransformation
-export NatafTransformation, RosenblattTransformation
 export AbstractSamplingTechnique
 export ITS, LHS
+export AbstractTransformation
+export NatafTransformation, RosenblattTransformation
 export AbstractReliabilityProblem
-export ReliabilityProblem
+export ReliabilityProblem, InverseReliabilityProblem, SensitivityProblem
+export SensitivityProblemCache
 export AbstractReliabililyAnalysisMethod
 export FORMSubmethod, SORMSubmethod
 export MCS, MCSCache
 export FORM, MCFOSM, HLRF, iHLRF, MCFOSMCache, HLRFCache, iHLRFCache
 export SORM, CF, PF, CFCache, PFCache
 export SSM, SSMCache
-include("GenerateRandomVariables.jl")
+include("Random Variables/GenerateRandomVariables.jl")
+include("Random Variables/SampleRandomVariables.jl")
 export generaterv
-include("SampleRandomVariables.jl")
 export samplerv
-include("Transformations/NatafTransformation.jl")
+include("Isoprobabilistic Transformations/NatafTransformation.jl")
+include("Isoprobabilistic Transformations/RosenblattTransformation.jl")
 export getdistortedcorrelation
 export transformsamples
 export getjacobian
 export jointpdf
-include("PerformReliabilityAnalysis.jl")
+include("Reliability Problems/ReliabilityProblems.jl")
+include("Inverse Reliability Problems/InverseReliabilityProblems.jl")
+include("Sensitivity Problems/SensitivityProblems.jl")
 export analyze
 end

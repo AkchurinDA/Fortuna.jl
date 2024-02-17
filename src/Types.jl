@@ -1,4 +1,36 @@
-#= Transformations =#
+# --------------------------------------------------
+# SAMPLING TECHNIQUES
+# --------------------------------------------------
+"""
+    AbstractSamplingTechnique
+
+A custom abstract supertype used by `Fortuna.jl` to define various types of sampling techniques.
+"""
+abstract type AbstractSamplingTechnique end
+
+# Inverse Transform Sampling:
+"""
+    struct ITS <: AbstractSamplingTechnique
+
+A custom type used by `Fortuna.jl` to perform the Inverse Transform Sampling.
+"""
+struct ITS <: AbstractSamplingTechnique
+
+end
+
+# Latin Hypercube Sampling:
+"""
+    struct LHS <: AbstractSamplingTechnique
+
+A custom type used by `Fortuna.jl` to perform the Latin Hypercube Sampling.
+"""
+struct LHS <: AbstractSamplingTechnique
+
+end
+
+# --------------------------------------------------
+# ISOPROBABILISTIC TRANSFORMATIONS
+# --------------------------------------------------
 """
     AbstractTransformation
 
@@ -43,35 +75,9 @@ mutable struct RosenblattTransformation <: AbstractTransformation
 
 end
 
-#= Sampling Techniques =#
-"""
-    AbstractSamplingTechnique
-
-A custom abstract supertype used by `Fortuna.jl` to define various types of sampling techniques.
-"""
-abstract type AbstractSamplingTechnique end
-
-# Inverse Transform Sampling:
-"""
-    struct ITS <: AbstractSamplingTechnique
-
-A custom type used by `Fortuna.jl` to perform the Inverse Transform Sampling.
-"""
-struct ITS <: AbstractSamplingTechnique
-
-end
-
-# Latin Hypercube Sampling:
-"""
-    struct LHS <: AbstractSamplingTechnique
-
-A custom type used by `Fortuna.jl` to perform the Latin Hypercube Sampling.
-"""
-struct LHS <: AbstractSamplingTechnique
-
-end
-
-#= Reliability Analysis =#
+# --------------------------------------------------
+# RELIABILITY PROBLEMS
+# --------------------------------------------------
 """
     AbstractReliabilityProblem
 
@@ -102,20 +108,6 @@ A custom abstract supertype used by `Fortuna.jl` to define various types of reli
 """
 abstract type AbstractReliabililyAnalysisMethod end
 
-"""
-    abstract type FORMSubmethod end
-
-A custom abstract supertype used by `Fortuna.jl` to define various types of First-Order Reliability Methods.
-"""
-abstract type FORMSubmethod end
-
-"""
-    abstract type SORMSubmethod end
-
-A custom abstract supertype used by `Fortuna.jl` to define various types of Second-Order Reliability Methods.
-"""
-abstract type SORMSubmethod end
-
 # Monte Carlo Simulations:
 """
     struct MCS <: AbstractReliabililyAnalysisMethod
@@ -137,6 +129,13 @@ end
 
 # First-Order Reliability Method:
 """
+    abstract type FORMSubmethod end
+
+A custom abstract supertype used by `Fortuna.jl` to define various types of First-Order Reliability Methods.
+"""
+abstract type FORMSubmethod end
+
+"""
     struct FORM <: AbstractReliabililyAnalysisMethod
 
 A custom type used by `Fortuna.jl` to perform reliability analysis using First-Order Reliability Methods.
@@ -152,23 +151,11 @@ struct MCFOSM <: FORMSubmethod # Mean-Centered First-Order Second-Moment method
 
 end
 
-struct MCFOSMCache
-    β::Float64
-end
-
 Base.@kwdef struct HL <: FORMSubmethod # Hasofer-Lind method
 
 end
 
-struct HLCache
-
-end
-
 Base.@kwdef struct RF <: FORMSubmethod # Rackwitz-Fiessler method
-
-end
-
-struct RFCache
 
 end
 
@@ -181,6 +168,27 @@ Base.@kwdef struct HLRF <: FORMSubmethod # Hasofer-Lind Rackwitz-Fiessler method
     ϵ₂                  ::Real = 10^(-9)
 end
 
+Base.@kwdef struct iHLRF <: FORMSubmethod # Improved Hasofer-Lind Rackwitz-Fiessler method
+    # Maximum number of iterations allowed:
+    MaxNumIterations    ::Integer = 100
+    # Criterion #1:
+    ϵ₁                  ::Real = 10^(-9)
+    # Criterion #2:
+    ϵ₂                  ::Real = 10^(-9)
+end
+
+struct MCFOSMCache
+    β::Float64
+end
+
+struct HLCache
+
+end
+
+struct RFCache
+
+end
+
 struct HLRFCache
     β   ::Float64
     PoF ::Float64
@@ -191,15 +199,6 @@ struct HLRFCache
     α   ::Matrix{Float64}
     d   ::Matrix{Float64}
     γ   ::Vector{Float64}
-end
-
-Base.@kwdef struct iHLRF <: FORMSubmethod # Improved Hasofer-Lind Rackwitz-Fiessler method
-    # Maximum number of iterations allowed:
-    MaxNumIterations    ::Integer = 100
-    # Criterion #1:
-    ϵ₁                  ::Real = 10^(-9)
-    # Criterion #2:
-    ϵ₂                  ::Real = 10^(-9)
 end
 
 struct iHLRFCache
@@ -217,8 +216,14 @@ struct iHLRFCache
     γ   ::Vector{Float64}
 end
 
-
 # Second-Order Reliability Method:
+"""
+    abstract type SORMSubmethod end
+
+A custom abstract supertype used by `Fortuna.jl` to define various types of Second-Order Reliability Methods.
+"""
+abstract type SORMSubmethod end
+
 """
     struct SORM <: AbstractReliabililyAnalysisMethod
 
@@ -235,7 +240,15 @@ Base.@kwdef struct CF <: SORMSubmethod # Curve-Fitting method
     ϵ::Real = 1 / 1000
 end
 
-struct CFCache
+Base.@kwdef struct GF <: SORMSubmethod # Gradient-Free method
+
+end
+
+Base.@kwdef struct PF <: SORMSubmethod # Point-Fitting method
+
+end
+
+struct CFCache # Curve-Fitting method
     β₁      ::Float64
     PoF₁    ::Float64
     β₂      ::Vector{Float64}
@@ -246,19 +259,11 @@ struct CFCache
     κ       ::Vector{Float64}
 end
 
-Base.@kwdef struct GF <: SORMSubmethod # Gradient-Free method
+struct GFCache # Gradient-Free method
 
 end
 
-struct GFCache
-
-end
-
-Base.@kwdef struct PF <: SORMSubmethod # Point-Fitting method
-
-end
-
-struct PFCache
+struct PFCache # Point-Fitting method
     β₁              ::Float64
     PoF₁            ::Float64
     β₂              ::Vector{Float64}
@@ -304,4 +309,52 @@ struct SSMCache
     PoFSubset       ::Vector{Float64}
     "Probabilities of failure"
     PoF             ::Float64
+end
+
+# --------------------------------------------------
+# INVERSE RELIABILITY PROBLEMS
+# --------------------------------------------------
+"""
+    mutable struct SensitivityProblem <: AbstractReliabilityProblem
+
+A custom type used by `Fortuna.jl` to define inverse reliability problems.
+
+$(FIELDS)
+"""
+mutable struct InverseReliabilityProblem <: AbstractReliabilityProblem
+    "Random vector with correlated non-normal marginal random variables"
+    X   ::AbstractVector{<:Distribution}
+    "Correlation matrix"
+    ρˣ  ::AbstractMatrix{<:Real}
+    "Limit state function"
+    g   ::Function
+    "Desired reliability index"
+    β   ::Real
+end
+
+# --------------------------------------------------
+# SENSITIVITY PROBLEMS
+# --------------------------------------------------
+"""
+    mutable struct SensitivityProblem <: AbstractReliabilityProblem
+
+A custom type used by `Fortuna.jl` to define sensitivity problems.
+
+$(FIELDS)
+"""
+mutable struct SensitivityProblem <: AbstractReliabilityProblem
+    "Random vector with correlated non-normal marginal random variables"
+    X   ::AbstractVector{<:Distribution}
+    "Correlation matrix"
+    ρˣ  ::AbstractMatrix{<:Real}
+    "Limit state function"
+    g   ::Function
+    "Parameters of the limit state function"
+    θ   ::AbstractVector{<:Real}
+end
+
+struct SensitivityProblemCache
+    FORMSolution    ::Union{HLRFCache, iHLRFCache}
+    ∇β              ::Vector{Float64}
+    ∇PoF            ::Vector{Float64}
 end
