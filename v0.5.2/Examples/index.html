@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Examples · Fortuna.jl</title><meta name="title" content="Examples · Fortuna.jl"/><meta property="og:title" content="Examples · Fortuna.jl"/><meta property="twitter:title" content="Examples · Fortuna.jl"/><meta name="description" content="Documentation for Fortuna.jl."/><meta property="og:description" content="Documentation for Fortuna.jl."/><meta property="twitter:description" content="Documentation for Fortuna.jl."/><script data-outdated-warner src="../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../assets/documenter.js"></script><script src="../search_index.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../assets/themeswap.js"></script><link href="../assets/Favicon.ico" rel="icon" type="image/x-icon"/><link href="../assets/Custom.css" rel="stylesheet" type="text/css"/></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../"><img src="../assets/logo.svg" alt="Fortuna.jl logo"/></a><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../">Home</a></li><li><span class="tocitem">Random Variables</span><ul><li><a class="tocitem" href="../RandomVariables/GenerateRV/">Generating Random Variables</a></li><li><a class="tocitem" href="../RandomVariables/SampleRV/">Sampling Random Variables</a></li></ul></li><li><span class="tocitem">Isoprobabilistic Transformations</span><ul><li><a class="tocitem" href="../IsoprobabilisticTransformations/NatafTransformation/">Nataf Transformation</a></li><li><a class="tocitem" href="../IsoprobabilisticTransformations/RosenblattTransformation/">Rosenblatt Transformation</a></li></ul></li><li><span class="tocitem">Reliability Problems</span><ul><li><a class="tocitem" href="../ReliabilityProblems/DefiningReliabilityProblems/">Defining Reliability Problems</a></li><li><a class="tocitem" href="../ReliabilityProblems/MCS/">Monte Carlo Simulations</a></li><li><a class="tocitem" href="../ReliabilityProblems/FORM/">First-Order Reliability Methods</a></li><li><a class="tocitem" href="../ReliabilityProblems/SORM/">Second-Order Reliability Methods</a></li><li><a class="tocitem" href="../ReliabilityProblems/SSM/">Subset Simulation Method</a></li></ul></li><li><a class="tocitem" href="../InverseReliabilityProblems/">Inverse Reliability Problems</a></li><li><a class="tocitem" href="../SensitivityAnalysis/">Sensitivity Analysis</a></li><li class="is-active"><a class="tocitem" href>Examples</a><ul class="internal"><li><a class="tocitem" href="#Isoprobabilistic-Transformation"><span>Isoprobabilistic Transformation</span></a></li><li><a class="tocitem" href="#Monte-Carlo-Simulations"><span>Monte Carlo Simulations</span></a></li><li><a class="tocitem" href="#First-Order-Reliability-Methods"><span>First-Order Reliability Methods</span></a></li><li><a class="tocitem" href="#Second-Order-Reliability-Methods"><span>Second-Order Reliability Methods</span></a></li><li><a class="tocitem" href="#Subset-Simulation-Method"><span>Subset Simulation Method</span></a></li></ul></li><li><a class="tocitem" href="../Showcases/">Showcases</a></li><li><a class="tocitem" href="../References/">References</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>Examples</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Examples</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/AkchurinDA/Fortuna.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/AkchurinDA/Fortuna.jl/blob/main/docs/src/Examples.md" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="Examples"><a class="docs-heading-anchor" href="#Examples">Examples</a><a id="Examples-1"></a><a class="docs-heading-anchor-permalink" href="#Examples" title="Permalink"></a></h1><h2 id="Isoprobabilistic-Transformation"><a class="docs-heading-anchor" href="#Isoprobabilistic-Transformation">Isoprobabilistic Transformation</a><a id="Isoprobabilistic-Transformation-1"></a><a class="docs-heading-anchor-permalink" href="#Isoprobabilistic-Transformation" title="Permalink"></a></h2><h3 id="Nataf-Transformation"><a class="docs-heading-anchor" href="#Nataf-Transformation">Nataf Transformation</a><a id="Nataf-Transformation-1"></a><a class="docs-heading-anchor-permalink" href="#Nataf-Transformation" title="Permalink"></a></h3><pre><code class="language-julia hljs"># Generate a random vector X with correlated marginal random variables X₁ and X₂:
+X₁  = generaterv(&quot;Gamma&quot;, &quot;M&quot;, [10, 1.5])
+X₂  = generaterv(&quot;Gumbel&quot;, &quot;M&quot;, [15, 2.5])
+X   = [X₁, X₂]
+
+# Define the correlation matrix:
+ρˣ = [1 0.90; 0.90 1]
+
+# Perform the Nataf Transformation by defining a &quot;NatafTransformation&quot; object:
+NatafObject = NatafTransformation(X, ρˣ)
+
+# Generate 1000 samples of the random vector X in X-, Z-, and U-spaces:
+XSamples, USamples, ZSamples = samplerv(NatafObject, 1000, ITS())</code></pre><img src="../assets/NatafTransformation.svg" class="center" style="border-radius:5px;"/><h2 id="Monte-Carlo-Simulations"><a class="docs-heading-anchor" href="#Monte-Carlo-Simulations">Monte Carlo Simulations</a><a id="Monte-Carlo-Simulations-1"></a><a class="docs-heading-anchor-permalink" href="#Monte-Carlo-Simulations" title="Permalink"></a></h2><pre><code class="language-julia hljs"># Generate a random vector X with correlated marginal random variables:
+M₁  = generaterv(&quot;Normal&quot;, &quot;M&quot;, [250, 250 * 0.3])
+M₂  = generaterv(&quot;Normal&quot;, &quot;M&quot;, [125, 125 * 0.3])
+P   = generaterv(&quot;Gumbel&quot;, &quot;M&quot;, [2500, 2500 * 0.2])
+Y   = generaterv(&quot;Weibull&quot;, &quot;M&quot;, [40000, 40000 * 0.1])
+X   = [M₁, M₂, P, Y]
+ρˣ  = [1 0.5 0.3 0; 0.5 1 0.3 0; 0.3 0.3 1 0; 0 0 0 1]
+
+# Define a limit state function:
+a   = 0.190
+s₁  = 0.030
+s₂  = 0.015
+g(x) = 1 - x[1] / (s₁ * x[4]) - x[2] / (s₂ * x[4]) - (x[3] / (a * x[4])) ^ 2
+
+# Define a reliability problem:
+Problem = ReliabilityProblem(X, ρˣ, g)
+
+# Perform the reliability analysis using curve-fitting SORM:
+Solution = analyze(Problem, MCS())
+println(&quot;MCS:&quot;)
+println(&quot;PoF: $(Solution.PoF)&quot;)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">MCS:
+PoF: 0.009312</code></pre><h2 id="First-Order-Reliability-Methods"><a class="docs-heading-anchor" href="#First-Order-Reliability-Methods">First-Order Reliability Methods</a><a id="First-Order-Reliability-Methods-1"></a><a class="docs-heading-anchor-permalink" href="#First-Order-Reliability-Methods" title="Permalink"></a></h2><h3 id="Mean-Centered-First-Order-Second-Moment-Method"><a class="docs-heading-anchor" href="#Mean-Centered-First-Order-Second-Moment-Method">Mean-Centered First-Order Second-Moment Method</a><a id="Mean-Centered-First-Order-Second-Moment-Method-1"></a><a class="docs-heading-anchor-permalink" href="#Mean-Centered-First-Order-Second-Moment-Method" title="Permalink"></a></h3><pre><code class="language-julia hljs"># Generate a random vector X with correlated marginal random variables:
+X₁  = generaterv(&quot;Normal&quot;, &quot;Moments&quot;, [10, 2])
+X₂  = generaterv(&quot;Normal&quot;, &quot;Moments&quot;, [20, 5])
+X   = [X₁, X₂]
+ρˣ  = [1 0.5; 0.5 1]
+
+# Define two equivalent limit state functions:
+g₁(x) = x[1] ^ 2 - 2 * x[2]
+g₂(x) = 1 - 2 * x[2] / x[1] ^ 2
+
+# Define reliability problems:
+Problem₁ = ReliabilityProblem(X, ρˣ, g₁)
+Problem₂ = ReliabilityProblem(X, ρˣ, g₂)
+
+# Perform the reliability analysis:
+Solution₁ = analyze(Problem₁, FORM(MCFOSM()))
+Solution₂ = analyze(Problem₂, FORM(MCFOSM()))
+println(&quot;MCFOSM:&quot;)
+println(&quot;β from g₁: $(Solution₁.β)&quot;)
+println(&quot;β from g₂: $(Solution₂.β)&quot;)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">MCFOSM:
+β from g₁: 1.6641005886756874
+β from g₂: 4.285714285714286</code></pre><h3 id="Improved-Hasofer-Lind-Rackwitz-Fiessler-Method"><a class="docs-heading-anchor" href="#Improved-Hasofer-Lind-Rackwitz-Fiessler-Method">Improved Hasofer-Lind-Rackwitz-Fiessler Method</a><a id="Improved-Hasofer-Lind-Rackwitz-Fiessler-Method-1"></a><a class="docs-heading-anchor-permalink" href="#Improved-Hasofer-Lind-Rackwitz-Fiessler-Method" title="Permalink"></a></h3><pre><code class="language-julia hljs"># Generate a random vector X with correlated marginal random variables:
+X₁  = generaterv(&quot;Normal&quot;, &quot;Moments&quot;, [10, 2])
+X₂  = generaterv(&quot;Normal&quot;, &quot;Moments&quot;, [20, 5])
+X   = [X₁, X₂]
+ρˣ  = [1 0.5; 0.5 1]
+
+# Define two equivalent limit state functions:
+g₁(x) = x[1] ^ 2 - 2 * x[2]
+g₂(x) = 1 - 2 * x[2] / x[1] ^ 2
+
+# Define reliability problems:
+Problem₁ = ReliabilityProblem(X, ρˣ, g₁)
+Problem₂ = ReliabilityProblem(X, ρˣ, g₂)
+
+# Perform the reliability analysis:
+Solution₁ = analyze(Problem₁, FORM(iHLRF()))
+Solution₂ = analyze(Problem₂, FORM(iHLRF()))
+println(&quot;FORM:&quot;)
+println(&quot;β from g₁: $(Solution₁.β)&quot;)
+println(&quot;β from g₂: $(Solution₂.β)&quot;)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">FORM:
+β from g₁: 2.1083397672223776
+β from g₂: 2.1083397672223776</code></pre><h2 id="Second-Order-Reliability-Methods"><a class="docs-heading-anchor" href="#Second-Order-Reliability-Methods">Second-Order Reliability Methods</a><a id="Second-Order-Reliability-Methods-1"></a><a class="docs-heading-anchor-permalink" href="#Second-Order-Reliability-Methods" title="Permalink"></a></h2><h3 id="Curve-Fitting-Method"><a class="docs-heading-anchor" href="#Curve-Fitting-Method">Curve-Fitting Method</a><a id="Curve-Fitting-Method-1"></a><a class="docs-heading-anchor-permalink" href="#Curve-Fitting-Method" title="Permalink"></a></h3><pre><code class="language-julia hljs"># Generate a random vector X with correlated marginal random variables:
+M₁  = generaterv(&quot;Normal&quot;, &quot;M&quot;, [250, 250 * 0.3])
+M₂  = generaterv(&quot;Normal&quot;, &quot;M&quot;, [125, 125 * 0.3])
+P   = generaterv(&quot;Gumbel&quot;, &quot;M&quot;, [2500, 2500 * 0.2])
+Y   = generaterv(&quot;Weibull&quot;, &quot;M&quot;, [40000, 40000 * 0.1])
+X   = [M₁, M₂, P, Y]
+ρˣ  = [1 0.5 0.3 0; 0.5 1 0.3 0; 0.3 0.3 1 0; 0 0 0 1]
+
+# Define a limit state function:
+a   = 0.190
+s₁  = 0.030
+s₂  = 0.015
+g(x) = 1 - x[1] / (s₁ * x[4]) - x[2] / (s₂ * x[4]) - (x[3] / (a * x[4])) ^ 2
+
+# Define a reliability problem:
+Problem = ReliabilityProblem(X, ρˣ, g)
+
+# Perform the reliability analysis using curve-fitting SORM:
+Solution = analyze(Problem, SORM(CF()))
+println(&quot;SORM:&quot;)
+println(&quot;β from FORM: $(Solution.β₁)&quot;)
+println(&quot;β from SORM: $(Solution.β₂[1]) (Hohenbichler and Rackwitz)&quot;)
+println(&quot;β from SORM: $(Solution.β₂[2]) (Breitung)&quot;)
+println(&quot;PoF from FORM: $(Solution.PoF₁)&quot;)
+println(&quot;PoF from SORM: $(Solution.PoF₂[1]) (Hohenbichler and Rackwitz)&quot;)
+println(&quot;PoF from SORM: $(Solution.PoF₂[2]) (Breitung)&quot;)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">SORM:
+β from FORM: 2.466021207388449
+β from SORM: 2.3410266431467046 (Hohenbichler and Rackwitz)
+β from SORM: 2.359553628710581 (Breitung)
+PoF from FORM: 0.006831162248127732
+PoF from SORM: 0.009615397350616303 (Hohenbichler and Rackwitz)
+PoF from SORM: 0.009148468014784986 (Breitung)</code></pre><h3 id="Point-Fitting-Method"><a class="docs-heading-anchor" href="#Point-Fitting-Method">Point-Fitting Method</a><a id="Point-Fitting-Method-1"></a><a class="docs-heading-anchor-permalink" href="#Point-Fitting-Method" title="Permalink"></a></h3><pre><code class="language-julia hljs"># Generate a random vector X with correlated marginal random variables:
+M₁  = generaterv(&quot;Normal&quot;, &quot;M&quot;, [250, 250 * 0.3])
+M₂  = generaterv(&quot;Normal&quot;, &quot;M&quot;, [125, 125 * 0.3])
+P   = generaterv(&quot;Gumbel&quot;, &quot;M&quot;, [2500, 2500 * 0.2])
+Y   = generaterv(&quot;Weibull&quot;, &quot;M&quot;, [40000, 40000 * 0.1])
+X   = [M₁, M₂, P, Y]
+ρˣ  = [1 0.5 0.3 0; 0.5 1 0.3 0; 0.3 0.3 1 0; 0 0 0 1]
+
+# Define a limit state function:
+a   = 0.190
+s₁  = 0.030
+s₂  = 0.015
+g(x) = 1 - x[1] / (s₁ * x[4]) - x[2] / (s₂ * x[4]) - (x[3] / (a * x[4])) ^ 2
+
+# Define a reliability problem:
+Problem = ReliabilityProblem(X, ρˣ, g)
+
+# Perform the reliability analysis using curve-fitting SORM:
+Solution = analyze(Problem, SORM(PF()))
+println(&quot;SORM:&quot;)
+println(&quot;β from FORM: $(Solution.β₁)&quot;)
+println(&quot;β from SORM: $(Solution.β₂[1]) (Hohenbichler and Rackwitz)&quot;)
+println(&quot;β from SORM: $(Solution.β₂[2]) (Breitung)&quot;)
+println(&quot;PoF from FORM: $(Solution.PoF₁)&quot;)
+println(&quot;PoF from SORM: $(Solution.PoF₂[1]) (Hohenbichler and Rackwitz)&quot;)
+println(&quot;PoF from SORM: $(Solution.PoF₂[2]) (Breitung)&quot;)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">SORM:
+β from FORM: 2.466021207388449
+β from SORM: 2.353666600829293 (Hohenbichler and Rackwitz)
+β from SORM: 2.3692855452692765 (Breitung)
+PoF from FORM: 0.006831162248127732
+PoF from SORM: 0.009294637816442962 (Hohenbichler and Rackwitz)
+PoF from SORM: 0.008911243806574475 (Breitung)</code></pre><h2 id="Subset-Simulation-Method"><a class="docs-heading-anchor" href="#Subset-Simulation-Method">Subset Simulation Method</a><a id="Subset-Simulation-Method-1"></a><a class="docs-heading-anchor-permalink" href="#Subset-Simulation-Method" title="Permalink"></a></h2><pre><code class="language-julia hljs"># Define a random vector of uncorrelated marginal distributions:
+X₁  = generaterv(&quot;Exponential&quot;, &quot;P&quot;, 1)
+X₂  = generaterv(&quot;Exponential&quot;, &quot;P&quot;, 1)
+X   = [X₁, X₂]
+ρˣ  = [1 0; 0 1]
+
+# Define a limit state function:
+g(x) = 10 - x[1] - x[2]
+
+# Define reliability problems:
+Problem = ReliabilityProblem(X, ρˣ, g)
+
+# Perform the reliability analysis using SSM:
+Solution = analyze(Problem, SSM())
+println(&quot;SSM&quot;)
+println(&quot;PoF from SSM: $(Solution.PoF)&quot;)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">SSM
+PoF from SSM: 0.0005001000000000001</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../SensitivityAnalysis/">« Sensitivity Analysis</a><a class="docs-footer-nextpage" href="../Showcases/">Showcases »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="auto">Automatic (OS)</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.2.1 on <span class="colophon-date" title="Saturday 17 February 2024 06:42">Saturday 17 February 2024</span>. Using Julia version 1.10.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
