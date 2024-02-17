@@ -1,4 +1,4 @@
-@testset "Reliability Analysis: FORM - MCFOSM" begin
+@testset "Reliability Problems: FORM - MCFOSM" begin
     # Example 5.1 (p. 110) from "Structural and System Reliability" book by Armen Der Kiureghian
 
     # Define a random vector of correlated marginal distributions:
@@ -8,12 +8,12 @@
     ρˣ  = [1 0.5; 0.5 1]
 
     # Define two equivalent limit state functions to demonstrate the invariance problem of the MCFOSM method:
-    G₁(x::Vector) = x[1]^2 - 2 * x[2]
-    G₂(x::Vector) = 1 - 2 * x[2] / x[1]^2
+    g₁(x::Vector) = x[1]^2 - 2 * x[2]
+    g₂(x::Vector) = 1 - 2 * x[2] / x[1]^2
 
     # Define reliability problems:
-    Problem₁ = ReliabilityProblem(X, ρˣ, G₁)
-    Problem₂ = ReliabilityProblem(X, ρˣ, G₂)
+    Problem₁ = ReliabilityProblem(X, ρˣ, g₁)
+    Problem₂ = ReliabilityProblem(X, ρˣ, g₂)
 
     # Perform the reliability analysis using MCFOSM:
     Solution₁ = analyze(Problem₁, FORM(MCFOSM()))
@@ -24,7 +24,7 @@
     @test isapprox(Solution₂.β, 4.29, rtol = 0.01)
 end
 
-@testset "Reliability Analysis: FORM - HLRF #1" begin
+@testset "Reliability Problems: FORM - HLRF #1" begin
     # Example 5.2 (p. 118) from "Structural and System Reliability" book by Armen Der Kiureghian
 
     # Define a random vector of correlated marginal distributions:
@@ -34,12 +34,12 @@ end
     ρˣ  = [1 0.5; 0.5 1]
 
     # Define two equivalent limit state functions to demonstrate the invariance problem of the MCFOSM method:
-    G₁(x::Vector) = x[1]^2 - 2 * x[2]
-    G₂(x::Vector) = 1 - 2 * x[2] / x[1]^2
+    g₁(x::Vector) = x[1]^2 - 2 * x[2]
+    g₂(x::Vector) = 1 - 2 * x[2] / x[1]^2
 
     # Define reliability problems:
-    Problem₁ = ReliabilityProblem(X, ρˣ, G₁)
-    Problem₂ = ReliabilityProblem(X, ρˣ, G₂)
+    Problem₁ = ReliabilityProblem(X, ρˣ, g₁)
+    Problem₂ = ReliabilityProblem(X, ρˣ, g₂)
 
     # Perform the reliability analysis using FORM:
     Solution₁ = analyze(Problem₁, FORM(HLRF()))
@@ -54,7 +54,7 @@ end
     @test isapprox(Solution₂.u[:, end], [-1.928, 0.852], rtol = 0.01)
 end
 
-@testset "Reliability Analysis: FORM - HLRF #2" begin
+@testset "Reliability Problems: FORM - HLRF #2" begin
     # Test from UQPy package (https://github.com/SURGroup/UQpy/tree/master)
 
     # Define a random vector of correlated marginal distributions:
@@ -64,10 +64,10 @@ end
     ρˣ  = [1 0; 0 1]
 
     # Define two equivalent limit state functions to demonstrate the invariance problem of the MCFOSM method:
-    G(x::Vector) = x[1] - x[2]
+    g(x::Vector) = x[1] - x[2]
 
     # Define reliability problems:
-    Problem = ReliabilityProblem(X, ρˣ, G)
+    Problem = ReliabilityProblem(X, ρˣ, g)
 
     # Perform the reliability analysis using FORM:
     Solution = analyze(Problem, FORM(HLRF()))
@@ -79,7 +79,7 @@ end
     @test isapprox(Solution.u[:, end], [-2, 1], rtol = 10^(-9))
 end
 
-@testset "Reliability Analysis: FORM - HLRF #3" begin
+@testset "Reliability Problems: FORM - HLRF #3" begin
     # Example 6.5 (p. 147) from "Structural and System Reliability" book by Armen Der Kiureghian
 
     # Define a random vector of correlated marginal distributions:
@@ -94,10 +94,10 @@ end
     a   = 0.190
     s₁  = 0.030
     s₂  = 0.015
-    G(x::Vector) = 1 - x[1] / (s₁ * x[4]) - x[2] / (s₂ * x[4]) - (x[3] / (a * x[4]))^2
+    g(x::Vector) = 1 - x[1] / (s₁ * x[4]) - x[2] / (s₂ * x[4]) - (x[3] / (a * x[4]))^2
 
     # Define a reliability problem:
-    Problem = ReliabilityProblem(X, ρˣ, G)
+    Problem = ReliabilityProblem(X, ρˣ, g)
 
     # Perform the reliability analysis using curve-fitting SORM:
     Solution = analyze(Problem, FORM(HLRF()))
@@ -109,7 +109,7 @@ end
     # Note: There is a typo in the book for this example. The last coordinate of the design point in U-space must be -1.80.
 end
 
-@testset "Reliability Analysis: FORM - iHLRF #1" begin
+@testset "Reliability Problems: FORM - iHLRF #1" begin
     # Example 5.2 (p. 118) from "Structural and System Reliability" book by Armen Der Kiureghian
 
     # Define a random vector of correlated marginal distributions:
@@ -119,12 +119,12 @@ end
     ρˣ  = [1 0.5; 0.5 1]
 
     # Define two equivalent limit state functions to demonstrate the invariance problem of the MCFOSM method:
-    G₁(x::Vector) = x[1]^2 - 2 * x[2]
-    G₂(x::Vector) = 1 - 2 * x[2] / x[1]^2
+    g₁(x::Vector) = x[1]^2 - 2 * x[2]
+    g₂(x::Vector) = 1 - 2 * x[2] / x[1]^2
 
     # Define reliability problems:
-    Problem₁ = ReliabilityProblem(X, ρˣ, G₁)
-    Problem₂ = ReliabilityProblem(X, ρˣ, G₂)
+    Problem₁ = ReliabilityProblem(X, ρˣ, g₁)
+    Problem₂ = ReliabilityProblem(X, ρˣ, g₂)
 
     # Perform the reliability analysis using FORM:
     Solution₁ = analyze(Problem₁, FORM(iHLRF()))
@@ -139,7 +139,7 @@ end
     @test isapprox(Solution₂.u[:, end], [-1.928, 0.852], rtol = 0.01)
 end
 
-@testset "Reliability Analysis: FORM - iHLRF #2" begin
+@testset "Reliability Problems: FORM - iHLRF #2" begin
     # Test from UQPy package (https://github.com/SURGroup/UQpy/tree/master)
 
     # Define a random vector of correlated marginal distributions:
@@ -149,10 +149,10 @@ end
     ρˣ  = [1 0; 0 1]
 
     # Define two equivalent limit state functions to demonstrate the invariance problem of the MCFOSM method:
-    G(x::Vector) = x[1] - x[2]
+    g(x::Vector) = x[1] - x[2]
 
     # Define reliability problems:
-    Problem = ReliabilityProblem(X, ρˣ, G)
+    Problem = ReliabilityProblem(X, ρˣ, g)
 
     # Perform the reliability analysis using FORM:
     Solution = analyze(Problem, FORM(iHLRF()))
@@ -164,7 +164,7 @@ end
     @test isapprox(Solution.u[:, end], [-2, 1], rtol = 10^(-9))
 end
 
-@testset "Reliability Analysis: FORM - iHLRF #3" begin
+@testset "Reliability Problems: FORM - iHLRF #3" begin
     # Example 6.5 (p. 147) from "Structural and System Reliability" book by Armen Der Kiureghian
 
     # Define a random vector of correlated marginal distributions:
@@ -179,10 +179,10 @@ end
     a   = 0.190
     s₁  = 0.030
     s₂  = 0.015
-    G(x::Vector) = 1 - x[1] / (s₁ * x[4]) - x[2] / (s₂ * x[4]) - (x[3] / (a * x[4]))^2
+    g(x::Vector) = 1 - x[1] / (s₁ * x[4]) - x[2] / (s₂ * x[4]) - (x[3] / (a * x[4]))^2
 
     # Define a reliability problem:
-    Problem = ReliabilityProblem(X, ρˣ, G)
+    Problem = ReliabilityProblem(X, ρˣ, g)
 
     # Perform the reliability analysis using curve-fitting SORM:
     Solution = analyze(Problem, FORM(iHLRF()))

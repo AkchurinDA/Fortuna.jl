@@ -1,4 +1,4 @@
-@testset "Reliability Analysis: MCS" begin
+@testset "Reliability Problems: MCS" begin
     # Define a random vector of correlated marginal distributions:
     M₁  = generaterv("Normal", "M", [250, 250 * 0.3])
     M₂  = generaterv("Normal", "M", [125, 125 * 0.3])

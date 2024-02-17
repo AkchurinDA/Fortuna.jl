@@ -9,9 +9,9 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::FORM)
     Submethod = AnalysisMethod.Submethod
 
     # Extract the problem data:
-    g = Problem.g
-    X = Problem.X
-    ρˣ = Problem.ρˣ
+    X   = Problem.X
+    ρˣ  = Problem.ρˣ
+    g   = Problem.g
 
     if !isa(Submethod, MCFOSM) && !isa(Submethod, HL) && !isa(Submethod, RF) && !isa(Submethod, HLRF) && !isa(Submethod, iHLRF)
         error("Invalid FORM submethod.")
@@ -108,7 +108,7 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::FORM)
 
                 # Compute the importance vector:
                 L⁻¹ = NatafObject.L⁻¹
-                γ   = vec((L⁻¹ * α[:, i]) / norm(L⁻¹ * α[:, i]))
+                γ   = vec((transpose(α[:, i]) * L⁻¹) / norm(transpose(α[:, i]) * L⁻¹))
 
                 # Clean up the results:
                 x = x[:, 1:i]
@@ -238,7 +238,7 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::FORM)
 
                 # Compute the importance vector:
                 L⁻¹ = NatafObject.L⁻¹
-                γ   = vec((L⁻¹ * α[:, i]) / norm(L⁻¹ * α[:, i]))
+                γ   = vec((transpose(α[:, i]) * L⁻¹) / norm(transpose(α[:, i]) * L⁻¹))
 
                 # Clean up the results:
                 x   = x[:, 1:i]

@@ -9,17 +9,17 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::SORM)
     Submethod = AnalysisMethod.Submethod
 
     # Determine the design point using FORM:
-    FORMSolution    = analyze(Problem, FORM(iHLRF()))
-    β₁              = FORMSolution.β
-    PoF₁            = FORMSolution.PoF
+    FORMSolution    = analyze(Problem, FORM())
     u               = FORMSolution.u[:, end]
     ∇G              = FORMSolution.∇G[:, end]
     α               = FORMSolution.α[:, end]
+    β₁              = FORMSolution.β
+    PoF₁            = FORMSolution.PoF
 
     # Extract the problem data:
-    g   = Problem.g
     X   = Problem.X
     ρˣ  = Problem.ρˣ
+    g   = Problem.g
 
     if !isa(Submethod, CF) && !isa(Submethod, GF) && !isa(Submethod, PF)
         error("Invalid SORM submethod.")

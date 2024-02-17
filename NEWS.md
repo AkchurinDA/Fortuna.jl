@@ -1,5 +1,9 @@
 # News
 
+## Release V0.5.2
+
+- Added functionality to perform sensitivity analysis.
+
 ## Release V0.5.1
 
 - Added measure of importance of random variables $\gamma$ to FORM. Note that the importance vector $\gamma$ is only available if the reliability analysis was carried out using HLRF or iHLRF methods.
