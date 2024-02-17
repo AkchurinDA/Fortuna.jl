@@ -61,4 +61,4 @@ The following functionality is planned to be added:
     - [x] Point-Fitting Method
   - [x] Subset Simulation Method
 - [ ] Inverse Reliability Analysis Methods
-- [ ] Sensitivity Analysis
+- [x] Sensitivity Analysis
