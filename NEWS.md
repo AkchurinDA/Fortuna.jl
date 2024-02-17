@@ -3,6 +3,7 @@
 ## Release V0.5.2
 
 - Added functionality to perform sensitivity analysis.
+- Sped up the calculations of the importance vector $\gamma$. 
 
 ## Release V0.5.1
 
