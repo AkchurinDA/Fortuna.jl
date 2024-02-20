@@ -1,5 +1,14 @@
 # News
 
+## Release V0.5.3
+
+- HLRF and iHLRF methods can now be started from any arbitrary point $x_{0}$. For example
+
+```julia
+analyze(Problem, FORM(HLRF(x₀ = [100, 100])))
+analyze(Problem, FORM(iHLRF(x₀ = [150, 275])))
+```
+
 ## Release V0.5.2
 
 - Added functionality to perform sensitivity analysis.
