@@ -21,7 +21,7 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::SORM)
     ρˣ  = Problem.ρˣ
     g   = Problem.g
 
-    if !isa(Submethod, CF) && !isa(Submethod, GF) && !isa(Submethod, PF)
+    if !isa(Submethod, CF) && !isa(Submethod, PF)
         error("Invalid SORM submethod.")
     elseif isa(Submethod, CF)
         # Extract the analysis details:
@@ -53,7 +53,7 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::SORM)
                 PoF₂[1] = cdf(Normal(0, 1), -β₁) * prod(κᵢ -> 1 / sqrt(1 + ψ * κᵢ), κ)
             else
                 PoF₂[1] = nothing
-                println("Condition of Hohenbichler-Rackwitz's approximation of the probability of failure was not satisfied.")
+                error("Condition of Hohenbichler-Rackwitz's approximation of the probability of failure was not satisfied.")
             end
         end
 
@@ -62,7 +62,7 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::SORM)
                 PoF₂[2] = cdf(Normal(0, 1), -β₁) * prod(κᵢ -> 1 / sqrt(1 + β₁ * κᵢ), κ)
             else
                 PoF₂[2] = nothing
-                println("Condition of Breitung's approximation of the probability of failure was not satisfied.")
+                error("Condition of Breitung's approximation of the probability of failure was not satisfied.")
             end
         end
 

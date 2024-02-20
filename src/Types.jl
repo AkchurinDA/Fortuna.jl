@@ -244,10 +244,6 @@ Base.@kwdef struct CF <: SORMSubmethod # Curve-Fitting method
     ϵ::Real = 1 / 1000
 end
 
-Base.@kwdef struct GF <: SORMSubmethod # Gradient-Free method
-
-end
-
 Base.@kwdef struct PF <: SORMSubmethod # Point-Fitting method
 
 end
@@ -261,10 +257,6 @@ struct CFCache # Curve-Fitting method
     R       ::Matrix{Float64}
     A       ::Matrix{Float64}
     κ       ::Vector{Float64}
-end
-
-struct GFCache # Gradient-Free method
-
 end
 
 struct PFCache # Point-Fitting method

@@ -4,9 +4,11 @@ CairoMakie.activate!(type = :svg)
 
 Random.seed!(1)
 
-X = generaterv("Gamma", "M", [10, 1.5])
-
-XSamples = samplerv(X, 5000, ITS())
+# --------------------------------------------------
+# HISTOGRAM
+# --------------------------------------------------
+X           = generaterv("Gamma", "M", [10, 1.5])
+XSamples    = samplerv(X, 10000, LHS())
 
 begin
     F = Figure(size = 72 .* (8, 6), fonts = (; regular = texfont()), fontsize = 14)
@@ -17,26 +19,30 @@ begin
             xgridvisible = true, ygridvisible = true,
             xminorgridvisible = true, yminorgridvisible = true,
             xlabel = L"$x$", ylabel = "PDF",
-            limits = (5.0, 17.5, 0, nothing))
+            limits = (5.0, 17.5, 0, nothing),
+            aspect = 4 / 3)
 
     hist!(XSamples,
         color = :steelblue,
         strokecolor = :black, strokewidth = 0.25,
-        bins = 25, normalization = :pdf)
+        bins = 50, normalization = :pdf)
     
     display(F)
 end
 
 save("Sample-RVariable.svg", F)
 
-X₁  = generaterv("Gamma", "M", [10, 1.5])
-X₂  = generaterv("Gumbel", "M", [15, 2.5])
-X   = [X₁, X₂]
-
-XSamples = samplerv(X, 5000, ITS())
+# --------------------------------------------------
+# SCATTER (UNCORRELATED)
+# --------------------------------------------------
+X₁          = generaterv("Gamma",  "M", [10, 1.5])
+X₂          = generaterv("Gumbel", "M", [15, 2.5])
+X           = [X₁, X₂]
+XSamples    = samplerv(X, 10000, LHS())
 
 begin
     F = Figure(size = 72 .* (6, 6), fonts = (; regular = texfont()), fontsize = 14)
+
     A = Axis(F[1, 1], 
             xminorticks = IntervalsBetween(5), yminorticks = IntervalsBetween(5),
             xminorticksvisible = true, yminorticksvisible = true,
@@ -56,18 +62,19 @@ end
 
 save("Sample-RVector-U.svg", F)
 
-X₁  = generaterv("Gamma", "M", [10, 1.5])
-X₂  = generaterv("Gumbel", "M", [15, 2.5])
-X   = [X₁, X₂]
-
-ρˣ = [1 0.90; 0.90 1]
-
-TransformationObject = NatafTransformation(X, ρˣ)
-
-XSamples, ZSamples, USamples = samplerv(TransformationObject, 5000, ITS())
+# --------------------------------------------------
+# SCATTER (CORRELATED)
+# --------------------------------------------------
+X₁                              = generaterv("Gamma",  "M", [10, 1.5])
+X₂                              = generaterv("Gumbel", "M", [15, 2.5])
+X                               = [X₁, X₂]
+ρˣ                              = [1 0.90; 0.90 1]
+TransformationObject            = NatafTransformation(X, ρˣ)
+XSamples, ZSamples, USamples    = samplerv(TransformationObject, 10000, LHS())
 
 begin
     F = Figure(size = 72 .* (6, 6), fonts = (; regular = texfont()), fontsize = 14)
+
     A = Axis(F[1, 1], 
             xminorticks = IntervalsBetween(5), yminorticks = IntervalsBetween(5),
             xminorticksvisible = true, yminorticksvisible = true,

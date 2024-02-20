@@ -29,7 +29,7 @@ nothing # hide
 ```
 
 ```@raw html
-<img src="../Sample-RVariable.svg" class="center" style="max-height:350px; border-radius:5px;"/>
+<img src="../Sample-RVariable.svg" class="center" style="max-height:400px; border-radius:2.5px;"/>
 ```
 
 ## Sampling Random Vectors with Uncorrelated Marginals
@@ -58,7 +58,7 @@ nothing # hide
 ```
 
 ```@raw html
-<img src="../Sample-RVector-U.svg" class="center" style="max-height:350px; border-radius:5px;"/>
+<img src="../Sample-RVector-U.svg" class="center" style="max-height:400px; border-radius:2.5px;"/>
 ```
 
 ## Sampling Random Vectors with Correlated Marginals
@@ -100,7 +100,7 @@ nothing # hide
 ```
 
 ```@raw html
-<img src="../Sample-RVector-C.svg" class="center" style="max-height:350px; border-radius:5px;"/>
+<img src="../Sample-RVector-C.svg" class="center" style="max-height:400px; border-radius:2.5px;"/>
 ```
 
 ## API

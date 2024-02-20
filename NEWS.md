@@ -2,10 +2,10 @@
 
 ## Release V0.5.3
 
-- HLRF and iHLRF methods can now be started from any arbitrary point $x_{0}$. For example
+- HLRF and iHLRF methods can now be started from any arbitrary point $x_{0}$.
 
 ```julia
-analyze(Problem, FORM(HLRF(x₀ = [100, 100])))
+analyze(Problem, FORM( HLRF(x₀ = [150, 275])))
 analyze(Problem, FORM(iHLRF(x₀ = [150, 275])))
 ```
 
@@ -55,7 +55,7 @@ XSamples, ZSamples, USamples = samplerv(TransformationObject, 1000, LHS())
 ## Release V0.4.1
 
 - Accelerate the Subset Simulation Method.
-- 
+
 ```julia
 SSMSolution = analyze(Problem, SSM())
 ```
