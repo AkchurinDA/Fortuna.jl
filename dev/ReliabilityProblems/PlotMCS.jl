@@ -4,7 +4,7 @@ CairoMakie.activate!(type = :svg)
 
 N(PoF, V) = (1 - PoF) / (PoF * V ^ 2)
 
-VRange          = collect(0.01:0.001:1)
+VRange          = collect(range(0.01, 1, 1000))
 PoFRange        = [0.1, 0.01, 0.001, 0.0001, 0.00001, 0.000001]
 PoFRangeText    = ["0.1", "0.01", "0.001", "0.0001", "0.00001", "0.000001"]
 
