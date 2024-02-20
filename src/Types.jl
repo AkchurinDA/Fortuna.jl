@@ -161,20 +161,24 @@ end
 
 Base.@kwdef struct HLRF <: FORMSubmethod # Hasofer-Lind Rackwitz-Fiessler method
     # Maximum number of iterations allowed:
-    MaxNumIterations    ::Integer = 100
+    MaxNumIterations    ::Integer = 250
     # Criterion #1:
     ϵ₁                  ::Real = 10^(-9)
     # Criterion #2:
     ϵ₂                  ::Real = 10^(-9)
+    # Starting point:
+    x₀                  ::Union{Nothing, Vector{<:Real}} = nothing
 end
 
 Base.@kwdef struct iHLRF <: FORMSubmethod # Improved Hasofer-Lind Rackwitz-Fiessler method
     # Maximum number of iterations allowed:
-    MaxNumIterations    ::Integer = 100
+    MaxNumIterations    ::Integer = 250
     # Criterion #1:
     ϵ₁                  ::Real = 10^(-9)
     # Criterion #2:
     ϵ₂                  ::Real = 10^(-9)
+    # Starting point:
+    x₀                  ::Union{Nothing, Vector{<:Real}} = nothing
 end
 
 struct MCFOSMCache
@@ -284,7 +288,7 @@ $(FIELDS)
 """
 Base.@kwdef struct SSM <: AbstractReliabililyAnalysisMethod
     "Target conditional probability"
-    P₀              ::Float64 = 0.10
+    P₀              ::Real = 0.10
     "Number of samples to generate for each subset"
     NumSamples      ::Integer = 10000
     "Maximum number of subsets"

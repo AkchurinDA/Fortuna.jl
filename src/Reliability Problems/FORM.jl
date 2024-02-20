@@ -41,6 +41,7 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::FORM)
         MaxNumIterations = Submethod.MaxNumIterations
         ϵ₁ = Submethod.ϵ₁
         ϵ₂ = Submethod.ϵ₂
+        x₀ = Submethod.x₀
 
         # Compute the number of marginal distributions:
         NumDims = length(X)
@@ -57,7 +58,11 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::FORM)
         NatafObject = NatafTransformation(X, ρˣ)
 
         # Initialize the design point in X-space:
-        x[:, 1] = mean.(X)
+        if isnothing(x₀) 
+            x[:, 1] = mean.(X)
+        else
+            x[:, 1] = x₀
+        end
 
         # Compute the initial design point in U-space:
         u[:, 1] = transformsamples(NatafObject, x[:, 1], "X2U")
@@ -94,7 +99,7 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::FORM)
             d[:, i] = (G[i] / norm(∇G[:, i]) + dot(α[:, i], u[:, i])) * α[:, i] - u[:, i]
 
             # Compute the new design point in U-space:
-            u[:, i+1] = u[:, i] + λ * d[:, i]
+            u[:, i + 1] = u[:, i] + λ * d[:, i]
 
             # Check for convergance:
             Criterion₁ = abs(g(x[:, i]) / G₀)                               # Check if the value of the limit state function is close to zero.
@@ -111,12 +116,12 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::FORM)
                 γ   = vec((transpose(α[:, i]) * L⁻¹) / norm(transpose(α[:, i]) * L⁻¹))
 
                 # Clean up the results:
-                x = x[:, 1:i]
-                u = u[:, 1:i]
-                G = G[1:i]
-                ∇G = ∇G[:, 1:i]
-                α = α[:, 1:i]
-                d = d[:, 1:i]
+                x   = x[:, 1:i]
+                u   = u[:, 1:i]
+                G   = G[1:i]
+                ∇G  = ∇G[:, 1:i]
+                α   = α[:, 1:i]
+                d   = d[:, 1:i]
 
                 # Return results:
                 return HLRFCache(β, PoF, x, u, G, ∇G, α, d, γ)
@@ -134,11 +139,7 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::FORM)
         MaxNumIterations = Submethod.MaxNumIterations
         ϵ₁ = Submethod.ϵ₁
         ϵ₂ = Submethod.ϵ₂
-
-        # Extract data:
-        g = Problem.g
-        X = Problem.X
-        ρˣ = Problem.ρˣ
+        x₀ = Submethod.x₀
 
         # Compute the number of marginal distributions:
         NumDims = length(X)
@@ -158,7 +159,11 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::FORM)
         NatafObject = NatafTransformation(X, ρˣ)
 
         # Initialize the design point in X-space:
-        x[:, 1] = mean.(X)
+        if isnothing(x₀) 
+            x[:, 1] = mean.(X)
+        else
+            x[:, 1] = x₀
+        end
 
         # Compute the initial design point in U-space:
         u[:, 1] = transformsamples(NatafObject, x[:, 1], "X2U")
@@ -221,10 +226,10 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::FORM)
             λ[i] = λₜ
 
             # Compute the new design point in U-space:
-            u[:, i+1] = u[:, i] + λ[i] * d[:, i]
+            u[:, i + 1] = u[:, i] + λ[i] * d[:, i]
 
             # Compute the new design point in X-space:
-            x[:, i+1] = transformsamples(NatafObject, u[:, i+1], "U2X")
+            x[:, i + 1] = transformsamples(NatafObject, u[:, i + 1], "U2X")
 
             # Check for convergance:
             Criterion₁ = abs(g(x[:, i]) / G₀)                               # Check if the limit state function is close to zero.
