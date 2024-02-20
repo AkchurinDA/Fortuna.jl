@@ -71,8 +71,6 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::SORM)
 
         # Return results:
         return CFCache(β₁, PoF₁, β₂, PoF₂, H, R, A, κ)
-    elseif isa(Submethod, GF)
-        # Not yet implemented
     elseif isa(Submethod, PF)
         # Compute the number of marginal distributions:
         NumDims = length(X)
