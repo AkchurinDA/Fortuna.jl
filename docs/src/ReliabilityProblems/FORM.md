@@ -4,11 +4,6 @@
 
 The MCFOSM method is the simplest and least computationally expensive type of reliability method. It utilizes the first-order Taylor expansion of the limit state function ``g(\vec{X})`` at the mean values and the first two moments of the marginal random variables involved in the reliability problem to evaluate the reliability index. However, despite the fact that it is simple and does not require the complete knowledge of the random variables involved in the reliability problem, the MCFOSM method faces an issue known as the *invariance problem*. This problem arises because the resulting reliability index ``\beta`` is dependent on the formulation of the limit state function ``g(\vec{X})``. In other words, two equivalent limit state functions with the same failure boundaries produce two different reliability indices; thus, the use of MCFOSM method is not recommended.
 
-## Hasofer-Lind Method
-
-!!! warning
-    This feature is currently under development.
-
 ## Rackwitz-Fiessler Method
 
 !!! warning
