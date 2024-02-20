@@ -1,7 +1,7 @@
 <div align="center">
   <img src="assets/logo.svg" alt = "Logo" width="35%">
 
-  > **Audentes Fortuna Iuvat**
+  **Audentes Fortuna Iuvat**
 
   | Contributors | [Damir Akchurin](https://scholar.google.com/citations?user=chYaDcIAAAAJ&hl=en) |
   | :---: | :---: |

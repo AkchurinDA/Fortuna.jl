@@ -6,8 +6,8 @@ function analyze(Problem::SensitivityProblem)
     θ   = Problem.θ
 
     # Define a reliability problem for the FORM analysis:
-    gFORM(xVariable) = g(xVariable, θ)
-    FORMProblem = ReliabilityProblem(X, ρˣ, gFORM)
+    g₁(x) = g(x, θ)
+    FORMProblem = ReliabilityProblem(X, ρˣ, g₁)
 
     # Solve the reliability problem using the FORM:
     FORMSolution    = analyze(FORMProblem, FORM())
@@ -19,11 +19,11 @@ function analyze(Problem::SensitivityProblem)
     NatafObject = NatafTransformation(X, ρˣ)
 
     # Define gradient functions of the limit state function in X- and U-spaces:
-    ∇gVariable(x, θ) = gradient(Unknown -> g(x, Unknown), θ)
-    ∇GVariable(u, θ) = gradient(Unknown -> G(g, θ, NatafObject, Unknown), u)
+    ∇g(x, θ) = gradient(Unknown -> g(x, Unknown), θ)
+    ∇G(u, θ) = gradient(Unknown -> G(g, θ, NatafObject, Unknown), u)
     
     # Compute the sensitivities w.r.t. the reliability index:
-    ∇β = ∇gVariable(x, θ) / norm(∇GVariable(u, θ))
+    ∇β = ∇g(x, θ) / norm(∇G(u, θ))
 
     # Compute the sensitivities w.r.t. the probability of failure:
     ∇PoF = -pdf(Normal(0, 1), β) * ∇β
