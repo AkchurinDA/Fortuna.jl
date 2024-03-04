@@ -14,7 +14,6 @@ begin
     A = Axis(F[1, 1], 
             xminorticks = IntervalsBetween(5), yminorticks = IntervalsBetween(10),
             xminorticksvisible = true, yminorticksvisible = true,
-            xgridvisible = true, ygridvisible = true,
             xminorgridvisible = true, yminorgridvisible = true,
             xlabel = L"$V_{P_{f}}$", ylabel = L"$N$",
             yscale = log10,
