@@ -1,4 +1,5 @@
 include("MCS.jl")
+include("IS.jl")
 include("FORM.jl")
 include("SORM.jl")
 include("SSM.jl")

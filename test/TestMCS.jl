@@ -11,10 +11,10 @@
     a   = 0.190
     s₁  = 0.030
     s₂  = 0.015
-    G(x::Vector) = 1 - x[1] / (s₁ * x[4]) - x[2] / (s₂ * x[4]) - (x[3] / (a * x[4]))^2
+    g(x::Vector) = 1 - x[1] / (s₁ * x[4]) - x[2] / (s₂ * x[4]) - (x[3] / (a * x[4]))^2
 
     # Define a reliability problem:
-    Problem = ReliabilityProblem(X, ρˣ, G)
+    Problem = ReliabilityProblem(X, ρˣ, g)
 
     # Perform the reliability analysis using Monte Carlo simulations:
     Solution = analyze(Problem, MCS())

@@ -5,6 +5,7 @@ using Test
 include("TestSamplingTechniques.jl")
 include("TestNatafTransformation.jl")
 include("TestMCS.jl")
+include("TestIS.jl")
 include("TestFORM.jl")
 include("TestSORM.jl")
 # include("TestSSM.jl")

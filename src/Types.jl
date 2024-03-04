@@ -65,6 +65,7 @@ mutable struct NatafTransformation <: AbstractTransformation
         return new(X, ρˣ, ρᶻ, L, L⁻¹)
     end
 end
+Base.broadcastable(x::NatafTransformation) = Ref(x)
 
 """
     mutable struct RosenblattTransformation <: AbstractTransformation
@@ -74,6 +75,7 @@ A custom type used by `Fortuna.jl` to perform the Rosenblatt Transformation.
 mutable struct RosenblattTransformation <: AbstractTransformation
 
 end
+Base.broadcastable(x::RosenblattTransformation) = Ref(x)
 
 # --------------------------------------------------
 # RELIABILITY PROBLEMS
@@ -117,14 +119,35 @@ A custom type used by `Fortuna.jl` to perform reliability analysis using Monte C
 $(FIELDS)
 """
 Base.@kwdef struct MCS <: AbstractReliabililyAnalysisMethod
-    "Number of samples used in Monte Carlo simulations"
+    "Number of samples"
     NumSamples          ::Integer = 10^6
     "Sampling technique used to generate samples"
     SamplingTechnique   ::AbstractSamplingTechnique = LHS()
 end
 
 struct MCSCache
-    PoF::Float64
+    Samples ::Matrix{Float64}
+    PoF     ::Float64
+end
+
+# Importance Sampling:
+"""
+    struct IS <: AbstractReliabililyAnalysisMethod
+
+A custom type used by `Fortuna.jl` to perform reliability analysis using Importance Sampling technique.
+
+$(FIELDS)
+"""
+Base.@kwdef struct IS <: AbstractReliabililyAnalysisMethod
+    "Proposal density function"
+    q                   ::Distribution
+    "Number of samples"
+    NumSamples          ::Integer = 10^6
+end
+
+struct ISCache
+    Samples ::Matrix{Float64}
+    PoF     ::Float64
 end
 
 # First-Order Reliability Method:

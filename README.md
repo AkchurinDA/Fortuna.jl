@@ -49,6 +49,7 @@ The following functionality is planned to be added:
     - [ ] Rosennblatt Transformation
 - [x] Reliability Analysis Methods
   - [x] Monte Carlo Simulations
+  - [x] Importance Sampling
   - [x] First-Order Reliability Method
     - [x] Mean-Centered First-Order Second-Moment Method
     - [ ] Rackwitz-Fiessler Method
