@@ -291,7 +291,7 @@ function jointpdf(Object::NatafTransformation, x::Union{AbstractVector{<:Real}, 
 
     # Convert samples to the space of correlated standard normal random variables Z:
     for i in 1:NumDims
-        z[:, i] = quantile(Normal(0, 1), cdf(X[i], x[:, i]))
+        z[:, i] = quantile.(Normal.(0, 1), cdf.(X[i], x[:, i]))
         f[:, i] = pdf.(X[i], x[:, i])
         ϕ[:, i] = pdf.(Normal(0, 1), z[:, i])
     end

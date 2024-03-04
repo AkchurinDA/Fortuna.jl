@@ -28,6 +28,7 @@ export SensitivityProblemCache
 export AbstractReliabililyAnalysisMethod
 export FORMSubmethod, SORMSubmethod
 export MCS, MCSCache
+export IS, ISCache
 export FORM, MCFOSM, HLRF, iHLRF, MCFOSMCache, HLRFCache, iHLRFCache
 export SORM, CF, PF, CFCache, PFCache
 export SSM, SSMCache
