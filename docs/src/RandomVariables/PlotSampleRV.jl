@@ -16,7 +16,6 @@ begin
     A = Axis(F[1, 1], 
             xminorticks = IntervalsBetween(5), yminorticks = IntervalsBetween(5),
             xminorticksvisible = true, yminorticksvisible = true,
-            xgridvisible = true, ygridvisible = true,
             xminorgridvisible = true, yminorgridvisible = true,
             xlabel = L"$x$", ylabel = "PDF",
             limits = (5.0, 17.5, 0, nothing),

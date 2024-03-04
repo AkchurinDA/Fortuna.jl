@@ -1,15 +1,5 @@
 # News
 
-## Release V0.5.4
-
-- Added functionality to solve reliability problems with extremely small probabilities of failure using the Importance Sampling technique.
-- Isoprobabilistic transformation objects (`NatafTransformation` and `RosenblattTransformation`) are now broadcastable.
-
-```julia
-jointpdf.(NatafObject, XSamples)
-jointpdf.(RosenblattObject, XSamples)
-```
-
 ## Release V0.5.3
 
 - HLRF and iHLRF methods can now be started from any arbitrary point $x_{0}$.
@@ -17,6 +7,14 @@ jointpdf.(RosenblattObject, XSamples)
 ```julia
 analyze(Problem, FORM( HLRF(x₀ = [150, 275])))
 analyze(Problem, FORM(iHLRF(x₀ = [150, 275])))
+```
+
+- Added functionality to solve reliability problems with extremely small probabilities of failure using the Importance Sampling technique.
+- Isoprobabilistic transformation objects (`NatafTransformation` and `RosenblattTransformation`) are now broadcastable.
+
+```julia
+jointpdf.(NatafObject, XSamples)
+jointpdf.(RosenblattObject, XSamples)
 ```
 
 ## Release V0.5.2
