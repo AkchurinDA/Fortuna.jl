@@ -6,5 +6,5 @@
 
 ```@docs
 IS
-analyze(Problem::ReliabilityProblem, AnalysisMethod::IT)
+analyze(Problem::ReliabilityProblem, AnalysisMethod::IS)
 ```
