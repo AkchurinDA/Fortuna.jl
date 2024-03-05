@@ -1,4 +1,4 @@
-# First-Order Reliability Method:
+# Monte Carlo simulations:
 """
     analyze(Problem::ReliabilityProblem, AnalysisMethod::MCS)
 

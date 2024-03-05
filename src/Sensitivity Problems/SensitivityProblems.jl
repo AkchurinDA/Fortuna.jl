@@ -1,3 +1,8 @@
+"""
+    analyze(Problem::SensitivityProblem)
+
+The function solves the provided sensitivity problem.
+"""
 function analyze(Problem::SensitivityProblem)
     # Extract the problem data:
     X   = Problem.X

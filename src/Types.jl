@@ -334,7 +334,7 @@ end
 # INVERSE RELIABILITY PROBLEMS
 # --------------------------------------------------
 """
-    mutable struct SensitivityProblem <: AbstractReliabilityProblem
+    mutable struct InverseReliabilityProblem <: AbstractReliabilityProblem
 
 A custom type used by `Fortuna.jl` to define inverse reliability problems.
 
