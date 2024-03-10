@@ -1,10 +1,4 @@
-# Monte Carlo simulations:
-"""
-    analyze(Problem::ReliabilityProblem, AnalysisMethod::MCS)
-
-The function solves the provided reliability problem using Monte Carlo simulations.
-"""
-function analyze(Problem::ReliabilityProblem, AnalysisMethod::MCS)
+function solve(Problem::ReliabilityProblem, AnalysisMethod::MC)
     # Extract the analysis details:
     NumSamples          = AnalysisMethod.NumSamples
     SamplingTechnique   = AnalysisMethod.SamplingTechnique
@@ -21,11 +15,11 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::MCS)
     if !isa(SamplingTechnique, ITS) && !isa(SamplingTechnique, LHS)
         error("Invalid sampling technique.")
     else
-        XSamples, _, _ = samplerv(NatafObject, NumSamples, SamplingTechnique)
+        XSamples, _, _ = rand(NatafObject, NumSamples, SamplingTechnique)
     end
 
     # Clean up the generated samples:
-    XSamplesClean = eachrow(XSamples)
+    XSamplesClean = eachcol(XSamples)
     XSamplesClean = Vector.(XSamplesClean)
 
     # Evaluate the limit state function at the generate samples:
@@ -35,5 +29,5 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::MCS)
     PoF = count(x -> x ≤ 0, gSamples) / NumSamples
 
     # Return results:
-    return MCSCache(XSamples, PoF)
+    return MCCache(XSamples, PoF)
 end

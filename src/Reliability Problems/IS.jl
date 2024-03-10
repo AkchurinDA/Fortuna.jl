@@ -1,9 +1,4 @@
-"""
-    analyze(Problem::ReliabilityProblem, AnalysisMethod::IS)
-
-The function solves the provided reliability problem using Importance Sampling technique.
-"""
-function analyze(Problem::ReliabilityProblem, AnalysisMethod::IS)
+function solve(Problem::ReliabilityProblem, AnalysisMethod::IS)
     # Extract the analysis details:
     q                   = AnalysisMethod.q
     NumSamples          = AnalysisMethod.NumSamples
@@ -25,14 +20,12 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::IS)
     XSamples = rand(q, NumSamples)
 
     # Clean up the generated samples:
-    XSamples        = transpose(XSamples)
-    XSamples        = Matrix(XSamples)
-    XSamplesClean   = eachrow(XSamples)
-    XSamplesClean   = Vector.(XSamplesClean)
+    XSamplesClean = eachcol(XSamples)
+    XSamplesClean = Vector.(XSamplesClean)
 
     # Evaluate the target and proposal probability density functions at the generate samples:
-    fSamples = jointpdf.(NatafObject, XSamplesClean)
-    qSamples = pdf(q, XSamplesClean)
+    fSamples = pdf(NatafObject, XSamples)
+    qSamples = pdf(q, XSamples)
 
     # Evaluate the limit state function at the generate samples:
     gSamples = g.(XSamplesClean)

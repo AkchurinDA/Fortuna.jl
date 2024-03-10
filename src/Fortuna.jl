@@ -1,49 +1,41 @@
 module Fortuna
-# Reexport some package and their functionalities:
+import Base
+import Random
+import Distributions
+import FastGaussQuadrature
+import LinearAlgebra
+import NonlinearSolve
+import SpecialFunctions
+import ForwardDiff
+
 using Reexport
-@reexport using Distributions
-@reexport using LinearAlgebra: I
+# Extended functions:
+@reexport import Distributions: rand, pdf 
+# Useful functions:
+@reexport import Distributions: mean, std
+@reexport import LinearAlgebra: I
 
-# Load dependencies:
-using Base.Iterators:       product, repeated
-using DocStringExtensions
-using FastGaussQuadrature:  gausslegendre
-using ForwardDiff:          gradient, hessian
-using LinearAlgebra
-using Random:               rand, randn, shuffle
-using NonlinearSolve:       NonlinearProblem, IntervalNonlinearProblem
-using NonlinearSolve:       NewtonRaphson, Bisection
-using NonlinearSolve:       solve
-using SpecialFunctions:     gamma
-
-# Include the following files into the scope of the module:
 include("Types.jl")
 export AbstractSamplingTechnique
 export ITS, LHS
 export AbstractTransformation
 export NatafTransformation, RosenblattTransformation
 export AbstractReliabilityProblem
-export ReliabilityProblem, InverseReliabilityProblem, SensitivityProblem
-export SensitivityProblemCache
-export AbstractReliabililyAnalysisMethod
-export FORMSubmethod, SORMSubmethod
-export MCS, MCSCache
+export ReliabilityProblem
+export MC, MCCache
 export IS, ISCache
-export FORM, MCFOSM, HLRF, iHLRF, MCFOSMCache, HLRFCache, iHLRFCache
-export SORM, CF, PF, CFCache, PFCache
+export FORM, MCFOSM, MCFOSMCache, HL, HLCache, RF, RFCache, HLRF, HLRFCache, iHLRF, iHLRFCache
+export SORM, CF, CFCache, PF, PFCache
 export SSM, SSMCache
+export SensitivityProblem, SensitivityProblemCache
+export InverseReliabilityProblem, InverseReliabilityProblemCache
 include("Random Variables/GenerateRandomVariables.jl")
 include("Random Variables/SampleRandomVariables.jl")
-export generaterv
-export samplerv
+export randomvariable
 include("Isoprobabilistic Transformations/NatafTransformation.jl")
-include("Isoprobabilistic Transformations/RosenblattTransformation.jl")
-export getdistortedcorrelation
-export transformsamples
-export getjacobian
-export jointpdf
+export getdistortedcorrelation, transformsamples, getjacobian
 include("Reliability Problems/ReliabilityProblems.jl")
 include("Inverse Reliability Problems/InverseReliabilityProblems.jl")
 include("Sensitivity Problems/SensitivityProblems.jl")
-export analyze
+export solve
 end

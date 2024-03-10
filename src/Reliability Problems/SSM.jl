@@ -1,10 +1,4 @@
-# Subset Simluation Method:
-"""
-    analyze(Problem::ReliabilityProblem, AnalysisMethod::SSM)
-
-The function solves the provided reliability problem using the Subset Simulation Method (SSM).
-"""
-function analyze(Problem::ReliabilityProblem, AnalysisMethod::SSM)
+function solve(Problem::ReliabilityProblem, AnalysisMethod::SSM)
     # Extract the analysis method:
     P₀ = AnalysisMethod.P₀
     NumSamples = AnalysisMethod.NumSamples

@@ -2,8 +2,8 @@
     # Example 5.1 (p. 110) from "Structural and System Reliability" book by Armen Der Kiureghian
 
     # Define a random vector of correlated marginal distributions:
-    X₁  = generaterv("Normal", "M", [10, 2])
-    X₂  = generaterv("Normal", "M", [20, 5])
+    X₁  = randomvariable("Normal", "M", [10, 2])
+    X₂  = randomvariable("Normal", "M", [20, 5])
     X   = [X₁, X₂]
     ρˣ  = [1 0.5; 0.5 1]
 
@@ -16,8 +16,8 @@
     Problem₂ = ReliabilityProblem(X, ρˣ, g₂)
 
     # Perform the reliability analysis using MCFOSM:
-    Solution₁ = analyze(Problem₁, FORM(MCFOSM()))
-    Solution₂ = analyze(Problem₂, FORM(MCFOSM()))
+    Solution₁ = solve(Problem₁, FORM(MCFOSM()))
+    Solution₂ = solve(Problem₂, FORM(MCFOSM()))
 
     # Test the results:
     @test isapprox(Solution₁.β, 1.66, rtol = 0.01)
@@ -28,8 +28,8 @@ end
     # Example 5.2 (p. 118) from "Structural and System Reliability" book by Armen Der Kiureghian
 
     # Define a random vector of correlated marginal distributions:
-    X₁  = generaterv("Normal", "M", [10, 2])
-    X₂  = generaterv("Normal", "M", [20, 5])
+    X₁  = randomvariable("Normal", "M", [10, 2])
+    X₂  = randomvariable("Normal", "M", [20, 5])
     X   = [X₁, X₂]
     ρˣ  = [1 0.5; 0.5 1]
 
@@ -41,9 +41,9 @@ end
     Problem₁ = ReliabilityProblem(X, ρˣ, g₁)
     Problem₂ = ReliabilityProblem(X, ρˣ, g₂)
 
-    # Perform the reliability analysis using FORM:
-    Solution₁ = analyze(Problem₁, FORM(HLRF()))
-    Solution₂ = analyze(Problem₂, FORM(HLRF()))
+    # Perform the reliability analysis using HLRF:
+    Solution₁ = solve(Problem₁, FORM(HLRF()))
+    Solution₂ = solve(Problem₂, FORM(HLRF()))
 
     # Test the results:
     @test isapprox(Solution₁.β, 2.11, rtol = 0.01)
@@ -58,8 +58,8 @@ end
     # Test from UQPy package (https://github.com/SURGroup/UQpy/tree/master)
 
     # Define a random vector of correlated marginal distributions:
-    X₁  = generaterv("Normal", "Parameters", [200, 20])
-    X₂  = generaterv("Normal", "Parameters", [150, 10])
+    X₁  = randomvariable("Normal", "P", [200, 20])
+    X₂  = randomvariable("Normal", "P", [150, 10])
     X   = [X₁, X₂]
     ρˣ  = [1 0; 0 1]
 
@@ -69,8 +69,8 @@ end
     # Define reliability problems:
     Problem = ReliabilityProblem(X, ρˣ, g)
 
-    # Perform the reliability analysis using FORM:
-    Solution = analyze(Problem, FORM(HLRF()))
+    # Perform the reliability analysis using HLRF:
+    Solution = solve(Problem, FORM(HLRF()))
 
     # Test the results:
     @test isapprox(Solution.β, 2.236067977499917, rtol = 10^(-9))
@@ -83,10 +83,10 @@ end
     # Example 6.5 (p. 147) from "Structural and System Reliability" book by Armen Der Kiureghian
 
     # Define a random vector of correlated marginal distributions:
-    M₁  = generaterv("Normal", "M", [250, 250 * 0.3])
-    M₂  = generaterv("Normal", "M", [125, 125 * 0.3])
-    P   = generaterv("Gumbel", "M", [2500, 2500 * 0.2])
-    Y   = generaterv("Weibull", "M", [40000, 40000 * 0.1])
+    M₁  = randomvariable("Normal", "M", [250, 250 * 0.3])
+    M₂  = randomvariable("Normal", "M", [125, 125 * 0.3])
+    P   = randomvariable("Gumbel", "M", [2500, 2500 * 0.2])
+    Y   = randomvariable("Weibull", "M", [40000, 40000 * 0.1])
     X   = [M₁, M₂, P, Y]
     ρˣ  = [1 0.5 0.3 0; 0.5 1 0.3 0; 0.3 0.3 1 0; 0 0 0 1]
 
@@ -99,8 +99,10 @@ end
     # Define a reliability problem:
     Problem = ReliabilityProblem(X, ρˣ, g)
 
-    # Perform the reliability analysis using curve-fitting SORM:
-    Solution = analyze(Problem, FORM(HLRF()))
+    # Perform the reliability analysis using HLRF:
+    Solution = solve(Problem, FORM(HLRF()))
+
+    # Test the results:
     @test isapprox(Solution.β, 2.47, rtol = 0.01)
     @test isapprox(Solution.PoF, 0.00682, rtol = 0.01)
     @test isapprox(Solution.x[:, end], [341, 170, 3223, 31770], rtol = 0.01)
@@ -113,8 +115,8 @@ end
     # Example 5.2 (p. 118) from "Structural and System Reliability" book by Armen Der Kiureghian
 
     # Define a random vector of correlated marginal distributions:
-    X₁  = generaterv("Normal", "M", [10, 2])
-    X₂  = generaterv("Normal", "M", [20, 5])
+    X₁  = randomvariable("Normal", "M", [10, 2])
+    X₂  = randomvariable("Normal", "M", [20, 5])
     X   = [X₁, X₂]
     ρˣ  = [1 0.5; 0.5 1]
 
@@ -126,9 +128,9 @@ end
     Problem₁ = ReliabilityProblem(X, ρˣ, g₁)
     Problem₂ = ReliabilityProblem(X, ρˣ, g₂)
 
-    # Perform the reliability analysis using FORM:
-    Solution₁ = analyze(Problem₁, FORM(iHLRF()))
-    Solution₂ = analyze(Problem₂, FORM(iHLRF()))
+    # Perform the reliability analysis using iHLRF:
+    Solution₁ = solve(Problem₁, FORM(iHLRF()))
+    Solution₂ = solve(Problem₂, FORM(iHLRF()))
 
     # Test the results:
     @test isapprox(Solution₁.β, 2.11, rtol = 0.01)
@@ -143,8 +145,8 @@ end
     # Test from UQPy package (https://github.com/SURGroup/UQpy/tree/master)
 
     # Define a random vector of correlated marginal distributions:
-    X₁  = generaterv("Normal", "Parameters", [200, 20])
-    X₂  = generaterv("Normal", "Parameters", [150, 10])
+    X₁  = randomvariable("Normal", "P", [200, 20])
+    X₂  = randomvariable("Normal", "P", [150, 10])
     X   = [X₁, X₂]
     ρˣ  = [1 0; 0 1]
 
@@ -154,8 +156,8 @@ end
     # Define reliability problems:
     Problem = ReliabilityProblem(X, ρˣ, g)
 
-    # Perform the reliability analysis using FORM:
-    Solution = analyze(Problem, FORM(iHLRF()))
+    # Perform the reliability analysis using iHLRF:
+    Solution = solve(Problem, FORM(iHLRF()))
 
     # Test the results:
     @test isapprox(Solution.β, 2.236067977499917, rtol = 10^(-9))
@@ -168,10 +170,10 @@ end
     # Example 6.5 (p. 147) from "Structural and System Reliability" book by Armen Der Kiureghian
 
     # Define a random vector of correlated marginal distributions:
-    M₁  = generaterv("Normal", "M", [250, 250 * 0.3])
-    M₂  = generaterv("Normal", "M", [125, 125 * 0.3])
-    P   = generaterv("Gumbel", "M", [2500, 2500 * 0.2])
-    Y   = generaterv("Weibull", "M", [40000, 40000 * 0.1])
+    M₁  = randomvariable("Normal", "M", [250, 250 * 0.3])
+    M₂  = randomvariable("Normal", "M", [125, 125 * 0.3])
+    P   = randomvariable("Gumbel", "M", [2500, 2500 * 0.2])
+    Y   = randomvariable("Weibull", "M", [40000, 40000 * 0.1])
     X   = [M₁, M₂, P, Y]
     ρˣ  = [1 0.5 0.3 0; 0.5 1 0.3 0; 0.3 0.3 1 0; 0 0 0 1]
 
@@ -184,8 +186,10 @@ end
     # Define a reliability problem:
     Problem = ReliabilityProblem(X, ρˣ, g)
 
-    # Perform the reliability analysis using curve-fitting SORM:
-    Solution = analyze(Problem, FORM(iHLRF()))
+    # Perform the reliability analysis using iHLRF:
+    Solution = solve(Problem, FORM(iHLRF()))
+
+    # Test the results:
     @test isapprox(Solution.β, 2.47, rtol = 0.01)
     @test isapprox(Solution.PoF, 0.00682, rtol = 0.01)
     @test isapprox(Solution.x[:, end], [341, 170, 3223, 31770], rtol = 0.01)

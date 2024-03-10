@@ -1,9 +1,4 @@
-"""
-    analyze(Problem::SensitivityProblem)
-
-The function solves the provided sensitivity problem.
-"""
-function analyze(Problem::SensitivityProblem)
+function solve(Problem::SensitivityProblem)
     # Extract the problem data:
     X   = Problem.X
     ρˣ  = Problem.ρˣ
@@ -15,7 +10,7 @@ function analyze(Problem::SensitivityProblem)
     FORMProblem = ReliabilityProblem(X, ρˣ, g₁)
 
     # Solve the reliability problem using the FORM:
-    FORMSolution    = analyze(FORMProblem, FORM())
+    FORMSolution    = solve(FORMProblem, FORM())
     x               = FORMSolution.x[:, end]
     u               = FORMSolution.u[:, end]
     β               = FORMSolution.β
@@ -24,14 +19,14 @@ function analyze(Problem::SensitivityProblem)
     NatafObject = NatafTransformation(X, ρˣ)
 
     # Define gradient functions of the limit state function in X- and U-spaces:
-    ∇g(x, θ) = gradient(Unknown -> g(x, Unknown), θ)
-    ∇G(u, θ) = gradient(Unknown -> G(g, θ, NatafObject, Unknown), u)
+    ∇g(x, θ) = ForwardDiff.gradient(Unknown -> g(x, Unknown), θ)
+    ∇G(u, θ) = ForwardDiff.gradient(Unknown -> G(g, θ, NatafObject, Unknown), u)
     
     # Compute the sensitivities w.r.t. the reliability index:
-    ∇β = ∇g(x, θ) / norm(∇G(u, θ))
+    ∇β = ∇g(x, θ) / LinearAlgebra.norm(∇G(u, θ))
 
     # Compute the sensitivities w.r.t. the probability of failure:
-    ∇PoF = -pdf(Normal(0, 1), β) * ∇β
+    ∇PoF = -Distributions.pdf(Distributions.Normal(), β) * ∇β
 
     return SensitivityProblemCache(FORMSolution, ∇β, ∇PoF)
 end

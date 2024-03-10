@@ -2,10 +2,10 @@
     # Example 6.7 (p. 161) from "Structural and System Reliability" book by Armen Der Kiureghian
 
     # Define a random vector of correlated marginal distributions:
-    M₁  = generaterv("Normal", "M", [250, 250 * 0.3])
-    M₂  = generaterv("Normal", "M", [125, 125 * 0.3])
-    P   = generaterv("Gumbel", "M", [2500, 2500 * 0.2])
-    Y   = generaterv("Weibull", "M", [40000, 40000 * 0.1])
+    M₁  = randomvariable("Normal", "M", [250, 250 * 0.3])
+    M₂  = randomvariable("Normal", "M", [125, 125 * 0.3])
+    P   = randomvariable("Gumbel", "M", [2500, 2500 * 0.2])
+    Y   = randomvariable("Weibull", "M", [40000, 40000 * 0.1])
     X   = [M₁, M₂, P, Y]
     ρˣ  = [1 0.5 0.3 0; 0.5 1 0.3 0; 0.3 0.3 1 0; 0 0 0 1]
 
@@ -22,7 +22,9 @@
     Problem = SensitivityProblem(X, ρˣ, g, θ)
 
     # Perform the sensitivity analysis:
-    Solution = analyze(Problem)
+    Solution = solve(Problem)
+
+    # Test the results:
     @test isapprox(Solution.∇β, [36.8, 73.6, 9.26], rtol = 0.01)
     @test isapprox(Solution.∇PoF, [-0.700, -1.400, -0.176], rtol = 0.01)
 end
