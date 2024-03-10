@@ -16,8 +16,8 @@ using Fortuna
 
 ```@example 1
 # Generate a random vector X with correlated marginal random variables X₁ and X₂:
-X₁  = generaterv("Normal", "Moments", [10, 2])
-X₂  = generaterv("Normal", "Moments", [20, 5])
+X₁  = randomvariable("Normal", "M", [10, 2])
+X₂  = randomvariable("Normal", "M", [20, 5])
 X   = [X₁, X₂]
 
 # Define a correlation matrix for the random vector X:
@@ -41,7 +41,7 @@ After defining the reliability problem, `Fortuna.jl` allows to easily solve it u
 
 ```@example 1
 # Solve the reliability problem using an imporved Hasofer-Lind-Rackwitz-Fiessler method:
-Solution = analyze(Problem, FORM(iHLRF()))
+Solution = solve(Problem, FORM(iHLRF()))
 println("PoF = $(Solution.PoF)")
 println("β = $(Solution.β)")
 ```

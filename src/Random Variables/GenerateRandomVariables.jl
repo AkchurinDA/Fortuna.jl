@@ -1,3 +1,8 @@
+"""
+    randomvariable(DistributionName::AbstractString, DefineBy::AbstractString, Values::Union{Real, AbstractVector{<:Real}})
+
+Function used to define random variables.
+"""
 function randomvariable(DistributionName::AbstractString, DefineBy::AbstractString, Values::Union{Real, AbstractVector{<:Real}})
     # Convert strings to lowercase:
     DistributionName = lowercase(DistributionName)

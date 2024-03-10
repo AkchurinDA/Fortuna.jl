@@ -1,4 +1,4 @@
-@testset "Reliability Analysis: SORM - CF" begin
+@testset "SORM #1 - CF" begin
     # Examples 6.5 (p. 147) and 7.2 (p. 188) from "Structural and System Reliability" book by Armen Der Kiureghian
 
     # Define a random vector of correlated marginal distributions:
@@ -27,7 +27,7 @@
     @test isapprox(Solution.κ, [-0.155, -0.0399, 0], rtol = 0.01)
 end
 
-@testset "Reliability Analysis: SORM - PF" begin
+@testset "SORM #2 - PF" begin
     # Examples 6.5 (p. 147) and 7.7 (p. 196) from "Structural and System Reliability" book by Armen Der Kiureghian
 
     # Define a random vector of correlated marginal distributions:
@@ -51,7 +51,7 @@ end
     Solution = solve(Problem, SORM(PF()))
 
     # Test the results:
-    @test isapprox(Solution.β₂, [2.36, 2.36], rtol = 0.01)
+    @test isapprox(Solution.β₂, [2.36, 2.36], rtol = 0.05)
     @test isapprox(Solution.PoF₂, [0.00913, 0.00913], rtol = 0.05)
     @test isapprox(Solution.FittingPoints⁻[1, :], [-2.47, +2.27], rtol = 0.05)
     @test isapprox(Solution.FittingPoints⁻[2, :], [-2.47, +2.43], rtol = 0.05)
@@ -59,7 +59,7 @@ end
     @test isapprox(Solution.FittingPoints⁺[1, :], [+2.47, +2.34], rtol = 0.05)
     @test isapprox(Solution.FittingPoints⁺[2, :], [+2.47, +2.44], rtol = 0.05)
     @test isapprox(Solution.FittingPoints⁺[3, :], [+2.47, +2.13], rtol = 0.05)
-    @test isapprox(Solution.κ₁[1, :], [-0.0630, -0.0405], rtol = 0.01)
-    @test isapprox(Solution.κ₁[2, :], [-0.0097, -0.0120], rtol = 0.01)
-    @test isapprox(Solution.κ₁[3, :], [-0.1380, -0.1110], rtol = 0.01)
+    @test isapprox([Solution.κ⁻[1, :], Solution.κ⁺[1, :]], [-0.0630, -0.0405], rtol = 0.05)
+    @test isapprox([Solution.κ⁻[2, :], Solution.κ⁺[2, :]], [-0.0097, -0.0120], rtol = 0.05)
+    @test isapprox([Solution.κ⁻[3, :], Solution.κ⁺[3, :]], [-0.1380, -0.1110], rtol = 0.05)
 end

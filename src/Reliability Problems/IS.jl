@@ -1,3 +1,32 @@
+"""
+    struct IS <: AbstractReliabililyAnalysisMethod
+
+Type used to perform reliability analysis using Importance Sampling method.
+"""
+Base.@kwdef struct IS <: AbstractReliabililyAnalysisMethod
+    "Proposal probability density function ``q``"
+    q                   ::Distributions.Sampleable
+    "Number of samples to generate ``N``"
+    NumSamples          ::Integer = 10 ^ 6
+end
+
+"""
+    struct ISCache
+
+Type used to store results of reliability analysis performed using Importance Sampling method.
+"""
+struct ISCache
+    "Generated samples"
+    Samples ::Matrix{Float64}
+    "Probability of failure ``P_{f}``"
+    PoF     ::Float64
+end
+
+"""
+    solve(Problem::ReliabilityProblem, AnalysisMethod::IS)
+
+Function used to solve reliability analysis using Importance Sampling method.
+"""
 function solve(Problem::ReliabilityProblem, AnalysisMethod::IS)
     # Extract the analysis details:
     q                   = AnalysisMethod.q

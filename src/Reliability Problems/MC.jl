@@ -1,3 +1,36 @@
+"""
+    struct MC <: AbstractReliabililyAnalysisMethod
+
+Type used to perform reliability analysis using Monte Carlo simulations.
+
+$(TYPEDFIELDS)
+"""
+Base.@kwdef struct MC <: AbstractReliabililyAnalysisMethod
+    "Number of samples ``N``"
+    NumSamples          ::Integer = 10 ^ 6
+    "Sampling technique"
+    SamplingTechnique   ::AbstractSamplingTechnique = ITS()
+end
+
+"""
+    struct MCCache
+
+Type used to store results of reliability analysis performed using Monte Carlo simulations.
+
+$(TYPEDFIELDS)
+"""
+struct MCCache
+    "Generated samples"
+    Samples ::Matrix{Float64}
+    "Probability of failure ``P_{f}``"
+    PoF     ::Float64
+end
+
+"""
+    solve(Problem::ReliabilityProblem, AnalysisMethod::MC)
+
+Function used to solve reliability analysis using Monte Carlo simulations.
+"""
 function solve(Problem::ReliabilityProblem, AnalysisMethod::MC)
     # Extract the analysis details:
     NumSamples          = AnalysisMethod.NumSamples

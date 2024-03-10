@@ -1,4 +1,38 @@
-function getdistortedcorrelation(X::AbstractVector{<:Distributions.Sampleable}, ρˣ::AbstractMatrix{<:Real})
+"""
+    mutable struct NatafTransformation <: AbstractTransformation
+
+Type used to perform Nataf Transformation.
+
+$(TYPEDFIELDS)
+"""
+mutable struct NatafTransformation <: AbstractIsoprobabilisticTransformation
+    "Random vector ``\\vec{X}``"
+    X   ::AbstractVector{<:Distributions.UnivariateDistribution}
+    "Correlation matrix ``\\rho^{X}``"
+    ρˣ  ::AbstractMatrix{<:Real}
+    "Distorted correlation matrix ``\\rho^{Z}``"
+    ρᶻ  ::AbstractMatrix{Float64}
+    "Lower triangular matrix of the Cholesky decomposition of the distorted correlation matrix ``L``"
+    L   ::AbstractMatrix{Float64}
+    "Inverse of the lower triangular matrix of the Cholesky decomposition of the distorted correlation matrix ``L^{-1}``"
+    L⁻¹ ::AbstractMatrix{Float64}
+
+    function NatafTransformation(X::AbstractVector{<:Distributions.UnivariateDistribution}, ρˣ::AbstractMatrix{<:Real})
+        # Compute the distorted correlation matrix:
+        ρᶻ, L, L⁻¹ = getdistortedcorrelation(X, ρˣ)
+
+        # Return the Nataf Transformation object with the computed distorted correlation matrix:
+        return new(X, ρˣ, ρᶻ, L, L⁻¹)
+    end
+end
+Base.broadcastable(x::NatafTransformation) = Ref(x)
+
+"""
+    getdistortedcorrelation(X::AbstractVector{<:Distributions.UnivariateDistribution}, ρˣ::AbstractMatrix{<:Real})
+
+Function used to compute the distorted correlation matrix ``\\rho^{Z}``.
+"""
+function getdistortedcorrelation(X::AbstractVector{<:Distributions.UnivariateDistribution}, ρˣ::AbstractMatrix{<:Real})
     # Compute number of dimensions:
     NumDimensions = length(X)
 
@@ -17,8 +51,8 @@ function getdistortedcorrelation(X::AbstractVector{<:Distributions.Sampleable}, 
     end
 
     # Compute the locations and weights of the integration points in 1D:
-    if MaxCorrelationValue < 0.9
-        NumIP = 32
+    if MaxCorrelationValue ≤ 0.9
+        NumIP = 64
     else
         NumIP = 1024
     end
@@ -75,6 +109,14 @@ function getdistortedcorrelation(X::AbstractVector{<:Distributions.Sampleable}, 
     return ρᶻ, L, L⁻¹
 end
 
+"""
+    transformsamples(TransformationObject::NatafTransformation, Samples::AbstractVector{<:Real}, TransformationDirection::AbstractString)
+
+Function used to transform samples from ``X``- to ``U``-space and vice versa. \\
+If `TransformationDirection is:
+- `"X2U"`, then the function transforms samples ``\\vec{x}`` from ``X``- to ``U``-space.
+- `"U2X"`, then the function transforms samples ``\\vec{u}`` from ``U``- to ``X``-space.
+"""
 function transformsamples(TransformationObject::NatafTransformation, Samples::AbstractVector{<:Real}, TransformationDirection::AbstractString)
     # Convert strings to lowercase:
     TransformationDirection = lowercase(TransformationDirection)
@@ -145,6 +187,14 @@ function transformsamples(TransformationObject::NatafTransformation, Samples::Ab
     return TransformedSamples
 end
 
+"""
+    getjacobian(TransformationObject::NatafTransformation, Samples::AbstractVector{<:Real}, TransformationDirection::AbstractString)
+
+Function used to compute the Jacobians of the transformations of samples from ``X``- to ``U``-space and vice versa. \\
+If `TransformationDirection` is:
+- `"X2U"`, then the function returns the Jacobians of the transformations of samples ``\\vec{x}`` from ``X``- to ``U``-space.
+- `"U2X"`, then the function returns the Jacobians of the transformations of samples ``\\vec{u}`` from ``U``- to ``X``-space.
+"""
 function getjacobian(TransformationObject::NatafTransformation, Samples::AbstractVector{<:Real}, TransformationDirection::AbstractString)
     # Convert strings to lowercase:
     TransformationDirection = lowercase(TransformationDirection)
@@ -230,6 +280,11 @@ function getjacobian(TransformationObject::NatafTransformation, Samples::Abstrac
     return J
 end
 
+"""
+    pdf(TransformationObject::NatafTransformation, x::AbstractVector{<:Real})
+
+Function used to compute the joint PDF in ``X``-space.
+"""
 function Distributions.pdf(TransformationObject::NatafTransformation, x::AbstractVector{<:Real})
     # Extract data:
     X   = TransformationObject.X

@@ -1,3 +1,39 @@
+"""
+    struct SSM <: AbstractReliabililyAnalysisMethod
+
+Type used to perform reliability analysis using Subset Simulation Method (SSM).
+
+$(TYPEDFIELDS)
+"""
+Base.@kwdef struct SSM <: AbstractReliabililyAnalysisMethod
+    "Probability of failure for each subset ``P_{0}``"
+    P₀              ::Real = 0.10
+    "Number of samples generated within each subset ``N``"
+    NumSamples      ::Integer = 10000
+    "Maximum number of subsets ``M``"
+    MaxNumSubsets   ::Integer = 25
+end
+
+"""
+    struct SSM <: AbstractReliabililyAnalysisMethod
+
+Type used to perform reliability analysis using Subset Simulation Method (SSM).
+
+$(TYPEDFIELDS)
+"""
+struct SSMCache
+    "Samples generated within each subset in ``X``-space"
+    XSamplesSubset  ::Vector{Matrix{Float64}}
+    "Samples generated within each subset in ``U``-space"
+    USamplesSubset  ::Vector{Matrix{Float64}}
+    "Threshold for each subset ``C_{i}``"
+    CSubset         ::Vector{Float64}
+    "Probability of failure for each subset ``P_{f_{i}}``"
+    PoFSubset       ::Vector{Float64}
+    "Probability of failure ``P_{f}``"
+    PoF             ::Float64
+end
+
 function solve(Problem::ReliabilityProblem, AnalysisMethod::SSM)
     # Extract the analysis method:
     P₀ = AnalysisMethod.P₀

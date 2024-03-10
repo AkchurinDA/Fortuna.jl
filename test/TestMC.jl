@@ -1,4 +1,29 @@
-@testset "Reliability Problems: MC" begin
+@testset "Monte Carlo #1" begin
+    # Define a list of reliability indices of interest:
+    βList = 1:3
+
+    for i in eachindex(βList)
+        # Define a random vector of correlated marginal distributions:
+        X₁  = randomvariable("Normal", "M", [0, 1])
+        X₂  = randomvariable("Normal", "M", [0, 1])
+        X   = [X₁, X₂]
+        ρˣ  = [1 0; 0 1]
+
+        # Define a limit state function:
+        g(x::Vector) = βList[i] * sqrt(2) - x[1] - x[2]
+
+        # Define a reliability problem:
+        Problem = ReliabilityProblem(X, ρˣ, g)
+
+        # Perform the reliability analysis using Importance Sampling method:
+        Solution = solve(Problem, MC())
+
+        # Test the results:
+        @test isapprox(Solution.PoF, cdf(Normal(), -βList[i]), rtol = 0.05)
+    end
+end
+
+@testset "Monte Carlo #2" begin
     # Define a random vector of correlated marginal distributions:
     M₁  = randomvariable("Normal", "M", [250, 250 * 0.3])
     M₂  = randomvariable("Normal", "M", [125, 125 * 0.3])
@@ -20,6 +45,5 @@
     Solution = solve(Problem, MC())
 
     # Test the results:
-    PoF = Solution.PoF
-    @test isapprox(PoF, 0.00931, rtol = 0.10)
+    @test isapprox(Solution.PoF, 0.00931, rtol = 0.05)
 end

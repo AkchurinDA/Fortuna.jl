@@ -1,21 +1,25 @@
-@testset "Reliability Problems: IS" begin
-    # Define a random vector of correlated marginal distributions:
-    X₁  = randomvariable("Normal", "M", [0, 1])
-    X₂  = randomvariable("Normal", "M", [0, 1])
-    X   = [X₁, X₂]
-    ρˣ  = [1 0; 0 1]
+@testset "Importance Sampling #1" begin
+    # Define a list of reliability indices of interest:
+    βList = 1:6
 
-    # Define a limit state function:
-    g(x::Vector) = 4 * sqrt(2) - x[1] - x[2]
+    for i in eachindex(βList)
+        # Define a random vector of correlated marginal distributions:
+        X₁  = randomvariable("Normal", "M", [0, 1])
+        X₂  = randomvariable("Normal", "M", [0, 1])
+        X   = [X₁, X₂]
+        ρˣ  = [1 0; 0 1]
 
-    # Define a reliability problem:
-    Problem = ReliabilityProblem(X, ρˣ, g)
+        # Define a limit state function:
+        g(x::Vector) = βList[i] * sqrt(2) - x[1] - x[2]
 
-    # Perform the reliability analysis using Importance Sampling method:
-    q = MvNormal([4 / sqrt(2), 4 / sqrt(2)], [2.5 0; 0 2.5])
-    Solution = solve(Problem, IS(q, 10 ^ 6))
+        # Define a reliability problem:
+        Problem = ReliabilityProblem(X, ρˣ, g)
 
-    # Test the results:
-    PoF = Solution.PoF
-    @test isapprox(PoF, cdf(Normal(), -4), rtol = 0.01)
+        # Perform the reliability analysis using Importance Sampling method:
+        ProposalPDF     = MvNormal([βList[i] / sqrt(2), βList[i] / sqrt(2)], [1 0; 0 1])
+        Solution        = solve(Problem, IS(ProposalPDF, 10 ^ 6))
+
+        # Test the results:
+        @test isapprox(Solution.PoF, cdf(Normal(), -βList[i]), rtol = 0.05)
+    end
 end

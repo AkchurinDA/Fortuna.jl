@@ -1,3 +1,156 @@
+"""
+    struct FORM <: AbstractReliabililyAnalysisMethod
+
+Type used to perform reliability analysis using First-Order Reliability Method (FORM).
+
+$(TYPEDFIELDS)
+"""
+Base.@kwdef struct FORM <: AbstractReliabililyAnalysisMethod
+    Submethod::FORMSubmethod = iHLRF()
+end
+
+"""
+    struct MCFOSM <: FORMSubmethod
+
+Type used to perform reliability analysis using Mean-Centered First-Order Second-Moment (MCFOSM) method.
+
+$(TYPEDFIELDS)
+"""
+struct MCFOSM <: FORMSubmethod # Mean-Centered First-Order Second-Moment method
+
+end
+
+Base.@kwdef struct HL <: FORMSubmethod # Hasofer-Lind method
+
+end
+
+Base.@kwdef struct RF <: FORMSubmethod # Rackwitz-Fiessler method
+
+end
+
+"""
+    struct HLRF <: FORMSubmethod
+
+Type used to perform reliability analysis using Hasofer-Lind Rackwitz-Fiessler (HLRF) method.
+
+$(TYPEDFIELDS)
+"""
+Base.@kwdef struct HLRF <: FORMSubmethod # Hasofer-Lind Rackwitz-Fiessler method
+    "Maximum number of iterations"
+    MaxNumIterations    ::Integer = 250
+    "Convergance criterion #1 ``\\epsilon_{1}``"
+    ϵ₁                  ::Real = 10^(-9)
+    "Convergance criterion #1 ``\\epsilon_{2}``"
+    ϵ₂                  ::Real = 10^(-9)
+    "Starting point ``x_{0}``"
+    x₀                  ::Union{Nothing, Vector{<:Real}} = nothing
+end
+
+"""
+    struct iHLRF <: FORMSubmethod
+
+Type used to perform reliability analysis using improved Hasofer-Lind Rackwitz-Fiessler (iHLRF) method.
+
+$(TYPEDFIELDS)
+"""
+Base.@kwdef struct iHLRF <: FORMSubmethod # Improved Hasofer-Lind Rackwitz-Fiessler method
+    "Maximum number of iterations"
+    MaxNumIterations    ::Integer = 250
+    "Convergance criterion #1 ``\\epsilon_{1}``"
+    ϵ₁                  ::Real = 10^(-9)
+    "Convergance criterion #1 ``\\epsilon_{2}``"
+    ϵ₂                  ::Real = 10^(-9)
+    "Starting point ``x_{0}``"
+    x₀                  ::Union{Nothing, Vector{<:Real}} = nothing
+end
+
+"""
+    struct MCFOSMCache
+
+Type used to store results of reliability analysis performed using Mean-Centered First-Order Second-Moment (MCFOSM) method.
+
+$(TYPEDFIELDS)
+"""
+struct MCFOSMCache
+    "Reliability index ``\\beta``"
+    β::Float64
+end
+
+struct HLCache
+
+end
+
+struct RFCache
+
+end
+
+"""
+    struct HLRFCache
+
+Type used to store results of reliability analysis performed using Hasofer-Lind Rackwitz-Fiessler (HLRF) method.
+
+$(TYPEDFIELDS)
+"""
+struct HLRFCache
+    "Reliability index ``\\beta``"
+    β   ::Float64
+    "Probability of failure ``P_{f}``"
+    PoF ::Float64
+    "Design points in X-space at each iteration ``\\vec{x}_{i}^{*}``"
+    x   ::Matrix{Float64}
+    "Design points in U-space at each iteration ``\\vec{u}_{i}^{*}``"
+    u   ::Matrix{Float64}
+    "Limit state function at each iteration ``G(\\vec{u}_{i}^{*})``"
+    G   ::Vector{Float64}
+    "Gradient of the limit state function at each iteration ``\\nabla G(\\vec{u}_{i}^{*})``"
+    ∇G  ::Matrix{Float64}
+    "Normalized negative gradient of the limit state function at each iteration ``\\vec{\\alpha}_{i}``"
+    α   ::Matrix{Float64}
+    "Search direction at each iteration ``\\vec{d}_{i}``"
+    d   ::Matrix{Float64}
+    "Importance vector``\\vec{\\gamma}``"
+    γ   ::Vector{Float64}
+end
+
+"""
+    struct iHLRFCache
+
+Type used to store results of reliability analysis performed using improved Hasofer-Lind Rackwitz-Fiessler (iHLRF) method.
+
+$(TYPEDFIELDS)
+"""
+struct iHLRFCache
+    "Reliability index ``\\beta``"
+    β   ::Float64
+    "Probability of failure ``P_{f}``"
+    PoF ::Float64
+    "Design points in X-space at each iteration ``\\vec{x}_{i}^{*}``"
+    x   ::Matrix{Float64}
+    "Design points in U-space at each iteration ``\\vec{u}_{i}^{*}``"
+    u   ::Matrix{Float64}
+    "Limit state function at each iteration ``G(\\vec{u}_{i}^{*})``"
+    G   ::Vector{Float64}
+    "Gradient of the limit state function at each iteration ``\\nabla G(\\vec{u}_{i}^{*})``"
+    ∇G  ::Matrix{Float64}
+    "Normalized negative gradient of the limit state function at each iteration ``\\vec{\alpha}_{i}``"
+    α   ::Matrix{Float64}
+    "Search direction at each iteration ``\\vec{d}_{i}``"
+    d   ::Matrix{Float64}
+    "c-coefficient at each iteration ``c_{i}``"
+    c   ::Vector{Float64}
+    "Merit function at each iteration ``m_{i}``"
+    m   ::Vector{Float64}
+    "Step size at each iteration ``\\lambda_{i}``"
+    λ   ::Vector{Float64}
+    "Importance vector``\\vec{\\gamma}``"
+    γ   ::Vector{Float64}
+end
+
+"""
+    solve(Problem::ReliabilityProblem, AnalysisMethod::FORM)
+
+Function used to solve reliability analysis using First-Order Reliability Method (FORM).
+"""
 function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM)
     # Extract the analysis method:
     Submethod = AnalysisMethod.Submethod

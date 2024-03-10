@@ -46,7 +46,7 @@ end
 
     # Test the results:
     ρᶻ = NatafObject.ρᶻ
-    @test isapprox(ρᶻ, [1 0.8; 0.8 1], rtol = 10^(-6))
+    @test isapprox(ρᶻ, [1 0.8; 0.8 1], rtol = 10 ^ (-6))
 end
 
 @testset "Nataf Transformation: Distorted Correlation Matrix #4 (Non-Identity)" begin

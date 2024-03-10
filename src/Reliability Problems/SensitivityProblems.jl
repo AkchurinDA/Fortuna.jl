@@ -1,3 +1,16 @@
+mutable struct SensitivityProblem <: AbstractReliabilityProblem
+    X   ::AbstractVector{<:Distributions.Sampleable}
+    ρˣ  ::AbstractMatrix{<:Real}
+    g   ::Function
+    θ   ::AbstractVector{<:Real}
+end
+
+struct SensitivityProblemCache
+    FORMSolution    ::iHLRFCache
+    ∇β              ::Vector{Float64}
+    ∇PoF            ::Vector{Float64}
+end
+
 function solve(Problem::SensitivityProblem)
     # Extract the problem data:
     X   = Problem.X

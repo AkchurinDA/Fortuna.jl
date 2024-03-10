@@ -1,6 +1,6 @@
 # Sampling Random Variables
 
-`Fortuna.jl` package allows to easily generate samples of both uncorrelated and correlated random variables using `samplerv()` function using different sampling techniques. Current version of the package implements [Inverse Transform Sampling (ITS)](https://en.wikipedia.org/wiki/Inverse_transform_sampling) and [Latin Hypercube Sampling (LHS)](https://en.wikipedia.org/wiki/Latin_hypercube_sampling) techniques.
+`Fortuna.jl` package allows to easily generate samples of both uncorrelated and correlated random variables using `rand()` function using different sampling techniques. Current version of the package implements [Inverse Transform Sampling (ITS)](https://en.wikipedia.org/wiki/Inverse_transform_sampling) and [Latin Hypercube Sampling (LHS)](https://en.wikipedia.org/wiki/Latin_hypercube_sampling) techniques.
 
 ```@setup 1
 using Fortuna
@@ -15,7 +15,7 @@ To generate samples of a random variable:
 - Generate a random variable (`X`).
 
 ```@example 1
-X = generaterv("Gamma", "M", [10, 1.5])
+X = randomvariable("Gamma", "M", [10, 1.5])
 
 nothing # hide
 ```
@@ -23,7 +23,7 @@ nothing # hide
 - Sample the generated random variable using a sampling technique of your choice.
 
 ```@example 1
-XSamples = samplerv(X, 5000, ITS())
+XSamples = rand(X, 5000, ITS())
 
 nothing # hide
 ```
@@ -41,8 +41,8 @@ To generate samples of a random vector with *uncorrelated* marginals:
 
 ```@example 1
 # Generate a random vector X with uncorrelated marginals X₁ and X₂:
-X₁  = generaterv("Gamma", "M", [10, 1.5])
-X₂  = generaterv("Gumbel", "M", [15, 2.5])
+X₁  = randomvariable("Gamma", "M", [10, 1.5])
+X₂  = randomvariable("Gumbel", "M", [15, 2.5])
 X   = [X₁, X₂]
 
 nothing # hide
@@ -52,7 +52,7 @@ nothing # hide
 
 ```@example 1
 # Generate 5000 samples of the random vector X using Inverse Transform Sampling technique:
-XSamples = samplerv(X, 5000, ITS())
+XSamples = rand(X, 5000, ITS())
 
 nothing # hide
 ```
@@ -70,8 +70,8 @@ To generate samples of a random vector with *correlated* marginals:
 
 ```@example 1
 # Define a random vector X with correlated marginals X₁ and X₂:
-X₁  = generaterv("Gamma", "M", [10, 1.5])
-X₂  = generaterv("Gumbel", "M", [15, 2.5])
+X₁  = randomvariable("Gamma", "M", [10, 1.5])
+X₂  = randomvariable("Gumbel", "M", [15, 2.5])
 X   = [X₁, X₂]
 
 nothing # hide
@@ -94,7 +94,7 @@ Sample the defined random vector using a sampling technique of your choice.
 
 ```@example 1
 # Generate 5000 samples of the random vector X in X-, Z-, and U-spaces using Inverse Transform Sampling technique:
-XSamples, ZSamples, USamples = samplerv(TransformationObject, 5000, ITS())
+XSamples, ZSamples, USamples = rand(TransformationObject, 5000, ITS())
 
 nothing # hide
 ```
@@ -108,6 +108,7 @@ nothing # hide
 ```@docs
 ITS
 LHS
-samplerv(Samplers::Union{<:Distribution, Vector{<:Distribution}}, NumSamples::Integer, SamplingTechnique::AbstractSamplingTechnique)
-samplerv(Object::NatafTransformation, NumSamples::Integer, SamplingTechnique::AbstractSamplingTechnique)
+rand(RNG::Distributions.AbstractRNG, RandomVariable::Distributions.UnivariateDistribution, NumSamples::Int, SamplingTechnique::AbstractSamplingTechnique)
+rand(RNG::Distributions.AbstractRNG, RandomVector::Vector{<:Distributions.UnivariateDistribution}, NumSamples::Int, SamplingTechnique::AbstractSamplingTechnique)
+rand(RNG::Distributions.AbstractRNG, TransformationObject::NatafTransformation, NumSamples::Int, SamplingTechnique::AbstractSamplingTechnique)
 ```

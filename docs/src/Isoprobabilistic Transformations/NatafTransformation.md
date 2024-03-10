@@ -34,8 +34,8 @@ where ``\phi_2(\cdot)`` is the bivariate standard normal probability density fun
 
 ```@docs
 NatafTransformation
-getdistortedcorrelation(X::Vector{<:Distribution}, ρˣ::Matrix{<:Real})
-transformsamples(Object::NatafTransformation, Samples::Union{Vector{<:Real},Matrix{<:Real}}, TransformationDirection::String)
-getjacobian(Object::NatafTransformation, Samples::Union{Vector{<:Real},Matrix{<:Real}}, TransformationDirection::String)
-jointpdf(Object::NatafTransformation, x::Union{Vector{<:Real},Matrix{<:Real}})
+getdistortedcorrelation(X::AbstractVector{<:Distributions.UnivariateDistribution}, ρˣ::AbstractMatrix{<:Real})
+transformsamples(TransformationObject::NatafTransformation, Samples::AbstractVector{<:Real}, TransformationDirection::AbstractString)
+getjacobian(TransformationObject::NatafTransformation, Samples::AbstractVector{<:Real}, TransformationDirection::AbstractString)
+pdf(TransformationObject::NatafTransformation, x::AbstractVector{<:Real})
 ```

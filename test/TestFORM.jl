@@ -1,4 +1,4 @@
-@testset "Reliability Problems: FORM - MCFOSM" begin
+@testset "FORM #1 - MCFOSM" begin
     # Example 5.1 (p. 110) from "Structural and System Reliability" book by Armen Der Kiureghian
 
     # Define a random vector of correlated marginal distributions:
@@ -24,7 +24,7 @@
     @test isapprox(Solution₂.β, 4.29, rtol = 0.01)
 end
 
-@testset "Reliability Problems: FORM - HLRF #1" begin
+@testset "FORM #2 - HLRF" begin
     # Example 5.2 (p. 118) from "Structural and System Reliability" book by Armen Der Kiureghian
 
     # Define a random vector of correlated marginal distributions:
@@ -54,7 +54,7 @@ end
     @test isapprox(Solution₂.u[:, end], [-1.928, 0.852], rtol = 0.01)
 end
 
-@testset "Reliability Problems: FORM - HLRF #2" begin
+@testset "FORM #3 - HLRF" begin
     # Test from UQPy package (https://github.com/SURGroup/UQpy/tree/master)
 
     # Define a random vector of correlated marginal distributions:
@@ -73,13 +73,13 @@ end
     Solution = solve(Problem, FORM(HLRF()))
 
     # Test the results:
-    @test isapprox(Solution.β, 2.236067977499917, rtol = 10^(-9))
-    @test isapprox(Solution.PoF, 0.012673659338729965, rtol = 10^(-9))
-    @test isapprox(Solution.x[:, end], [160, 160], rtol = 10^(-9))
-    @test isapprox(Solution.u[:, end], [-2, 1], rtol = 10^(-9))
+    @test isapprox(Solution.β, 2.236067977499917, rtol = 10 ^ (-9))
+    @test isapprox(Solution.PoF, 0.012673659338729965, rtol = 10 ^ (-9))
+    @test isapprox(Solution.x[:, end], [160, 160], rtol = 10 ^ (-9))
+    @test isapprox(Solution.u[:, end], [-2, 1], rtol = 10 ^ (-9))
 end
 
-@testset "Reliability Problems: FORM - HLRF #3" begin
+@testset "FORM #3 - HLRF" begin
     # Example 6.5 (p. 147) from "Structural and System Reliability" book by Armen Der Kiureghian
 
     # Define a random vector of correlated marginal distributions:
@@ -111,7 +111,7 @@ end
     # Note: There is a typo in the book for this example. The last coordinate of the design point in U-space must be -1.80.
 end
 
-@testset "Reliability Problems: FORM - iHLRF #1" begin
+@testset "FORM #4 - iHLRF" begin
     # Example 5.2 (p. 118) from "Structural and System Reliability" book by Armen Der Kiureghian
 
     # Define a random vector of correlated marginal distributions:
@@ -141,7 +141,7 @@ end
     @test isapprox(Solution₂.u[:, end], [-1.928, 0.852], rtol = 0.01)
 end
 
-@testset "Reliability Problems: FORM - iHLRF #2" begin
+@testset "FORM #5 - iHLRF" begin
     # Test from UQPy package (https://github.com/SURGroup/UQpy/tree/master)
 
     # Define a random vector of correlated marginal distributions:
@@ -160,13 +160,13 @@ end
     Solution = solve(Problem, FORM(iHLRF()))
 
     # Test the results:
-    @test isapprox(Solution.β, 2.236067977499917, rtol = 10^(-9))
-    @test isapprox(Solution.PoF, 0.012673659338729965, rtol = 10^(-9))
-    @test isapprox(Solution.x[:, end], [160, 160], rtol = 10^(-9))
-    @test isapprox(Solution.u[:, end], [-2, 1], rtol = 10^(-9))
+    @test isapprox(Solution.β, 2.236067977499917, rtol = 10 ^ (-9))
+    @test isapprox(Solution.PoF, 0.012673659338729965, rtol = 10 ^ (-9))
+    @test isapprox(Solution.x[:, end], [160, 160], rtol = 10 ^ (-9))
+    @test isapprox(Solution.u[:, end], [-2, 1], rtol = 10 ^ (-9))
 end
 
-@testset "Reliability Problems: FORM - iHLRF #3" begin
+@testset "FORM #6 - iHLRF" begin
     # Example 6.5 (p. 147) from "Structural and System Reliability" book by Armen Der Kiureghian
 
     # Define a random vector of correlated marginal distributions:

@@ -41,6 +41,7 @@ where ``N`` is the number of generated sampled. The estimator ``\hat{P}_{f}`` is
 ## API
 
 ```@docs
-MCS
-analyze(Problem::ReliabilityProblem, AnalysisMethod::MCS)
+MC
+MCCache
+solve(Problem::ReliabilityProblem, AnalysisMethod::MC)
 ```

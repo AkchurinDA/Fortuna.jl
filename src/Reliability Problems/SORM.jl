@@ -1,3 +1,83 @@
+"""
+    struct SORM <: AbstractReliabililyAnalysisMethod
+
+Type used to perform reliability analysis using Second-Order Reliability Method (SORM).
+
+$(TYPEDFIELDS)
+"""
+Base.@kwdef struct SORM <: AbstractReliabililyAnalysisMethod
+    Submethod::SORMSubmethod = CF()
+end
+
+"""
+    struct CF <: SORMSubmethod
+
+Type used to perform reliability analysis using Curve-Fitting (CF) method.
+
+$(TYPEDFIELDS)
+"""
+Base.@kwdef struct CF <: SORMSubmethod # Curve-Fitting method
+    ϵ::Real = 1 / 1000
+end
+
+"""
+    struct PF <: SORMSubmethod
+
+Type used to perform reliability analysis using Point-Fitting (PF) method.
+
+$(TYPEDFIELDS)
+"""
+Base.@kwdef struct PF <: SORMSubmethod # Point-Fitting method
+
+end
+
+"""
+    struct CFCache
+
+Type used to perform reliability analysis using Point-Fitting (PF) method.
+
+$(TYPEDFIELDS)
+"""
+struct CFCache # Curve-Fitting method
+    "Results of reliability analysis performed using First-Order Reliability Method (FORM)"
+    FORMSolution    ::iHLRFCache
+    "Generalized reliability indices ``\\beta``"
+    β₂              ::Vector{Float64}
+    "Probabilities of failure ``\\text{PoF}``"
+    PoF₂            ::Vector{Float64}
+    "Principal curvatures ``\\kappa``"
+    κ               ::Vector{Float64}
+end
+
+"""
+    struct PFCache
+
+Type used to perform reliability analysis using Point-Fitting (PF) method.
+
+$(TYPEDFIELDS)
+"""
+struct PFCache # Point-Fitting method
+    "Results of reliability analysis performed using First-Order Reliability Method (FORM)"
+    FORMSolution    ::iHLRFCache
+    "Generalized reliability index ``\\beta``"
+    β₂              ::Vector{Float64}
+    "Probabilities of failure ``\\text{PoF}``"
+    PoF₂            ::Vector{Float64}
+    "Fitting points on the negative side of the hypercylinder"
+    FittingPoints⁻  ::Matrix{Float64}
+    "Fitting points on the positive side of the hypercylinder"
+    FittingPoints⁺  ::Matrix{Float64}
+    "Principal curvatures on the negative side of the hypercylinder ``\\kappa^{-}``"
+    κ⁻              ::Vector{Float64}
+    "Principal curvatures on the positive side of the hypercylinder ``\\kappa^{+}``"
+    κ⁺              ::Vector{Float64}
+end
+
+"""
+    solve(Problem::ReliabilityProblem, AnalysisMethod::SORM)
+
+Function used to solve reliability analysis using Second-Order Reliability Method (SORM).
+"""
 function solve(Problem::ReliabilityProblem, AnalysisMethod::SORM)
     # Extract the analysis method:
     Submethod = AnalysisMethod.Submethod
@@ -8,7 +88,6 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::SORM)
     ∇G              = FORMSolution.∇G[:, end]
     α               = FORMSolution.α[:, end]
     β₁              = FORMSolution.β
-    PoF₁            = FORMSolution.PoF
 
     # Extract the problem data:
     X   = Problem.X
@@ -64,7 +143,7 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::SORM)
         β₂ = -Distributions.quantile.(Distributions.Normal(), PoF₂)
 
         # Return results:
-        return CFCache(β₁, PoF₁, β₂, PoF₂, H, R, A, κ)
+        return CFCache(FORMSolution, β₂, PoF₂, κ)
     elseif isa(Submethod, PF)
         # Compute number of dimensions: 
         NumDimensions = length(X)
@@ -118,6 +197,9 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::SORM)
             κ₁[i, 2] = 2 * (FittingPoints⁺[i, 2] - β₁) / (FittingPoints⁺[i, 1] ^ 2) # Positive side
         end
 
+        κ⁻ = κ₁[:, 1]
+        κ⁺ = κ₁[:, 2]
+
         # Compute number of hyperquadrants used to fit semiparabolas:
         NumHyperquadrants = 2 ^ (NumDimensions - 1)
 
@@ -166,7 +248,7 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::SORM)
         β₂ = -Distributions.quantile.(Distributions.Normal(), PoF₂)
 
         # Return results:
-        return PFCache(β₁, PoF₁, β₂, PoF₂, FittingPoints⁻, FittingPoints⁺, κ₁, κ₂)
+        return PFCache(FORMSolution, β₂, PoF₂, FittingPoints⁻, FittingPoints⁺, κ⁻, κ⁺)
     end
 end
 
