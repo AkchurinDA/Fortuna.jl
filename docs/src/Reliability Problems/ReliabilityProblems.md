@@ -24,7 +24,7 @@ X   = [X₁, X₂]
 ρˣ = [1 0.5; 0.5 1]
 
 # Define a limit state function:
-g(x) = x[1]^2 - 2 * x[2]
+g(x) = x[1] ^ 2 - 2 * x[2]
 
 # Define a reliability problem using the provided information:
 Problem = ReliabilityProblem(X, ρˣ, g)
@@ -42,8 +42,8 @@ After defining the reliability problem, `Fortuna.jl` allows to easily solve it u
 ```@example 1
 # Solve the reliability problem using an imporved Hasofer-Lind-Rackwitz-Fiessler method:
 Solution = solve(Problem, FORM(iHLRF()))
-println("PoF = $(Solution.PoF)")
-println("β = $(Solution.β)")
+println("PoF    = $(Solution.PoF)")
+println("β      = $(Solution.β)")
 ```
 
 Descriptions of all First- and Second-Order Reliability Methods implemented in `Fortuna.jl` can be found on [First-Order Reliability Methods](@ref FORMPage) and [Second-Order Reliability Methods](@ref SORMPage) pages.

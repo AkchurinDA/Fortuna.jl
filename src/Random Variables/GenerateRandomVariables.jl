@@ -1,11 +1,11 @@
 """
-    randomvariable(DistributionName::AbstractString, DefineBy::AbstractString, Values::Union{Real, AbstractVector{<:Real}})
+    randomvariable(Distribution::AbstractString, DefineBy::AbstractString, Values::Union{Real, AbstractVector{<:Real}})
 
 Function used to define random variables.
 """
-function randomvariable(DistributionName::AbstractString, DefineBy::AbstractString, Values::Union{Real, AbstractVector{<:Real}})
+function randomvariable(Distribution::AbstractString, DefineBy::AbstractString, Values::Union{Real, AbstractVector{<:Real}})
     # Convert strings to lowercase:
-    DistributionName = lowercase(DistributionName)
+    Distribution = lowercase(Distribution)
     DefineBy = lowercase(DefineBy)
 
     # Error-catching:
@@ -15,25 +15,25 @@ function randomvariable(DistributionName::AbstractString, DefineBy::AbstractStri
 
     # Convert moments of a random variable into its parameters if the random variable is defined by its moments:
     if DefineBy == "m"
-        Values = convert(DistributionName, Values)
+        Values = convert(Distribution, Values)
     end
 
     # Create a random variable:
-    if DistributionName == "exponential"
+    if Distribution == "exponential"
         RandomVariable = Distributions.Exponential(Values)
-    elseif DistributionName == "gamma"
+    elseif Distribution == "gamma"
         RandomVariable = Distributions.Gamma(Values[1], Values[2])
-    elseif DistributionName == "gumbel"
+    elseif Distribution == "gumbel"
         RandomVariable = Distributions.Gumbel(Values[1], Values[2])
-    elseif DistributionName == "lognormal"
+    elseif Distribution == "lognormal"
         RandomVariable = Distributions.LogNormal(Values[1], Values[2])
-    elseif DistributionName == "normal"
+    elseif Distribution == "normal"
         RandomVariable = Distributions.Normal(Values[1], Values[2])
-    elseif DistributionName == "poisson"
+    elseif Distribution == "poisson"
         RandomVariable = Distributions.Poisson(Values[1])
-    elseif DistributionName == "uniform"
+    elseif Distribution == "uniform"
         RandomVariable = Distributions.Uniform(Values[1], Values[2])
-    elseif DistributionName == "weibull"
+    elseif Distribution == "weibull"
         RandomVariable = Distributions.Weibull(Values[1], Values[2])
     else
         error("Provided distribution is not supported.")
@@ -43,9 +43,9 @@ function randomvariable(DistributionName::AbstractString, DefineBy::AbstractStri
     return RandomVariable
 end
 
-function convert(DistributionName::AbstractString, Moments::Union{Real, AbstractVector{<:Real}})
+function convert(Distribution::AbstractString, Moments::Union{Real, AbstractVector{<:Real}})
     # Convert strings to lowercase:
-    DistributionName = lowercase(DistributionName)
+    Distribution = lowercase(Distribution)
 
     # Error-catching:
     if length(Moments) > 2
@@ -53,7 +53,7 @@ function convert(DistributionName::AbstractString, Moments::Union{Real, Abstract
     end
 
     # Convert moments to parameters:
-    if DistributionName == "exponential"
+    if Distribution == "exponential"
         # Extract moments:
         Mean        = Moments[1]
         STD         = Moments[2]
@@ -66,7 +66,7 @@ function convert(DistributionName::AbstractString, Moments::Union{Real, Abstract
         # Convert moments to parameters:
         θ           = Mean
         Parameters  = θ
-    elseif DistributionName == "gamma"
+    elseif Distribution == "gamma"
         # Extract moments:
         Mean        = Moments[1]
         STD         = Moments[2]
@@ -75,7 +75,7 @@ function convert(DistributionName::AbstractString, Moments::Union{Real, Abstract
         α           = Mean^2 / STD^2
         θ           = STD^2 / Mean
         Parameters  = [α, θ]
-    elseif DistributionName == "gumbel"
+    elseif Distribution == "gumbel"
         # Extract moments:
         Mean        = Moments[1]
         STD         = Moments[2]
@@ -85,7 +85,7 @@ function convert(DistributionName::AbstractString, Moments::Union{Real, Abstract
         μ           = Mean - (STD * γ * sqrt(6)) / π
         θ           = (STD * sqrt(6)) / π
         Parameters  = [μ, θ]
-    elseif DistributionName == "lognormal"
+    elseif Distribution == "lognormal"
         # Extract moments:
         Mean        = Moments[1]
         STD         = Moments[2]
@@ -94,7 +94,7 @@ function convert(DistributionName::AbstractString, Moments::Union{Real, Abstract
         μ           = log(Mean) - log(sqrt(1 + (STD / Mean)^2))
         σ           = sqrt(log(1 + (STD / Mean)^2))
         Parameters  = [μ, σ]
-    elseif DistributionName == "normal"
+    elseif Distribution == "normal"
         # Extract moments:
         Mean        = Moments[1]
         STD         = Moments[2]
@@ -103,14 +103,14 @@ function convert(DistributionName::AbstractString, Moments::Union{Real, Abstract
         μ           = Mean
         σ           = STD
         Parameters  = [μ, σ]
-    elseif DistributionName == "poisson"
+    elseif Distribution == "poisson"
         # Extract moments:
         Mean        = Moments[1]
 
         # Convert moments to parameters:
         λ           = Mean
         Parameters  = λ
-    elseif DistributionName == "uniform"
+    elseif Distribution == "uniform"
         # Extract moments:
         Mean        = Moments[1]
         STD         = Moments[2]
@@ -119,7 +119,7 @@ function convert(DistributionName::AbstractString, Moments::Union{Real, Abstract
         a           = Mean - STD * sqrt(3)
         b           = Mean + STD * sqrt(3)
         Parameters  = [a, b]
-    elseif DistributionName == "weibull"
+    elseif Distribution == "weibull"
         # Extract moments:
         Mean        = Moments[1]
         STD         = Moments[2]

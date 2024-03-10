@@ -23,13 +23,13 @@ nothing # hide
 - Sample the generated random variable using a sampling technique of your choice.
 
 ```@example 1
-XSamples = rand(X, 5000, ITS())
+XSamples = rand(X, 10000, LHS())
 
 nothing # hide
 ```
 
 ```@raw html
-<img src="../Sample-RVariable.svg" class="center" style="max-height:400px; border-radius:2.5px;"/>
+<img src="../../assets/SampleRandomVariable.svg" class="center" style="max-height:400px; border-radius:2.5px;"/>
 ```
 
 ## Sampling Random Vectors with Uncorrelated Marginals
@@ -37,13 +37,18 @@ nothing # hide
 To generate samples of a random vector with *uncorrelated* marginals:
 
 - Generate random variables (`X₁` and `X₂`).
+
+```@example 1
+X₁ = randomvariable("Gamma", "M", [10, 1.5])
+X₂ = randomvariable("Gamma", "M", [15, 2.5])
+
+nothing #hide
+```
+
 - Define a random vector (`X`) with the generated random variables as marginals.
 
 ```@example 1
-# Generate a random vector X with uncorrelated marginals X₁ and X₂:
-X₁  = randomvariable("Gamma", "M", [10, 1.5])
-X₂  = randomvariable("Gumbel", "M", [15, 2.5])
-X   = [X₁, X₂]
+X = [X₁, X₂]
 
 nothing # hide
 ```
@@ -51,14 +56,13 @@ nothing # hide
 - Sample the defined random vector using a sampling technique of your choice.
 
 ```@example 1
-# Generate 5000 samples of the random vector X using Inverse Transform Sampling technique:
-XSamples = rand(X, 5000, ITS())
+XSamples = rand(X, 10000, LHS())
 
 nothing # hide
 ```
 
 ```@raw html
-<img src="../Sample-RVector-U.svg" class="center" style="max-height:400px; border-radius:2.5px;"/>
+<img src="../../assets/SampleUncorrelatedRandomVector.svg" class="center" style="max-height:400px; border-radius:2.5px;"/>
 ```
 
 ## Sampling Random Vectors with Correlated Marginals
@@ -66,41 +70,48 @@ nothing # hide
 To generate samples of a random vector with *correlated* marginals:
 
 - Generate random variables (`X₁` and `X₂`).
+
+```@example 1
+X₁ = randomvariable("Gamma", "M", [10, 1.5])
+X₂ = randomvariable("Gamma", "M", [15, 2.5])
+
+nothing # hide
+```
+
 - Define a random vector (`X`) with the generated random variables as marginals.
 
 ```@example 1
-# Define a random vector X with correlated marginals X₁ and X₂:
-X₁  = randomvariable("Gamma", "M", [10, 1.5])
-X₂  = randomvariable("Gumbel", "M", [15, 2.5])
-X   = [X₁, X₂]
+X = [X₁, X₂]
 
 nothing # hide
 ```
 
 - Define a correlated matrix (`ρˣ`) for the defined random vector.
-- Define a transformation object that hold all information about the define random vector.
 
 ```@example 1
-# Define a correlation matrix:
-ρˣ = [1 0.90; 0.90 1]
+ρˣ = [1 -0.75; -0.75 1]
 
-# Define a transformation object:
+nothing # hide
+```
+
+- Define a transformation object that hold all information about the defined random vector.
+
+```@example 1
 TransformationObject = NatafTransformation(X, ρˣ)
 
 nothing # hide
 ```
 
-Sample the defined random vector using a sampling technique of your choice.
+- Sample the defined random vector using a sampling technique of your choice.
 
 ```@example 1
-# Generate 5000 samples of the random vector X in X-, Z-, and U-spaces using Inverse Transform Sampling technique:
-XSamples, ZSamples, USamples = rand(TransformationObject, 5000, ITS())
+XSamples, ZSamples, USamples = rand(TransformationObject, 10000, LHS())
 
 nothing # hide
 ```
 
 ```@raw html
-<img src="../Sample-RVector-C.svg" class="center" style="max-height:400px; border-radius:2.5px;"/>
+<img src="../../assets/SampleCorrelatedRandomVector.svg" class="center" style="max-height:400px; border-radius:2.5px;"/>
 ```
 
 ## API

@@ -27,7 +27,7 @@ makedocs(
             ],
         "Reliability Problems"                  => [
             "Reliability Problems"              => "Reliability Problems/ReliabilityProblems.md",
-            "Monte Carlo Simulations"           => "Reliability Problems/MCS.md",
+            "Monte Carlo Simulations"           => "Reliability Problems/MC.md",
             "Importance Sampling"               => "Reliability Problems/IS.md",
             "First-Order Reliability Methods"   => "Reliability Problems/FORM.md",
             "Second-Order Reliability Methods"  => "Reliability Problems/SORM.md",
