@@ -11,8 +11,3 @@
 ```
 
 ## API
-
-```@docs
-SensitivityProblem
-analyze(Problem::SensitivityProblem)
-```

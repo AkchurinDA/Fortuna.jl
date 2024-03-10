@@ -1,5 +1,6 @@
 using Fortuna
 using Documenter, DocumenterCitations
+import Distributions
 
 Bibliography = CitationBibliography(
     joinpath(@__DIR__, "src/References.bib"),
@@ -17,23 +18,23 @@ makedocs(
     pages = [
         "Home"                                  => "index.md",
         "Random Variables"                      => [
-            "Generating Random Variables"       => "RandomVariables/GenerateRV.md",
-            "Sampling Random Variables"         => "RandomVariables/SampleRV.md"
+            "Generating Random Variables"       => "Random Variables/GenerateRandomVariables.md",
+            "Sampling Random Variables"         => "Random Variables/SampleRandomVariables.md"
             ],
         "Isoprobabilistic Transformations"      => [
-            "Nataf Transformation"              => "IsoprobabilisticTransformations/NatafTransformation.md",
-            "Rosenblatt Transformation"         => "IsoprobabilisticTransformations/RosenblattTransformation.md"
+            "Nataf Transformation"              => "Isoprobabilistic Transformations/NatafTransformation.md",
+            "Rosenblatt Transformation"         => "Isoprobabilistic Transformations/RosenblattTransformation.md"
             ],
         "Reliability Problems"                  => [
-            "Defining Reliability Problems"     => "ReliabilityProblems/DefiningReliabilityProblems.md",
-            "Monte Carlo Simulations"           => "ReliabilityProblems/MCS.md",
-            "Importance Sampling"               => "ReliabilityProblems/IS.md",
-            "First-Order Reliability Methods"   => "ReliabilityProblems/FORM.md",
-            "Second-Order Reliability Methods"  => "ReliabilityProblems/SORM.md",
-            "Subset Simulation Method"          => "ReliabilityProblems/SSM.md"
+            "Reliability Problems"              => "Reliability Problems/ReliabilityProblems.md",
+            "Monte Carlo Simulations"           => "Reliability Problems/MCS.md",
+            "Importance Sampling"               => "Reliability Problems/IS.md",
+            "First-Order Reliability Methods"   => "Reliability Problems/FORM.md",
+            "Second-Order Reliability Methods"  => "Reliability Problems/SORM.md",
+            "Subset Simulation Method"          => "Reliability Problems/SSM.md"
             ],
         "Inverse Reliability Problems"          => "InverseReliabilityProblems.md",
-        "Sensitivity Analysis"                  => "SensitivityAnalysis.md",
+        "Sensitivity Problems"                  => "SensitivityProblems.md",
         "Examples"                              => "Examples.md",
         "Showcases"                             => "Showcases.md",
         "References"                            => "References.md"],

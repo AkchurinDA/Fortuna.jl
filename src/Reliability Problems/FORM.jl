@@ -1,10 +1,157 @@
-# First-Order Reliability Method:
 """
-    analyze(Problem::ReliabilityProblem, AnalysisMethod::FORM)
+    struct FORM <: AbstractReliabililyAnalysisMethod
 
-The function solves the provided reliability problem using any submethod that falls under a broader category of First-Order Reliability Methods (FORM).
+Type used to perform reliability analysis using First-Order Reliability Method (FORM).
+
+$(TYPEDFIELDS)
 """
-function analyze(Problem::ReliabilityProblem, AnalysisMethod::FORM)
+Base.@kwdef struct FORM <: AbstractReliabililyAnalysisMethod
+    Submethod::FORMSubmethod = iHLRF()
+end
+
+"""
+    struct MCFOSM <: FORMSubmethod
+
+Type used to perform reliability analysis using Mean-Centered First-Order Second-Moment (MCFOSM) method.
+
+$(TYPEDFIELDS)
+"""
+struct MCFOSM <: FORMSubmethod # Mean-Centered First-Order Second-Moment method
+
+end
+
+Base.@kwdef struct HL <: FORMSubmethod # Hasofer-Lind method
+
+end
+
+Base.@kwdef struct RF <: FORMSubmethod # Rackwitz-Fiessler method
+
+end
+
+"""
+    struct HLRF <: FORMSubmethod
+
+Type used to perform reliability analysis using Hasofer-Lind Rackwitz-Fiessler (HLRF) method.
+
+$(TYPEDFIELDS)
+"""
+Base.@kwdef struct HLRF <: FORMSubmethod # Hasofer-Lind Rackwitz-Fiessler method
+    "Maximum number of iterations"
+    MaxNumIterations    ::Integer = 250
+    "Convergance criterion #1 ``\\epsilon_{1}``"
+    ϵ₁                  ::Real = 10^(-9)
+    "Convergance criterion #1 ``\\epsilon_{2}``"
+    ϵ₂                  ::Real = 10^(-9)
+    "Starting point ``x_{0}``"
+    x₀                  ::Union{Nothing, Vector{<:Real}} = nothing
+end
+
+"""
+    struct iHLRF <: FORMSubmethod
+
+Type used to perform reliability analysis using improved Hasofer-Lind Rackwitz-Fiessler (iHLRF) method.
+
+$(TYPEDFIELDS)
+"""
+Base.@kwdef struct iHLRF <: FORMSubmethod # Improved Hasofer-Lind Rackwitz-Fiessler method
+    "Maximum number of iterations"
+    MaxNumIterations    ::Integer = 250
+    "Convergance criterion #1 ``\\epsilon_{1}``"
+    ϵ₁                  ::Real = 10^(-9)
+    "Convergance criterion #1 ``\\epsilon_{2}``"
+    ϵ₂                  ::Real = 10^(-9)
+    "Starting point ``x_{0}``"
+    x₀                  ::Union{Nothing, Vector{<:Real}} = nothing
+end
+
+"""
+    struct MCFOSMCache
+
+Type used to store results of reliability analysis performed using Mean-Centered First-Order Second-Moment (MCFOSM) method.
+
+$(TYPEDFIELDS)
+"""
+struct MCFOSMCache
+    "Reliability index ``\\beta``"
+    β::Float64
+end
+
+struct HLCache
+
+end
+
+struct RFCache
+
+end
+
+"""
+    struct HLRFCache
+
+Type used to store results of reliability analysis performed using Hasofer-Lind Rackwitz-Fiessler (HLRF) method.
+
+$(TYPEDFIELDS)
+"""
+struct HLRFCache
+    "Reliability index ``\\beta``"
+    β   ::Float64
+    "Probability of failure ``P_{f}``"
+    PoF ::Float64
+    "Design points in X-space at each iteration ``\\vec{x}_{i}^{*}``"
+    x   ::Matrix{Float64}
+    "Design points in U-space at each iteration ``\\vec{u}_{i}^{*}``"
+    u   ::Matrix{Float64}
+    "Limit state function at each iteration ``G(\\vec{u}_{i}^{*})``"
+    G   ::Vector{Float64}
+    "Gradient of the limit state function at each iteration ``\\nabla G(\\vec{u}_{i}^{*})``"
+    ∇G  ::Matrix{Float64}
+    "Normalized negative gradient of the limit state function at each iteration ``\\vec{\\alpha}_{i}``"
+    α   ::Matrix{Float64}
+    "Search direction at each iteration ``\\vec{d}_{i}``"
+    d   ::Matrix{Float64}
+    "Importance vector``\\vec{\\gamma}``"
+    γ   ::Vector{Float64}
+end
+
+"""
+    struct iHLRFCache
+
+Type used to store results of reliability analysis performed using improved Hasofer-Lind Rackwitz-Fiessler (iHLRF) method.
+
+$(TYPEDFIELDS)
+"""
+struct iHLRFCache
+    "Reliability index ``\\beta``"
+    β   ::Float64
+    "Probability of failure ``P_{f}``"
+    PoF ::Float64
+    "Design points in X-space at each iteration ``\\vec{x}_{i}^{*}``"
+    x   ::Matrix{Float64}
+    "Design points in U-space at each iteration ``\\vec{u}_{i}^{*}``"
+    u   ::Matrix{Float64}
+    "Limit state function at each iteration ``G(\\vec{u}_{i}^{*})``"
+    G   ::Vector{Float64}
+    "Gradient of the limit state function at each iteration ``\\nabla G(\\vec{u}_{i}^{*})``"
+    ∇G  ::Matrix{Float64}
+    "Normalized negative gradient of the limit state function at each iteration ``\\vec{\alpha}_{i}``"
+    α   ::Matrix{Float64}
+    "Search direction at each iteration ``\\vec{d}_{i}``"
+    d   ::Matrix{Float64}
+    "c-coefficient at each iteration ``c_{i}``"
+    c   ::Vector{Float64}
+    "Merit function at each iteration ``m_{i}``"
+    m   ::Vector{Float64}
+    "Step size at each iteration ``\\lambda_{i}``"
+    λ   ::Vector{Float64}
+    "Importance vector``\\vec{\\gamma}``"
+    γ   ::Vector{Float64}
+end
+
+"""
+    solve(Problem::ReliabilityProblem, AnalysisMethod::FORM)
+
+Function used to solve reliability analysis using First-Order Reliability Method (FORM).
+"""
+function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM)
     # Extract the analysis method:
     Submethod = AnalysisMethod.Submethod
 
@@ -17,18 +164,18 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::FORM)
         error("Invalid FORM submethod.")
     elseif isa(Submethod, MCFOSM)
         # Compute the means of marginal distrbutions:
-        Mˣ = mean.(X)
+        Mˣ = Distributions.mean.(X)
 
         # Convert the correlation matrix into covariance matrix:
-        σˣ = std.(X)
-        Dˣ = diagm(σˣ)
+        σˣ = Distributions.std.(X)
+        Dˣ = LinearAlgebra.diagm(σˣ)
         Σˣ = Dˣ * ρˣ * Dˣ
 
         # Compute gradient of the limit state function and evaluate it at the means of the marginal distributions:
-        ∇g = gradient(g, Mˣ)
+        ∇g = ForwardDiff.gradient(g, Mˣ)
 
         # Compute the reliability index:
-        β = g(Mˣ) / sqrt(transpose(∇g) * Σˣ * ∇g)
+        β = g(Mˣ) / sqrt(LinearAlgebra.transpose(∇g) * Σˣ * ∇g)
 
         # Return results:
         return MCFOSMCache(β)
@@ -43,16 +190,16 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::FORM)
         ϵ₂ = Submethod.ϵ₂
         x₀ = Submethod.x₀
 
-        # Compute the number of marginal distributions:
-        NumDims = length(X)
+        # Compute number of dimensions: 
+        NumDimensions = length(X)
 
         # Preallocate:
-        x   = Matrix{Float64}(undef, NumDims, MaxNumIterations)
-        u   = Matrix{Float64}(undef, NumDims, MaxNumIterations)
+        x   = Matrix{Float64}(undef, NumDimensions, MaxNumIterations)
+        u   = Matrix{Float64}(undef, NumDimensions, MaxNumIterations)
         G   = Vector{Float64}(undef, MaxNumIterations)
-        ∇G  = Matrix{Float64}(undef, NumDims, MaxNumIterations)
-        α   = Matrix{Float64}(undef, NumDims, MaxNumIterations)
-        d   = Matrix{Float64}(undef, NumDims, MaxNumIterations)
+        ∇G  = Matrix{Float64}(undef, NumDimensions, MaxNumIterations)
+        α   = Matrix{Float64}(undef, NumDimensions, MaxNumIterations)
+        d   = Matrix{Float64}(undef, NumDimensions, MaxNumIterations)
 
         # Perform the Nataf Transformation:
         NatafObject = NatafTransformation(X, ρˣ)
@@ -87,33 +234,33 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::FORM)
             G[i] = g(x[:, i])
 
             # Evaluate gradient of the limit state function at the design point in X-space:
-            ∇g = transpose(gradient(g, x[:, i]))
+            ∇g = LinearAlgebra.transpose(ForwardDiff.gradient(g, x[:, i]))
 
             # Convert the evaluated gradient of the limit state function from X- to U-space:
             ∇G[:, i] = vec(∇g * Jₓᵤ)
 
             # Compute the normalized negative gradient vector at the design point in U-space:
-            α[:, i] = -∇G[:, i] / norm(∇G[:, i])
+            α[:, i] = -∇G[:, i] / LinearAlgebra.norm(∇G[:, i])
 
             # Compute the search direction:
-            d[:, i] = (G[i] / norm(∇G[:, i]) + dot(α[:, i], u[:, i])) * α[:, i] - u[:, i]
+            d[:, i] = (G[i] / LinearAlgebra.norm(∇G[:, i]) + LinearAlgebra.dot(α[:, i], u[:, i])) * α[:, i] - u[:, i]
 
             # Compute the new design point in U-space:
             u[:, i + 1] = u[:, i] + λ * d[:, i]
 
             # Check for convergance:
             Criterion₁ = abs(g(x[:, i]) / G₀)                               # Check if the value of the limit state function is close to zero.
-            Criterion₂ = norm(u[:, i] - dot(α[:, i], u[:, i]) * α[:, i])    # Check if the design point is on the failure boundary.
+            Criterion₂ = LinearAlgebra.norm(u[:, i] - LinearAlgebra.dot(α[:, i], u[:, i]) * α[:, i])    # Check if the design point is on the failure boundary.
             if Criterion₁ < ϵ₁ && Criterion₂ < ϵ₂
                 # Compute the reliability index:
-                β = dot(α[:, i], u[:, i])
+                β = LinearAlgebra.dot(α[:, i], u[:, i])
 
                 # Compute the probability of failure:
-                PoF = cdf(Normal(0, 1), -β)
+                PoF = Distributions.cdf(Distributions.Normal(), -β)
 
                 # Compute the importance vector:
                 L⁻¹ = NatafObject.L⁻¹
-                γ   = vec((transpose(α[:, i]) * L⁻¹) / norm(transpose(α[:, i]) * L⁻¹))
+                γ   = vec((LinearAlgebra.transpose(α[:, i]) * L⁻¹) / LinearAlgebra.norm(LinearAlgebra.transpose(α[:, i]) * L⁻¹))
 
                 # Clean up the results:
                 x   = x[:, 1:i]
@@ -141,16 +288,16 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::FORM)
         ϵ₂ = Submethod.ϵ₂
         x₀ = Submethod.x₀
 
-        # Compute the number of marginal distributions:
-        NumDims = length(X)
+        # Compute number of dimensions: 
+        NumDimensions = length(X)
 
         # Preallocate:
-        x   = Matrix{Float64}(undef, NumDims, MaxNumIterations)
-        u   = Matrix{Float64}(undef, NumDims, MaxNumIterations)
+        x   = Matrix{Float64}(undef, NumDimensions, MaxNumIterations)
+        u   = Matrix{Float64}(undef, NumDimensions, MaxNumIterations)
         G   = Vector{Float64}(undef, MaxNumIterations)
-        ∇G  = Matrix{Float64}(undef, NumDims, MaxNumIterations)
-        α   = Matrix{Float64}(undef, NumDims, MaxNumIterations)
-        d   = Matrix{Float64}(undef, NumDims, MaxNumIterations)
+        ∇G  = Matrix{Float64}(undef, NumDimensions, MaxNumIterations)
+        α   = Matrix{Float64}(undef, NumDimensions, MaxNumIterations)
+        d   = Matrix{Float64}(undef, NumDimensions, MaxNumIterations)
         c   = Vector{Float64}(undef, MaxNumIterations)
         m   = Vector{Float64}(undef, MaxNumIterations)
         λ   = Vector{Float64}(undef, MaxNumIterations)
@@ -160,7 +307,7 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::FORM)
 
         # Initialize the design point in X-space:
         if isnothing(x₀) 
-            x[:, 1] = mean.(X)
+            x[:, 1] = Distributions.mean.(X)
         else
             x[:, 1] = x₀
         end
@@ -185,29 +332,29 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::FORM)
             G[i] = g(x[:, i])
 
             # Evaluate gradient of the limit state function at the design point in X-space:
-            ∇g = transpose(gradient(g, x[:, i]))
+            ∇g = LinearAlgebra.transpose(ForwardDiff.gradient(g, x[:, i]))
 
             # Convert the evaluated gradient of the limit state function from X- to U-space:
             ∇G[:, i] = vec(∇g * Jₓᵤ)
 
             # Compute the normalized negative gradient vector at the design point in U-space:
-            α[:, i] = -∇G[:, i] / norm(∇G[:, i])
+            α[:, i] = -∇G[:, i] / LinearAlgebra.norm(∇G[:, i])
 
             # Compute the search direction:
-            d[:, i] = (G[i] / norm(∇G[:, i]) + dot(α[:, i], u[:, i])) * α[:, i] - u[:, i]
+            d[:, i] = (G[i] / LinearAlgebra.norm(∇G[:, i]) + LinearAlgebra.dot(α[:, i], u[:, i])) * α[:, i] - u[:, i]
 
             # Compute the c-coefficient:
-            c[i] = ceil(norm(u[:, i]) / norm(∇G[:, i]))
+            c[i] = ceil(LinearAlgebra.norm(u[:, i]) / LinearAlgebra.norm(∇G[:, i]))
 
             # Compute the merit function at the current design point:
-            m[i] = 0.5 * norm(u[:, i])^2 + c[i] * abs(G[i])
+            m[i] = 0.5 * LinearAlgebra.norm(u[:, i])^2 + c[i] * abs(G[i])
 
             # Find a step size that satisfies m(uᵢ + λᵢdᵢ) < m(uᵢ):
             λₜ = 1
             uₜ = u[:, i] + λₜ * d[:, i]
             xₜ = transformsamples(NatafObject, uₜ, "U2X")
             Gₜ = g(xₜ)
-            mₜ = 0.5 * norm(uₜ)^2 + c[i] * abs(Gₜ)
+            mₜ = 0.5 * LinearAlgebra.norm(uₜ)^2 + c[i] * abs(Gₜ)
             while mₜ ≥ m[i]
                 # Update the step size:
                 λₜ = λₜ / 2
@@ -219,7 +366,7 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::FORM)
                 uₜ = u[:, i] + λₜ * d[:, i]
                 xₜ = transformsamples(NatafObject, uₜ, "U2X")
                 Gₜ = g(xₜ)
-                mₜ = 0.5 * norm(uₜ)^2 + c[i] * abs(Gₜ)
+                mₜ = 0.5 * LinearAlgebra.norm(uₜ)^2 + c[i] * abs(Gₜ)
             end
 
             # Update the step size:
@@ -233,17 +380,17 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::FORM)
 
             # Check for convergance:
             Criterion₁ = abs(g(x[:, i]) / G₀)                               # Check if the limit state function is close to zero.
-            Criterion₂ = norm(u[:, i] - dot(α[:, i], u[:, i]) * α[:, i])    # Check if the design point is on the failure boundary.
+            Criterion₂ = LinearAlgebra.norm(u[:, i] - LinearAlgebra.dot(α[:, i], u[:, i]) * α[:, i])    # Check if the design point is on the failure boundary.
             if Criterion₁ < ϵ₁ && Criterion₂ < ϵ₂
                 # Compute the reliability index:
-                β = dot(α[:, i], u[:, i])
+                β = LinearAlgebra.dot(α[:, i], u[:, i])
 
                 # Compute the probability of failure:
-                PoF = cdf(Normal(0, 1), -β)
+                PoF = Distributions.cdf(Distributions.Normal(), -β)
 
                 # Compute the importance vector:
                 L⁻¹ = NatafObject.L⁻¹
-                γ   = vec((transpose(α[:, i]) * L⁻¹) / norm(transpose(α[:, i]) * L⁻¹))
+                γ   = vec((LinearAlgebra.transpose(α[:, i]) * L⁻¹) / LinearAlgebra.norm(LinearAlgebra.transpose(α[:, i]) * L⁻¹))
 
                 # Clean up the results:
                 x   = x[:, 1:i]

@@ -17,6 +17,5 @@ The HLRF method overcomes the invariance problem faced by the MCFOSM method by u
 
 ```@docs
 FORM
-FORMSubmethod
-analyze(Problem::ReliabilityProblem, AnalysisMethod::FORM)
+solve(Problem::ReliabilityProblem, AnalysisMethod::FORM)
 ```

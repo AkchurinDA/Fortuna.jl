@@ -1,21 +1,36 @@
 # News
 
-## Release V0.5.3
+## Release V0.6.0
 
+- The internals of the module were completely reworked to use `import` instead of `using` for most of the dependencies to avoid pollution of the global variable scope of the module and improve its performance. The code was also completely reorganized to allow for easier contributions from other people in the future.
+- The following function and types were completely reworked:
+  - `generaterv()` is replaced with `randomvariable()`.
+  - `samplerv()` is replaced by extending `rand()` from `Distributions.jl` package.
+  - `jointpdf()` is replaced by extending `pdf()` from `Distributions.jl` package.
+  - `analyze()` is replaced with `solve()`.
+  - `MCS()` is replated with `MC()`. Consequently, `MCSCache()` is replaced with `MCCache()`.
+- `rand()` method is now completely compatible with `Random.jl` and `Distributions.jl` packages, i.e. you can now generate reproducible sequence of numbers if RNG seed is provided.
+- `pdf()` method is now completely compatible with `Distributions.jl` package.
 - HLRF and iHLRF methods can now be started from any arbitrary point $x_{0}$.
 
 ```julia
-analyze(Problem, FORM( HLRF(x₀ = [150, 275])))
-analyze(Problem, FORM(iHLRF(x₀ = [150, 275])))
+solve(Problem, FORM( HLRF(x₀ = [150, 275])))
+solve(Problem, FORM(iHLRF(x₀ = [150, 275])))
 ```
 
-- Added functionality to solve reliability problems with extremely small probabilities of failure using the Importance Sampling technique.
+- Added functionality to solve reliability problems with extremely small probabilities of failure using the Importance Sampling method.
+
+```julia
+ISSolution = solve(Problem, IS())
+```
+
 - Isoprobabilistic transformation objects (`NatafTransformation` and `RosenblattTransformation`) are now broadcastable.
 
 ```julia
-jointpdf.(NatafObject, XSamples)
-jointpdf.(RosenblattObject, XSamples)
+pdf.(TransformationObject, XSamples)
 ```
+
+- Documentation is updated to include all possible functionality.
 
 ## Release V0.5.2
 

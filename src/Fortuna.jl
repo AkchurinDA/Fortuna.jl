@@ -1,49 +1,94 @@
 module Fortuna
-# Reexport some package and their functionalities:
+# --------------------------------------------------
+# IMPORT PACKAGES
+# --------------------------------------------------
+import  Base
+import  Random
+import  Distributions
+import  FastGaussQuadrature
+import  LinearAlgebra
+import  NonlinearSolve
+import  SpecialFunctions
+import  ForwardDiff
+using   DocStringExtensions
+
+# --------------------------------------------------
+# REEXPORT PACKAGES
+# --------------------------------------------------
 using Reexport
-@reexport using Distributions
-@reexport using LinearAlgebra: I
+@reexport import Distributions: rand, pdf # Extended functions
+@reexport import Distributions: mean, std, cor, params # Useful functions
+@reexport import LinearAlgebra: I
 
-# Load dependencies:
-using Base.Iterators:       product, repeated
-using DocStringExtensions
-using FastGaussQuadrature:  gausslegendre
-using ForwardDiff:          gradient, hessian
-using LinearAlgebra
-using Random:               rand, randn, shuffle
-using NonlinearSolve:       NonlinearProblem, IntervalNonlinearProblem
-using NonlinearSolve:       NewtonRaphson, Bisection
-using NonlinearSolve:       solve
-using SpecialFunctions:     gamma
+# --------------------------------------------------
+# DEFINE ABSTRACT TYPES
+# --------------------------------------------------
+"""
+    abstract type AbstractIsoprobabilisticTransformation end
 
-# Include the following files into the scope of the module:
-include("Types.jl")
+Abstract type for isoprobabilistic transformations.
+"""
+abstract type AbstractIsoprobabilisticTransformation end
+
+"""
+    abstract type AbstractSamplingTechnique end
+
+Abstract type for sampling techniques.
+"""
+abstract type AbstractSamplingTechnique end
+
+"""
+    abstract type AbstractReliabilityProblem end
+
+Abstract type for reliability problems.
+"""
+abstract type AbstractReliabilityProblem end
+
+"""
+    abstract type AbstractReliabililyAnalysisMethod end
+
+Abstract type for reliability analysis methods.
+"""
+abstract type AbstractReliabililyAnalysisMethod end
+
+"""
+    abstract type FORMSubmethod end
+
+Abstract type for First-Order Reliability Method's (FORM) submethods.
+"""
+abstract type FORMSubmethod end
+
+"""
+    abstract type SORMSubmethod end
+
+Abstract type for Second-Order Reliability Method's (FORM) submethods.
+"""
+abstract type SORMSubmethod end
+
+# --------------------------------------------------
+# EXPORT TYPES AND FUNCTIONS
+# --------------------------------------------------
+include("Isoprobabilistic Transformations/NatafTransformation.jl")
+include("Isoprobabilistic Transformations/RosenblattTransformation.jl")
+include("Random Variables/GenerateRandomVariables.jl")
+include("Random Variables/SampleRandomVariables.jl")
+include("Reliability Problems/ReliabilityProblems.jl")
+include("Reliability Problems/InverseReliabilityProblems.jl")
+include("Reliability Problems/SensitivityProblems.jl")
 export AbstractSamplingTechnique
 export ITS, LHS
 export AbstractTransformation
 export NatafTransformation, RosenblattTransformation
 export AbstractReliabilityProblem
-export ReliabilityProblem, InverseReliabilityProblem, SensitivityProblem
-export SensitivityProblemCache
-export AbstractReliabililyAnalysisMethod
-export FORMSubmethod, SORMSubmethod
-export MCS, MCSCache
+export ReliabilityProblem
+export MC, MCCache
 export IS, ISCache
-export FORM, MCFOSM, HLRF, iHLRF, MCFOSMCache, HLRFCache, iHLRFCache
-export SORM, CF, PF, CFCache, PFCache
+export FORM, MCFOSM, MCFOSMCache, HL, HLCache, RF, RFCache, HLRF, HLRFCache, iHLRF, iHLRFCache
+export SORM, CF, CFCache, PF, PFCache
 export SSM, SSMCache
-include("Random Variables/GenerateRandomVariables.jl")
-include("Random Variables/SampleRandomVariables.jl")
-export generaterv
-export samplerv
-include("Isoprobabilistic Transformations/NatafTransformation.jl")
-include("Isoprobabilistic Transformations/RosenblattTransformation.jl")
-export getdistortedcorrelation
-export transformsamples
-export getjacobian
-export jointpdf
-include("Reliability Problems/ReliabilityProblems.jl")
-include("Inverse Reliability Problems/InverseReliabilityProblems.jl")
-include("Sensitivity Problems/SensitivityProblems.jl")
-export analyze
+export SensitivityProblem, SensitivityProblemCache
+export InverseReliabilityProblem, InverseReliabilityProblemCache
+export randomvariable
+export getdistortedcorrelation, transformsamples, getjacobian
+export solve
 end

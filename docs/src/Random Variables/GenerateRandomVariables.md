@@ -1,6 +1,6 @@
 # Generating Random Variables
 
-`Fortuna.jl` package builds its capacity to generate random variables using `generaterv()` function by utilizing the widely-adopted [`Distributions.jl`](https://github.com/JuliaStats/Distributions.jl) package, enabling seamless integration with other probabilistic programming Julia packages such as [`Turing.jl`](https://github.com/TuringLang/Turing.jl) and [`RxInfer.jl`](https://github.com/biaslab/RxInfer.jl). However, unlike [`Distributions.jl`](https://github.com/JuliaStats/Distributions.jl) package, `Fortuna.jl` allows you to generate random variables not only using their *parameters*, but also using their *moments*, which often useful in the field of Structural and System Reliability Analysis.
+`Fortuna.jl` package builds its capacity to generate random variables using `randomvariable()` function by utilizing the widely-adopted [`Distributions.jl`](https://github.com/JuliaStats/Distributions.jl) package, enabling seamless integration with other probabilistic programming Julia packages such as [`Turing.jl`](https://github.com/TuringLang/Turing.jl) and [`RxInfer.jl`](https://github.com/biaslab/RxInfer.jl). However, unlike [`Distributions.jl`](https://github.com/JuliaStats/Distributions.jl) package, `Fortuna.jl` allows you to generate random variables not only using their *parameters*, but also using their *moments*, which often useful in the field of Structural and System Reliability Analysis.
 
 ```@setup GenerateRV
 using Fortuna
@@ -8,24 +8,24 @@ using Fortuna
 
 ## Generating Random Variables Using Moments
 
-To generate a random variable using its moments use pass `"M"` or `"Moments"` as the second argument of `generaterv()` function followed by the moments themselves. 
+To generate a random variable using its moments use pass `"M"` as the second argument of `randomvariable()` function followed by the moments themselves. 
 
 ```@example GenerateRV
 # Generate a lognormally distributed random variable R 
 # with mean (μ) of 15 and standard deviation (σ) of 10:
-R = generaterv("LogNormal", "M", [15, 10])
+R = randomvariable("LogNormal", "M", [15, 10])
 println("μ = $(mean(R))")
 println("σ = $(std(R))")
 ```
 
 ## Generating Random Variables Using Parameters
 
-To generate a random variable using its parameters use pass `"P"` or `"Parameters"` as the second argument of `generaterv()` function followed by the parameters themselves. 
+To generate a random variable using its parameters use pass `"P"` as the second argument of `randomvariable()` function followed by the parameters themselves. 
 
 ```@example GenerateRV
 # Generate a gamma-distributed random variable Q 
 # with shape parameter (α) of 16 and scale parameter (θ) of 0.625:
-Q = generaterv("Gamma", "P", [16, 0.625])
+Q = randomvariable("Gamma", "P", [16, 0.625])
 println("α = $(params(Q)[1])")
 println("θ = $(params(Q)[2])")
 ```
@@ -48,5 +48,5 @@ println("θ = $(params(Q)[2])")
 ## API
 
 ```@docs
-generaterv(DistributionName::String, DefineBy::String, Values::Union{Real, Vector{<:Real}})
+randomvariable(DistributionName::AbstractString, DefineBy::AbstractString, Values::Union{Real, AbstractVector{<:Real}})
 ```

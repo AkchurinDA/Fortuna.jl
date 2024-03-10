@@ -1,18 +1,47 @@
 """
-    getdistortedcorrelation(X::AbstractVector{<:Distribution}, ρˣ::AbstractMatrix{<:Real})
+    mutable struct NatafTransformation <: AbstractTransformation
 
-The function returns the distorted correlation matrix ``\\rho^{Z}`` of the correlated standard normal random variables ``\\vec{Z}``. Additionally, the function returns the lower triangular matrix of the Cholesky decomposition of the distorted correlation matrix ``L`` and its inverse ``L^{-1}``.
+Type used to perform Nataf Transformation.
+
+$(TYPEDFIELDS)
 """
-function getdistortedcorrelation(X::AbstractVector{<:Distribution}, ρˣ::AbstractMatrix{<:Real})
-    # Compute the number of marginal distributions:
-    NumDims = length(X)
+mutable struct NatafTransformation <: AbstractIsoprobabilisticTransformation
+    "Random vector ``\\vec{X}``"
+    X   ::AbstractVector{<:Distributions.UnivariateDistribution}
+    "Correlation matrix ``\\rho^{X}``"
+    ρˣ  ::AbstractMatrix{<:Real}
+    "Distorted correlation matrix ``\\rho^{Z}``"
+    ρᶻ  ::AbstractMatrix{Float64}
+    "Lower triangular matrix of the Cholesky decomposition of the distorted correlation matrix ``L``"
+    L   ::AbstractMatrix{Float64}
+    "Inverse of the lower triangular matrix of the Cholesky decomposition of the distorted correlation matrix ``L^{-1}``"
+    L⁻¹ ::AbstractMatrix{Float64}
+
+    function NatafTransformation(X::AbstractVector{<:Distributions.UnivariateDistribution}, ρˣ::AbstractMatrix{<:Real})
+        # Compute the distorted correlation matrix:
+        ρᶻ, L, L⁻¹ = getdistortedcorrelation(X, ρˣ)
+
+        # Return the Nataf Transformation object with the computed distorted correlation matrix:
+        return new(X, ρˣ, ρᶻ, L, L⁻¹)
+    end
+end
+Base.broadcastable(x::NatafTransformation) = Ref(x)
+
+"""
+    getdistortedcorrelation(X::AbstractVector{<:Distributions.UnivariateDistribution}, ρˣ::AbstractMatrix{<:Real})
+
+Function used to compute the distorted correlation matrix ``\\rho^{Z}``.
+"""
+function getdistortedcorrelation(X::AbstractVector{<:Distributions.UnivariateDistribution}, ρˣ::AbstractMatrix{<:Real})
+    # Compute number of dimensions:
+    NumDimensions = length(X)
 
     # Error-catching:
-    if size(ρˣ) != (NumDims, NumDims)
+    if size(ρˣ) != (NumDimensions, NumDimensions)
         error("Size of the correlation matrix ρₓ is not compatible with the number of the marginal distributions.")
     end
 
-    if !isposdef(ρˣ)
+    if !LinearAlgebra.isposdef(ρˣ)
         error("Correlation matrix ρₓ must be a positive-definite matrix.")
     end
 
@@ -22,13 +51,13 @@ function getdistortedcorrelation(X::AbstractVector{<:Distribution}, ρˣ::Abstra
     end
 
     # Compute the locations and weights of the integration points in 1D:
-    if MaxCorrelationValue < 0.9
-        NumIP = 32
+    if MaxCorrelationValue ≤ 0.9
+        NumIP = 64
     else
         NumIP = 1024
     end
 
-    IPLocations1D, IPWeights1D = gausslegendre(NumIP)
+    IPLocations1D, IPWeights1D = FastGaussQuadrature.gausslegendre(NumIP)
 
     # Transform the locations and weights of the integration points from 1D into 2D:
     ξ       = Vector{Float64}(undef, NumIP^2)
@@ -51,265 +80,264 @@ function getdistortedcorrelation(X::AbstractVector{<:Distribution}, ρˣ::Abstra
     zⱼ = ((ZMax - ZMin) / 2) * η .+ (ZMax + ZMin) / 2
 
     # Compute the entries of the distorted correlation matrix:
-    ρᶻ = Matrix{Float64}(I, NumDims, NumDims)
-    for i in 1:NumDims
-        for j in i+1:NumDims
+    ρᶻ = Matrix{Float64}(I, NumDimensions, NumDimensions)
+    for i in 1:NumDimensions
+        for j in i+1:NumDimensions
             # Check if the marginal distributions are uncorrelated:
             if ρˣ[i, j] == 0
                 continue
             end
 
             # Define a function from which we will compute the entries of the distorted correlation matrix:
-            hᵢ          = (quantile.(X[i], cdf.(Normal(0, 1), zᵢ)) .- mean(X[i])) / std(X[i])
-            hⱼ          = (quantile.(X[j], cdf.(Normal(0, 1), zⱼ)) .- mean(X[j])) / std(X[j])
-            F(ρ, p)     = ((ZMax - ZMin) / 2)^2 * dot(Wᵢⱼ .* (hᵢ .* hⱼ), ((1 / (2 * π * sqrt(1 - ρ^2))) * exp.((2 * ρ * (zᵢ .* zⱼ) - zᵢ .^ 2 - zⱼ .^ 2) / (2 * (1 - ρ^2))))) - ρˣ[i, j]
+            hᵢ          = (Distributions.quantile.(X[i], Distributions.cdf.(Distributions.Normal(0, 1), zᵢ)) .- Distributions.mean(X[i])) / Distributions.std(X[i])
+            hⱼ          = (Distributions.quantile.(X[j], Distributions.cdf.(Distributions.Normal(0, 1), zⱼ)) .- Distributions.mean(X[j])) / Distributions.std(X[j])
+            F(ρ, p)     = ((ZMax - ZMin) / 2)^2 * LinearAlgebra.dot(Wᵢⱼ .* (hᵢ .* hⱼ), ((1 / (2 * π * sqrt(1 - ρ^2))) * exp.((2 * ρ * (zᵢ .* zⱼ) - zᵢ .^ 2 - zⱼ .^ 2) / (2 * (1 - ρ^2))))) - ρˣ[i, j]
 
             # Compute the entries of the correlation matrix of the distorted correlation matrix:
-            Problem     = NonlinearProblem(F, ρˣ[i, j])
-            Solution    = solve(Problem, NewtonRaphson(), abstol=10^(-9), reltol=10^(-9))
+            Problem     = NonlinearSolve.NonlinearProblem(F, ρˣ[i, j])
+            Solution    = NonlinearSolve.solve(Problem, NonlinearSolve.NewtonRaphson(), abstol=10^(-6), reltol=10^(-6))
             ρᶻ[i, j]    = Solution.u
             ρᶻ[j, i]    = ρᶻ[i, j]
         end
     end
 
     # Compute the lower triangular matrix of the Cholesky decomposition of the distorted correlation matrix and its inverse:
-    C       = cholesky(ρᶻ, check=true)
-    L       = C.L
-    L⁻¹     = inv(L)
+    L       = LinearAlgebra.cholesky(ρᶻ, check=true).L
+    L⁻¹     = LinearAlgebra.inv(L)
 
+    # Return the result:
     return ρᶻ, L, L⁻¹
 end
 
 """
-    transformsamples(Object::NatafTransformation, Samples::Union{AbstractVector, AbstractMatrix}, TransformationDirection::String)
+    transformsamples(TransformationObject::NatafTransformation, Samples::AbstractVector{<:Real}, TransformationDirection::AbstractString)
 
-The function transforms samples from ``X``- to ``U``-space and vice versa. \\
+Function used to transform samples from ``X``- to ``U``-space and vice versa. \\
 If `TransformationDirection is:
 - `"X2U"`, then the function transforms samples ``\\vec{x}`` from ``X``- to ``U``-space.
 - `"U2X"`, then the function transforms samples ``\\vec{u}`` from ``U``- to ``X``-space.
 """
-function transformsamples(Object::NatafTransformation, Samples::Union{AbstractVector, AbstractMatrix}, TransformationDirection::String)
+function transformsamples(TransformationObject::NatafTransformation, Samples::AbstractVector{<:Real}, TransformationDirection::AbstractString)
     # Convert strings to lowercase:
     TransformationDirection = lowercase(TransformationDirection)
+
+    # Compute number of dimensions:
+    NumDimensions = length(Samples)
 
     if TransformationDirection != "x2u" && TransformationDirection != "u2x"
         error("Invalid transformation direction.")
     elseif TransformationDirection == "x2u"
         # Extract data:
-        X       = Object.X
-        L⁻¹     = Object.L⁻¹
-
-        # Check if the samples are passed as a vector or matrix:
-        XSamples = Samples
-        if typeof(XSamples) <: AbstractVector
-            XSamples = transpose(XSamples)
-        end
-
-        # Compute the number of samples and number of marginal distributions:
-        NumSamples  = size(XSamples, 1)
-        NumDims     = size(XSamples, 2)
+        X       = TransformationObject.X
+        L⁻¹     = TransformationObject.L⁻¹
 
         # Preallocate:
-        ZSamples = Matrix(undef, NumSamples, NumDims)
+        ZSamples = Vector{Float64}(undef, NumDimensions)
 
         # Convert samples of the marginal distributions X into the space of correlated standard normal random variables Z:
-        for i in 1:NumDims
-            ZSamples[:, i] = quantile.(Normal(0, 1), cdf.(X[i], XSamples[:, i]))
+        for i in 1:NumDimensions
+            ZSamples[i] = Distributions.quantile(Distributions.Normal(), Distributions.cdf(X[i], Samples[i]))
         end
-
+        
         # Convert samples from the space of correlated standard normal random variables Z into the space of uncorrelated standard normal random variables U:
-        USamples = transpose(L⁻¹ * transpose(ZSamples))
+        USamples = L⁻¹ * ZSamples
 
-        # Check if the samples are passed as a vector or matrix:
-        if typeof(transpose(XSamples)) <: AbstractVector
-            USamples = vec(USamples)
-        end
-
+        # Return the result:
         return USamples
     elseif TransformationDirection == "u2x"
         # Extract data:
-        X = Object.X
-        L = Object.L
-
-        # Check if the samples are passed as a vector or matrix:
-        USamples = Samples
-        if typeof(USamples) <: AbstractVector
-            USamples = transpose(USamples)
-        end
-
-        # Compute the number of samples and number of marginal distributions:
-        NumSamples  = size(USamples, 1)
-        NumDims     = size(USamples, 2)
+        X = TransformationObject.X
+        L = TransformationObject.L
 
         # Convert samples to the space of correlated standard normal random variables Z:
-        ZSamples = transpose(L * transpose(USamples))
+        ZSamples = L * Samples
 
         # Preallocate:
-        XSamples = Matrix(undef, NumSamples, NumDims)
+        XSamples = Vector(undef, NumDimensions)
 
         # Convert samples of the correlated standard normal random variables Z into samples of the marginals:
-        for i in 1:NumDims
-            XSamples[:, i] = quantile.(X[i], cdf.(Normal(0, 1), ZSamples[:, i]))
+        for i in 1:NumDimensions
+            XSamples[i] = Distributions.quantile(X[i], Distributions.cdf(Distributions.Normal(), ZSamples[i]))
         end
 
-        # Check if the samples are passed as a vector or matrix:
-        if typeof(transpose(USamples)) <: AbstractVector
-            XSamples = vec(XSamples)
-        end
-
+        # Return the result:
         return XSamples
     end
 end
 
-"""
-    getjacobian(Object::NatafTransformation, Samples::Union{AbstractVector{<:Real}, AbstractMatrix{<:Real}}, TransformationDirection::String)
+function transformsamples(TransformationObject::NatafTransformation, Samples::AbstractMatrix{<:Real}, TransformationDirection::AbstractString)
+    # Compute number of samples and dimensions:
+    NumDimensions = size(Samples, 1)
+    NumSamples = size(Samples, 2)
 
-The function returns the Jacobians of the transformations of samples from ``X``- to ``U``-space and vice versa. \\
+    # Error-catching:
+    if NumDimensions != length(TransformationObject.X)
+        error("Number of dimensions of the samples is incorrect.")
+    end
+
+    # Preallocate:
+    TransformedSamples = Matrix{Float64}(undef, NumDimensions, NumSamples)
+
+    # Convert samples:
+    for i in 1:NumSamples
+        TransformedSamples[:, i] = transformsamples(TransformationObject, Samples[:, i], TransformationDirection)
+    end
+
+    # Return the result:
+    return TransformedSamples
+end
+
+"""
+    getjacobian(TransformationObject::NatafTransformation, Samples::AbstractVector{<:Real}, TransformationDirection::AbstractString)
+
+Function used to compute the Jacobians of the transformations of samples from ``X``- to ``U``-space and vice versa. \\
 If `TransformationDirection` is:
 - `"X2U"`, then the function returns the Jacobians of the transformations of samples ``\\vec{x}`` from ``X``- to ``U``-space.
 - `"U2X"`, then the function returns the Jacobians of the transformations of samples ``\\vec{u}`` from ``U``- to ``X``-space.
 """
-function getjacobian(Object::NatafTransformation, Samples::Union{AbstractVector{<:Real}, AbstractMatrix{<:Real}}, TransformationDirection::String)
+function getjacobian(TransformationObject::NatafTransformation, Samples::AbstractVector{<:Real}, TransformationDirection::AbstractString)
     # Convert strings to lowercase:
     TransformationDirection = lowercase(TransformationDirection)
+
+    # Compute number of dimensions:
+    NumDimensions = length(Samples)
 
     if TransformationDirection != "x2u" && TransformationDirection != "u2x"
         error("Invalid transformation direction.")
     elseif TransformationDirection == "x2u"
         # Extract data:
-        X = Object.X
-        L = Object.L
-
-        # Check if the samples are passed as a vector or matrix:
-        XSamples = Samples
-        if typeof(XSamples) <: AbstractVector
-            # Convert column vector into row vector:
-            XSamples = transpose(XSamples)
-        end
-
-        # Compute the number of samples and number of marginal distributions:
-        NumSamples  = size(XSamples, 1)
-        NumDims     = size(XSamples, 2)
+        X = TransformationObject.X
+        L = TransformationObject.L
 
         # Preallocate:
-        ZSamples = Matrix{Float64}(undef, NumSamples, NumDims)
+        ZSamples = Vector{Float64}(undef, NumDimensions)
 
         # Convert samples to the space of correlated standard normal random variables Z:
-        for i in 1:NumDims
-            ZSamples[:, i] = quantile.(Normal(0, 1), cdf.(X[i], XSamples[:, i]))
+        for i in 1:NumDimensions
+            ZSamples[i] = Distributions.quantile(Distributions.Normal(), Distributions.cdf(X[i], Samples[i]))
         end
 
         # Preallocate:
-        J = Array{Float64}(undef, NumDims, NumDims, NumSamples)
+        D = LinearAlgebra.zeros(NumDimensions, NumDimensions)
 
         # Compute the Jacobian:
-        for i in 1:NumSamples
-            D = zeros(NumDims, NumDims)
-            for j in 1:NumDims
-                D[j, j] = pdf(Normal(0, 1), ZSamples[i, j]) / pdf(X[j], XSamples[i, j])
-            end
-            J[:, :, i] = D * L
+        for i in 1:NumDimensions
+            D[i, i] = Distributions.pdf(Distributions.Normal(), ZSamples[i]) / Distributions.pdf(X[i], Samples[i])
         end
 
-        # Flatten out the 3D array into 2D array if the samples are passed as a vector:
-        if NumSamples == 1
-            J = J[:, :, 1]
-        end
+        J = D * L
     elseif TransformationDirection == "u2x"
         # Extract data:
-        X       = Object.X
-        L       = Object.L
-        L⁻¹     = Object.L⁻¹
-
-        # Check if the samples are passed as a vector or matrix:
-        USamples = Samples
-        if typeof(USamples) <: AbstractVector
-            # Convert column vector into row vector:
-            USamples = transpose(USamples)
-        end
-
-        # Compute the number of samples and number of marginal distributions:
-        NumSamples = size(USamples, 1)
-        NumDims = size(USamples, 2)
+        X       = TransformationObject.X
+        L       = TransformationObject.L
+        L⁻¹     = TransformationObject.L⁻¹
 
         # Convert samples to the space of correlated standard normal random variables Z:
-        ZSamples = transpose(L * transpose(USamples))
+        ZSamples = L * Samples
 
         # Preallocate:
-        XSamples = Matrix{Float64}(undef, NumSamples, NumDims)
+        XSamples = Vector{Float64}(undef, NumDimensions)
 
         # Convert samples of the correlated standard normal random variables Z into samples of the marginals:
-        for i in 1:NumDims
-            XSamples[:, i] = quantile(X[i], cdf(Normal(0, 1), ZSamples[:, i]))
+        for i in 1:NumDimensions
+            XSamples[i] = Distributions.quantile(X[i], Distributions.cdf(Distributions.Normal(), ZSamples[i]))
         end
 
         # Preallocate:
-        J = Array{Float64}(undef, NumDims, NumDims, NumSamples)
+        D = LinearAlgebra.zeros(NumDimensions, NumDimensions)
 
         # Compute the Jacobian:
-        for i in 1:NumSamples
-            D = zeros(NumDims, NumDims)
-            for j in 1:NumDims
-                D[j, j] = pdf(X[j], XSamples[i, j]) / pdf(Normal(0, 1), ZSamples[i, j])
-            end
-            J[:, :, i] = L⁻¹ * D
+        for i in 1:NumDimensions
+            D[i, i] = Distributions.pdf(X[i], XSamples[i]) / Distributions.pdf(Distributions.Normal(), ZSamples[i])
         end
 
-        # Flatten out the 3D array into 2D array if the samples are passed as a vector:
-        if NumSamples == 1
-            J = J[:, :, 1]
-        end
+        J = L⁻¹ * D
     end
 
+    # Return the result:
+    return J
+end
+
+function getjacobian(TransformationObject::NatafTransformation, Samples::AbstractMatrix{<:Real}, TransformationDirection::AbstractString)
+    # Compute number of dimensions and samples:
+    NumDimensions = size(Samples, 1)
+    NumSamples = size(Samples, 2)
+
+    # Error-catching:
+    if NumDimensions != length(TransformationObject.X)
+        error("Number of dimensions of the samples is incorrect.")
+    end
+
+    # Preallocate:
+    J = Array{Float64}(undef, NumDimensions, NumDimensions, NumSamples)
+
+    # Convert samples:
+    for i in 1:NumSamples
+        J[:, :, i] = getjacobian(TransformationObject, Samples[:, i], TransformationDirection)
+    end
+
+    # Return the result:
     return J
 end
 
 """
-    jointpdf(Object::NatafTransformation, x::Union{AbstractVector{<:Real}, AbstractMatrix{<:Real}})
+    pdf(TransformationObject::NatafTransformation, x::AbstractVector{<:Real})
 
-The function returns the values of the joint probability density functions ``f_{\\vec{X}}(\\vec{x})`` evaluated at points ``\\vec{x}``.
+Function used to compute the joint PDF in ``X``-space.
 """
-function jointpdf(Object::NatafTransformation, x::Union{AbstractVector{<:Real}, AbstractMatrix{<:Real}})
+function Distributions.pdf(TransformationObject::NatafTransformation, x::AbstractVector{<:Real})
     # Extract data:
-    X   = Object.X
-    ρᶻ  = Object.ρᶻ
-
-    # Check if the samples are passed as a vector or matrix:
-    if typeof(x) <: AbstractVector
-        # Convert column vector into row vector:
-        x = transpose(x)
-    end
+    X   = TransformationObject.X
+    ρᶻ  = TransformationObject.ρᶻ
 
     # Compute the number of samples and number of marginal distributions:
-    NumSamples  = size(x, 1)
-    NumDims     = size(x, 2)
+    NumDimensions = length(x)
 
     # Preallocate:
-    z = Matrix{Float64}(undef, NumSamples, NumDims)
-    f = Matrix{Float64}(undef, NumSamples, NumDims)
-    ϕ = Matrix{Float64}(undef, NumSamples, NumDims)
+    z = Vector{Float64}(undef, NumDimensions)
+    f = Vector{Float64}(undef, NumDimensions)
+    ϕ = Vector{Float64}(undef, NumDimensions)
 
     # Convert samples to the space of correlated standard normal random variables Z:
-    for i in 1:NumDims
-        z[:, i] = quantile.(Normal.(0, 1), cdf.(X[i], x[:, i]))
-        f[:, i] = pdf.(X[i], x[:, i])
-        ϕ[:, i] = pdf.(Normal(0, 1), z[:, i])
+    for i in 1:NumDimensions
+        z[i] = Distributions.quantile(Distributions.Normal(), Distributions.cdf(X[i], x[i]))
+        f[i] = Distributions.pdf(X[i], x[i])
+        ϕ[i] = Distributions.pdf(Distributions.Normal(), z[i])
     end
 
     # Compute the joint PDF of samples in the space of correlated standard normal random variables Z: 
-    JointPDFZ = pdf(MvNormal(ρᶻ), transpose(z))
+    JointPDFZ = Distributions.pdf(Distributions.MvNormal(ρᶻ), z)
 
     # Compute the joint PDF:
-    JointPDFX = JointPDFZ .* (prod(f, dims=2) ./ prod(ϕ, dims=2))
+    JointPDFX = JointPDFZ * (prod(f) / prod(ϕ))
 
     # Clean up:
-    JointPDFX = replace(JointPDFX, NaN => 0, Inf => 0)
-    JointPDFX = vec(JointPDFX)
-
-    # Convert vector to scalar if needed:
-    if size(x)[1] == 1
-        JointPDFX = JointPDFX[1]
+    if !LinearAlgebra.isfinite(JointPDFX)
+        JointPDFX = 0
     end
 
+    # Return the result:
+    return JointPDFX
+end
+
+function Distributions.pdf(TransformationObject::NatafTransformation, x::AbstractMatrix{<:Real})
+    # Compute number of dimensions and samples:
+    NumDimensions = size(x, 1)
+    NumSamples = size(x, 2)
+
+    # Error-catching:
+    if NumDimensions != length(TransformationObject.X)
+        error("Number of dimensions of the samples is incorrect.")
+    end
+
+    # Preallocate:
+    JointPDFX = Vector{Float64}(undef, NumSamples)
+
+    # Convert samples:
+    for i in 1:NumSamples
+        JointPDFX[i] = Distributions.pdf(TransformationObject, x[:, i])
+    end
+
+    # Return the result:
     return JointPDFX
 end

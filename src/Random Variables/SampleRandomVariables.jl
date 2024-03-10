@@ -1,103 +1,122 @@
-# Sample random vectors with uncorrelated marginal random variables:
+# Inverse Transform Sampling:
 """
-    Samples = samplerv(Samplers::Union{<:Distribution, Vector{<:Distribution}}, NumSamples::Integer, SamplingTechnique::AbstractSamplingTechnique)
+    struct ITS <: AbstractSamplingTechnique
 
-The function returns samples of random variables and random vectors with uncorrelated marginal random variables using various sampling techniques. \\
+Type used to perform the Inverse Transform Sampling.
+"""
+struct ITS <: AbstractSamplingTechnique end
+
+# Latin Hypercube Sampling:
+"""
+    struct LHS <: AbstractSamplingTechnique
+
+Type used to perform the Latin Hypercube Sampling.
+"""
+struct LHS <: AbstractSamplingTechnique end
+
+# --------------------------------------------------
+# GENERATE SAMPLES FROM A RANDOM VARIABLE
+# --------------------------------------------------
+"""
+    rand(RNG::Distributions.AbstractRNG, RandomVariable::Distributions.UnivariateDistribution, NumSamples::Int, SamplingTechnique::AbstractSamplingTechnique)
+
+Function used to generate samples from a random variable.
 If `SamplingTechnique is:
 - `ITS()` samples are generated using Inverse Transform Sampling technique.
 - `LHS()` samples are generated using Latin Hypercube Sampling technique.
 """
-function samplerv(Samplers::Union{<:Distribution, Vector{<:Distribution}}, NumSamples::Integer, SamplingTechnique::AbstractSamplingTechnique)
-    # Compute the number of distributions:
-    NumDims = length(Samplers)
-
-    # Preallocate:
-    if NumDims == 1
-        Samples = Vector{Float64}(undef, NumSamples)
-    else
-        Samples = Matrix{Float64}(undef, NumSamples, NumDims)
-    end
-
+function Distributions.rand(RNG::Distributions.AbstractRNG, RandomVariable::Distributions.UnivariateDistribution, NumSamples::Int, SamplingTechnique::AbstractSamplingTechnique)
+    # Sample:
     if !isa(SamplingTechnique, ITS) && !isa(SamplingTechnique, LHS)
         error("Provided sampling technique is not supported.")
     elseif isa(SamplingTechnique, ITS)
-        # Generate samples for each distribution:
-        if NumDims == 1
-            Samples = rand(Samplers, NumSamples)
-        else
-            for i = 1:NumDims
-                Samples[:, i] = rand(Samplers[i], NumSamples)
-            end
-        end
+        # Generate samples:
+        Samples = Distributions.rand(RNG, RandomVariable, NumSamples)
     elseif isa(SamplingTechnique, LHS)
         # Define the lower limits of each strata:
-        LowerLimits = collect(0:(1/NumSamples):((NumSamples-1)/NumSamples))
+        LowerLimits = collect(0:(1 / NumSamples):((NumSamples - 1) / NumSamples))
 
-        if NumDims == 1
-            # Generate samples from a uniform distributions:
-            UniformSamples = LowerLimits + rand(Uniform(0, 1 / NumSamples), NumSamples)
+        # Generate samples within each strata:
+        UniformSamples = LowerLimits + Distributions.rand(RNG, Distributions.Uniform(0, 1 / NumSamples), NumSamples)
 
-            # Shuffle samples from a uniform distributions:
-            UniformSamples = shuffle(UniformSamples)
+        # Shuffle samples:
+        UniformSamples = Random.shuffle(RNG, UniformSamples)
 
-            # Generate samples:
-            Samples = quantile.(Samplers, UniformSamples)
-        else
-            for i = 1:NumDims
-                # Generate samples from a uniform distributions:
-                UniformSamples = LowerLimits + rand(Uniform(0, 1 / NumSamples), NumSamples)
-
-                # Shuffle samples from a uniform distributions:
-                UniformSamples = shuffle(UniformSamples)
-
-                # Generate samples:
-                Samples[:, i] = quantile.(Samplers[i], UniformSamples)
-            end
-        end
+        # Generate samples:
+        Samples = Distributions.quantile.(RandomVariable, UniformSamples)
     end
 
-    # Convert vector to scalar if only one sample if requested:
-    if NumDims == 1 && NumSamples == 1
-        Samples = Samples[1]
-    end
-
+    # Return the result:
     return Samples
 end
 
-# Sample random vectors with correlated marginal random variables:
-"""
-    XSamples, ZSamples, USamples = samplerv(Object::NatafTransformation, NumSamples::Integer, SamplingTechnique::AbstractSamplingTechnique)
+Distributions.rand(RandomVariable::Distributions. UnivariateDistribution, NumSamples::Int, SamplingTechnique::AbstractSamplingTechnique) = Distributions.rand(Distributions.default_rng(), RandomVariable, NumSamples, SamplingTechnique)
 
-This function generates samples of random variables in ``X``-, ``Z``-, and ``U``-spaces using a `NatafTransformation` object.
-- ``X``-space - space of correlated non-normal random variables
-- ``Z``-space - space of correlated standard normal random variables
-- ``U``-space - space of uncorrelated standard normal random variables
+# --------------------------------------------------
+# GENERATE SAMPLES FROM A RANDOM VECTOR
+# --------------------------------------------------
 """
-function samplerv(Object::NatafTransformation, NumSamples::Integer, SamplingTechnique::AbstractSamplingTechnique)
+    rand(RNG::Distributions.AbstractRNG, RandomVector::Vector{<:Distributions.UnivariateDistribution}, NumSamples::Int, SamplingTechnique::AbstractSamplingTechnique)
+
+Function used to generate samples from a random vector.
+If `SamplingTechnique is:
+- `ITS()` samples are generated using Inverse Transform Sampling technique.
+- `LHS()` samples are generated using Latin Hypercube Sampling technique.
+"""
+function Distributions.rand(RNG::Distributions.AbstractRNG, RandomVector::Vector{<:Distributions.UnivariateDistribution}, NumSamples::Int, SamplingTechnique::AbstractSamplingTechnique)
+    # Compute number of dimensions:
+    NumDimensions = length(RandomVector)
+
+    # Preallocate:
+    Samples = Matrix{Float64}(undef, NumDimensions, NumSamples)
+
+    # Sample:
+    for i in 1:NumDimensions
+        Samples[i, :] = Distributions.rand(RNG, RandomVector[i], NumSamples, SamplingTechnique)
+    end
+
+    # Return the result:
+    return Samples
+end
+
+Distributions.rand(RandomVector::Vector{<:Distributions. UnivariateDistribution}, NumSamples::Int, SamplingTechnique::AbstractSamplingTechnique) = Distributions.rand(Distributions.default_rng(), RandomVector, NumSamples, SamplingTechnique)
+
+# --------------------------------------------------
+# GENERATE SAMPLES FROM A TRANSFORMATION OBJECT
+# --------------------------------------------------
+# Nataf Transformation:
+"""
+    rand(RNG::Distributions.AbstractRNG, TransformationObject::NatafTransformation, NumSamples::Int, SamplingTechnique::AbstractSamplingTechnique)
+
+Function used to generate samples from a Nataf Transformation object.
+If `SamplingTechnique is:
+- `ITS()` samples are generated using Inverse Transform Sampling technique.
+- `LHS()` samples are generated using Latin Hypercube Sampling technique.
+"""
+function Distributions.rand(RNG::Distributions.AbstractRNG, TransformationObject::NatafTransformation, NumSamples::Int, SamplingTechnique::AbstractSamplingTechnique)
     # Extract data:
-    X = Object.X
-    L = Object.L
+    X = TransformationObject.X
+    L = TransformationObject.L
 
-    # Compute the number of marginal distributions:
-    NumDims = length(X)
-
-    # Define a standard normal random variable:
-    U = generaterv("Normal", "M", [0, 1])
+    # Compute number of dimensions:
+    NumDimensions = length(X)
 
     # Generate samples of uncorrelated normal random variables U:
-    USamples = Matrix{Float64}(undef, NumSamples, NumDims)
-    for i in 1:NumDims
-        USamples[:, i] = samplerv(U, NumSamples, SamplingTechnique)
+    USamples = Matrix{Float64}(undef, NumDimensions, NumSamples)
+    for i in 1:NumDimensions
+        USamples[i, :] = Distributions.rand(RNG, Distributions.Normal(), NumSamples, SamplingTechnique)
     end
 
     # Generate samples of correlated normal random variables Z:
-    ZSamples = USamples * transpose(L)
+    ZSamples = L * USamples
 
     # Generate samples of correlated non-normal random variables X:
-    XSamples = Matrix{Float64}(undef, NumSamples, NumDims)
-    for i in 1:NumDims
-        XSamples[:, i] = quantile.(X[i], cdf.(Normal(0, 1), ZSamples[:, i]))
+    XSamples = Matrix{Float64}(undef, NumDimensions, NumSamples)
+    for i in 1:NumDimensions
+        XSamples[i, :] = Distributions.quantile.(X[i], Distributions.cdf.(Distributions.Normal(), ZSamples[i, :]))
     end
 
     return XSamples, ZSamples, USamples
 end
+
+Distributions.rand(TransformationObject::NatafTransformation, NumSamples::Int, SamplingTechnique::AbstractSamplingTechnique) = Distributions.rand(Distributions.default_rng(), TransformationObject::NatafTransformation, NumSamples::Int, SamplingTechnique::AbstractSamplingTechnique)

@@ -1,9 +1,33 @@
 """
-    analyze(Problem::ReliabilityProblem, AnalysisMethod::IS)
+    struct IS <: AbstractReliabililyAnalysisMethod
 
-The function solves the provided reliability problem using Importance Sampling technique.
+Type used to perform reliability analysis using Importance Sampling method.
 """
-function analyze(Problem::ReliabilityProblem, AnalysisMethod::IS)
+Base.@kwdef struct IS <: AbstractReliabililyAnalysisMethod
+    "Proposal probability density function ``q``"
+    q                   ::Distributions.Sampleable
+    "Number of samples to generate ``N``"
+    NumSamples          ::Integer = 10 ^ 6
+end
+
+"""
+    struct ISCache
+
+Type used to store results of reliability analysis performed using Importance Sampling method.
+"""
+struct ISCache
+    "Generated samples"
+    Samples ::Matrix{Float64}
+    "Probability of failure ``P_{f}``"
+    PoF     ::Float64
+end
+
+"""
+    solve(Problem::ReliabilityProblem, AnalysisMethod::IS)
+
+Function used to solve reliability analysis using Importance Sampling method.
+"""
+function solve(Problem::ReliabilityProblem, AnalysisMethod::IS)
     # Extract the analysis details:
     q                   = AnalysisMethod.q
     NumSamples          = AnalysisMethod.NumSamples
@@ -25,14 +49,12 @@ function analyze(Problem::ReliabilityProblem, AnalysisMethod::IS)
     XSamples = rand(q, NumSamples)
 
     # Clean up the generated samples:
-    XSamples        = transpose(XSamples)
-    XSamples        = Matrix(XSamples)
-    XSamplesClean   = eachrow(XSamples)
-    XSamplesClean   = Vector.(XSamplesClean)
+    XSamplesClean = eachcol(XSamples)
+    XSamplesClean = Vector.(XSamplesClean)
 
     # Evaluate the target and proposal probability density functions at the generate samples:
-    fSamples = jointpdf.(NatafObject, XSamplesClean)
-    qSamples = pdf(q, XSamplesClean)
+    fSamples = pdf(NatafObject, XSamples)
+    qSamples = pdf(q, XSamples)
 
     # Evaluate the limit state function at the generate samples:
     gSamples = g.(XSamplesClean)

@@ -15,6 +15,5 @@ The SORM is an improvement over the FORM by accounting for the curved nature of 
 
 ```@docs
 SORM
-SORMSubmethod
-analyze(Problem::ReliabilityProblem, AnalysisMethod::SORM)
+solve(Problem::ReliabilityProblem, AnalysisMethod::SORM)
 ```
