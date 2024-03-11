@@ -53,7 +53,7 @@ The following functionality is planned to be added:
     - [x] Importance Sampling Method
   - [x] First-Order Reliability Method
     - [x] Mean-Centered First-Order Second-Moment Method
-    - [ ] Rackwitz-Fiessler Method
+    - [x] Rackwitz-Fiessler Method
     - [x] Hasofer-Lind Rackwitz-Fiessler Method
     - [x] Improved Hasofer-Lind Rackwitz-Fiessler Method
   - [x] Second-Order Reliability Method
