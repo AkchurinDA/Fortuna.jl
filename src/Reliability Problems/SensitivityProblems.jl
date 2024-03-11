@@ -70,7 +70,7 @@ function solve(Problem::SensitivityProblem)
     return SensitivityProblemCache(FORMSolution, ∇β, ∇PoF)
 end
 
-function G(g::Function, θ::Vector{Float64}, NatafObject::NatafTransformation, USample::AbstractVector)
+function G(g::Function, θ::AbstractVector, NatafObject::NatafTransformation, USample::AbstractVector)
     # Transform samples:
     XSample = transformsamples(NatafObject, USample, "U2X")
 

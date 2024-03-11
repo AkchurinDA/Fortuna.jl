@@ -113,10 +113,10 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::SSM)
             # Break out:
             break
         else
-            # # Check for convergance:
-            # if i == MaxNumSubsets
-            #     error("SSM did not converge. Try increasing the maximum number of subsets (MaxNumSubsets) or number of samples to generate within with subset (NumSamples).")
-            # end
+            # Check for convergance:
+            if i == MaxNumSubsets
+                error("SSM did not converge. Try increasing the maximum number of subsets (MaxNumSubsets) or number of samples to generate within with subset (NumSamples).")
+            end
 
             # Retain samples below the threshold:
             Indices = findall(x -> x ≤ CSubset[i], GSamples)

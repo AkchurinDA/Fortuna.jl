@@ -48,8 +48,9 @@ The following functionality is planned to be added:
     - [x] Nataf Transformation
     - [ ] Rosennblatt Transformation
 - [x] Reliability Analysis Methods
-  - [x] Monte Carlo Simulations
-  - [x] Importance Sampling
+  - [x] Monte Carlo Methods
+    - [x] Direct Monte Carlo Simulations
+    - [x] Importance Sampling Method
   - [x] First-Order Reliability Method
     - [x] Mean-Centered First-Order Second-Moment Method
     - [ ] Rackwitz-Fiessler Method
