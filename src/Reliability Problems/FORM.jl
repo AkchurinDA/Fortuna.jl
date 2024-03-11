@@ -20,12 +20,18 @@ struct MCFOSM <: FORMSubmethod # Mean-Centered First-Order Second-Moment method
 
 end
 
-Base.@kwdef struct HL <: FORMSubmethod # Hasofer-Lind method
+"""
+    RF <: FORMSubmethod
 
-end
+Type used to perform reliability analysis using Rackwitz-Fiessler (RF) method.
 
+$(TYPEDFIELDS)
+"""
 Base.@kwdef struct RF <: FORMSubmethod # Rackwitz-Fiessler method
-
+    "Maximum number of iterations"
+    MaxNumIterations    ::Integer = 250
+    "Convergance criterion ``\\epsilon``"
+    ϵ                   ::Real = 10^(-9)
 end
 
 """
@@ -76,12 +82,28 @@ struct MCFOSMCache
     β::Float64
 end
 
-struct HLCache
+"""
+    RFCache
 
-end
+Type used to store results of reliability analysis performed using Rackwitz-Fiessler (RF) method.
 
+$(TYPEDFIELDS)
+"""
 struct RFCache
-
+    "Reliability index ``\\beta``"
+    β::Float64
+    "Design points in X-space at each iteration ``\\vec{x}_{i}^{*}``"
+    x::Matrix{Float64}
+    "Design points in U-space at each iteration ``\\vec{u}_{i}^{*}``"
+    u::Matrix{Float64}
+    "Means of equivalent normal marginals at each iteration ``\\vec{\\mu}_{i}``"
+    μ::Matrix{Float64}
+    "Standard deviations of equivalent normal marginals at each iteration ``\\vec{\\sigma}_{i}``"
+    σ::Matrix{Float64}
+    "Gradient of the limit state function at each iteration ``\\nabla G(\\vec{u}_{i}^{*})``"
+    ∇G  ::Matrix{Float64}
+    "Normalized negative gradient of the limit state function at each iteration ``\\vec{\\alpha}_{i}``"
+    α   ::Matrix{Float64}
 end
 
 """
@@ -160,7 +182,7 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM)
     ρˣ  = Problem.ρˣ
     g   = Problem.g
 
-    if !isa(Submethod, MCFOSM) && !isa(Submethod, HL) && !isa(Submethod, RF) && !isa(Submethod, HLRF) && !isa(Submethod, iHLRF)
+    if !isa(Submethod, MCFOSM) && !isa(Submethod, RF) && !isa(Submethod, HLRF) && !isa(Submethod, iHLRF)
         error("Invalid FORM submethod.")
     elseif isa(Submethod, MCFOSM)
         # Compute the means of marginal distrbutions:
@@ -179,10 +201,110 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM)
 
         # Return results:
         return MCFOSMCache(β)
-    elseif isa(Submethod, HL)
-        # Not yet implemented
     elseif isa(Submethod, RF)
-        # Not yet implemented
+        # Extract the analysis details:
+        MaxNumIterations    = Submethod.MaxNumIterations
+        ϵ                   = Submethod.ϵ
+
+        # Error-catching:
+        if ρˣ != LinearAlgebra.I
+            error("Rackwitz-Fiessler method is only applicable to random vectors with uncorrelated marginals.")
+        end
+
+        # Compute number of dimensions: 
+        NumDimensions = length(X)
+
+        # Preallocate:
+        β   = Vector{Float64}(undef, MaxNumIterations)
+        x   = Matrix{Float64}(undef, NumDimensions, MaxNumIterations)
+        u   = Matrix{Float64}(undef, NumDimensions, MaxNumIterations)
+        μ   = Matrix{Float64}(undef, NumDimensions, MaxNumIterations)
+        σ   = Matrix{Float64}(undef, NumDimensions, MaxNumIterations)
+        ∇G  = Matrix{Float64}(undef, NumDimensions, MaxNumIterations)
+        α   = Matrix{Float64}(undef, NumDimensions, MaxNumIterations)
+
+        # Initialize the design point in X-space:
+        x[:, 1] = mean.(X)
+
+        # Force the design point to lay on the failure boundary:
+        function F(u, p)
+            x′                  = zeros(eltype(u), NumDimensions)
+            x′[1:(end - 1)]     = p[1:(end - 1)]
+            x′[end]             = u
+        
+            return g(x′)
+        end
+
+        Problem     = NonlinearSolve.NonlinearProblem(F, mean(X[end]), x[:, 1])
+        Solution    = NonlinearSolve.solve(Problem, NonlinearSolve.NewtonRaphson(), abstol=10 ^ (-9), reltol=10 ^ (-9))
+        x[end, 1]   = Solution.u
+        
+        # Start iterating:
+        for i in 1:(MaxNumIterations - 1)
+            # Compute the mean and standard deviation values of the equivalient normal marginals:
+            for j in 1:NumDimensions
+                σ[j, i] = Distributions.pdf(Distributions.Normal(), Distributions.quantile(Distributions.Normal(), Distributions.cdf(X[j], x[j, i]))) / Distributions.pdf(X[j], x[j, i])
+                μ[j, i] = x[j, i] - σ[j, i] * Distributions.quantile(Distributions.Normal(), Distributions.cdf(X[j], x[j, i]));
+            end
+
+            # Compute the design point in U-space:
+            u[:, i] = (x[:, i] - μ[:, i]) ./ σ[:, i]
+
+            # Evaluate gradient of the limit state function at the design point in U-space:
+            ∇G[:, i] = -σ[:, i] .* ForwardDiff.gradient(g, x[:, i])
+
+            # Compute the reliability index:
+            β[i] = LinearAlgebra.dot(∇G[:, i], u[:, i]) / LinearAlgebra.norm(∇G[:, i])
+
+            # Compute the normalized negative gradient vector at the design point in U-space:
+            α[:, i] = ∇G[:, i] / LinearAlgebra.norm(∇G[:, i])
+
+            # Compute the new design point in U-space:
+            u[:, i + 1] = β[i] * α[:, i]
+
+            # Compute the new design point in X-space:
+            x[:, i + 1] = μ[:, i] + σ[:, i] .* u[:, i + 1]
+
+            # Force the design point to lay on the failure boundary:
+            function F(u, p)
+                x′                  = zeros(eltype(u), NumDimensions)
+                x′[1:(end - 1)]     = p[1:(end - 1)]
+                x′[end]             = u
+            
+                return g(x′)
+            end
+    
+            Problem         = NonlinearSolve.NonlinearProblem(F, x[end, i + 1], x[:, i + 1])
+            Solution        = NonlinearSolve.solve(Problem, NonlinearSolve.NewtonRaphson(), abstol=10 ^ (-9), reltol=10 ^ (-9))
+            x[end, i + 1]   = Solution.u
+
+            # Check for convergance:
+            if i != 1
+                Criterion = abs(β[i] - β[i - 1])
+
+                if Criterion < ϵ
+                    # Clean up the results:
+                    β   = β[i]
+                    x   = x[:, 1:i]
+                    u   = u[:, 1:i]
+                    μ   = μ[:, 1:i]
+                    σ   = σ[:, 1:i]
+                    ∇G  = ∇G[:, 1:i]
+                    α   = α[:, 1:i]
+
+                    # Return results:
+                    return RFCache(β, x, u, μ, σ, ∇G, α)
+
+                    # Break out:
+                    continue
+                else
+                    # Check for convergance:
+                    if i == MaxNumIterations - 1
+                        error("RF did not converge. Try increasing the maximum number of iterations (MaxNumIterations) or relaxing the convergance criterion (ϵ).")
+                    end
+                end
+            end
+        end
     elseif isa(Submethod, HLRF)
         # Extract the analysis details:
         MaxNumIterations = Submethod.MaxNumIterations
@@ -249,8 +371,8 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM)
             u[:, i + 1] = u[:, i] + λ * d[:, i]
 
             # Check for convergance:
-            Criterion₁ = abs(g(x[:, i]) / G₀)                               # Check if the value of the limit state function is close to zero.
-            Criterion₂ = LinearAlgebra.norm(u[:, i] - LinearAlgebra.dot(α[:, i], u[:, i]) * α[:, i])    # Check if the design point is on the failure boundary.
+            Criterion₁ = abs(g(x[:, i]) / G₀) # Check if the value of the limit state function is close to zero.
+            Criterion₂ = LinearAlgebra.norm(u[:, i] - LinearAlgebra.dot(α[:, i], u[:, i]) * α[:, i]) # Check if the design point is on the failure boundary.
             if Criterion₁ < ϵ₁ && Criterion₂ < ϵ₂
                 # Compute the reliability index:
                 β = LinearAlgebra.dot(α[:, i], u[:, i])
@@ -380,8 +502,8 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM)
             x[:, i + 1] = transformsamples(NatafObject, u[:, i + 1], "U2X")
 
             # Check for convergance:
-            Criterion₁ = abs(g(x[:, i]) / G₀)                               # Check if the limit state function is close to zero.
-            Criterion₂ = LinearAlgebra.norm(u[:, i] - LinearAlgebra.dot(α[:, i], u[:, i]) * α[:, i])    # Check if the design point is on the failure boundary.
+            Criterion₁ = abs(g(x[:, i]) / G₀) # Check if the limit state function is close to zero.
+            Criterion₂ = LinearAlgebra.norm(u[:, i] - LinearAlgebra.dot(α[:, i], u[:, i]) * α[:, i]) # Check if the design point is on the failure boundary.
             if Criterion₁ < ϵ₁ && Criterion₂ < ϵ₂
                 # Compute the reliability index:
                 β = LinearAlgebra.dot(α[:, i], u[:, i])

@@ -66,17 +66,17 @@ begin
         color = :black, 
         align = (:center, :center), fontsize = 12)
 
-    tooltip!(1.0, 1.0, L"\Omega_{f, 1}",
+    tooltip!(1.0, 1.0, L"\Omega_{f_{1}}",
         color = :black, 
         offset = 0, outline_linewidth = 1,
         fontsize = 12)
 
-    tooltip!(1.7, 1.7, L"\Omega_{f, 2}",
+    tooltip!(1.7, 1.7, L"\Omega_{f_{2}}",
         color = :black, 
         offset = 0, outline_linewidth = 1,
         fontsize = 12)
 
-    tooltip!(2.4, 2.4, L"\Omega_{f, 3}",
+    tooltip!(2.4, 2.4, L"\Omega_{f_{3}}",
         color = :black, 
         offset = 0, outline_linewidth = 1,
         fontsize = 12)
