@@ -2,7 +2,7 @@
 
 ## Overview
 
-Using the brute force Monte Carlo simulations (MCS) is the simplest way to estimate the probability of failure ``P_{f}`` for reliability problems with both simple and complex limit state functions ``g(\vec{X})``. The brute force MCS relies on the following reformulation of the general analytical expression for the probability of failure ``P_{f}``:
+Using direct Monte Carlo simulations (MCS) is the simplest way to estimate the probability of failure ``P_{f}`` for reliability problems with both simple and complex limit state functions ``g(\vec{X})``. The brute force MCS relies on the following reformulation of the general analytical expression for the probability of failure ``P_{f}``:
 
 ```math
 P_{f} = P(\Omega_{f}) = \int_{\Omega_{f}} f_{\vec{X}}(\vec{x}) d\vec{x} = \int_{\mathbb{R}^{n}} \mathbb{I}(\vec{x}) f_{\vec{X}}(\vec{x}) d\vec{x} = \mathbb{E}_{f}[\mathbb{I}(\vec{x})]
@@ -34,14 +34,14 @@ where ``N`` is the number of generated sampled. The estimator ``\hat{P}_{f}`` is
     For typical structural reliability problems with true probabilities of failure ``P_{f}`` of ``\approx 10^{-3}``, it is recommended to use ``N = 10^{6}`` samples to get the coefficient of variation of the estimator ``V_{P_{f}}`` of ``\approx 0.10``.
 
     ```@raw html
-    <img src="../../RecommendedNumSamples.svg" class="center" style="height:350px; border-radius:5px;"/>
+    <img src="../../assets/MC-1.svg" class="center" style="max-height:400px; border-radius:2.5px;"/>
     ```
 
 
 ## API
 
 ```@docs
+solve(Problem::ReliabilityProblem, AnalysisMethod::MC)
 MC
 MCCache
-solve(Problem::ReliabilityProblem, AnalysisMethod::MC)
 ```

@@ -10,7 +10,7 @@
     ρˣ  = [1 0.5 0.3 0; 0.5 1 0.3 0; 0.3 0.3 1 0; 0 0 0 1]
 
     # Define a limit state function:
-    g(x, θ) = 1 - x[1] / (θ[1] * x[4]) - x[2] / (θ[2] * x[4]) - (x[3] / (θ[3] * x[4]))^2
+    g(x::Vector, θ::Vector) = 1 - x[1] / (θ[1] * x[4]) - x[2] / (θ[2] * x[4]) - (x[3] / (θ[3] * x[4]))^2
 
     # Define parameters of the limit state function:
     s₁  = 0.030

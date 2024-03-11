@@ -35,7 +35,7 @@ q \sim N(\vec{M} = \vec{x}^{*}, \Sigma = \sigma I)
 ## API
 
 ```@docs
+solve(Problem::ReliabilityProblem, AnalysisMethod::IS)
 IS
 ISCache
-solve(Problem::ReliabilityProblem, AnalysisMethod::IS)
 ```

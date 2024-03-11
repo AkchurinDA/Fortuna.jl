@@ -1,79 +1,27 @@
 @testset "Reliability Analysis: SSM #1" begin
-    # Define a random vector of uncorrelated marginal distributions:
-    X₁  = randomvariable("Normal", "M", [0, 1])
-    X₂  = randomvariable("Normal", "M", [0, 1])
-    X   = [X₁, X₂]
-    ρˣ  = [1 0; 0 1]
+    # Define a list of reliability indices of interest:
+    βList = 1:6
 
-    # Define a limit state function:
-    g(x::Vector) = 3.5 - (x[1] + x[2]) / sqrt(2)
+    # Set an RNG seed:
+    Random.seed!(123)
 
-    # Define reliability problems:
-    Problem = ReliabilityProblem(X, ρˣ, g)
+    for i in eachindex(βList)
+        # Define a random vector of uncorrelated marginal distributions:
+        X₁  = randomvariable("Normal", "M", [0, 1])
+        X₂  = randomvariable("Normal", "M", [0, 1])
+        X   = [X₁, X₂]
+        ρˣ  = [1 0; 0 1]
 
-    # Perform the reliability analysis using SSM:
-    Solution = solve(Problem, SSM())
+        # Define a limit state function:
+        g(x::Vector) = βList[i] * sqrt(2) - x[1] - x[2]
 
-    # Test the results:
-    @test isapprox(Solution.PoF, 0.000232629, rtol=0.30)
-end
+        # Define reliability problems:
+        Problem = ReliabilityProblem(X, ρˣ, g)
 
-@testset "Reliability Analysis: SSM #2" begin
-    # Define a random vector of uncorrelated marginal distributions:
-    X₁  = randomvariable("Exponential", "P", 1)
-    X₂  = randomvariable("Exponential", "P", 1)
-    X   = [X₁, X₂]
-    ρˣ  = [1 0; 0 1]
+        # Perform the reliability analysis using SSM:
+        Solution = solve(Problem, SSM())
 
-    # Define a limit state function:
-    g(x::Vector) = 10 - x[1] - x[2]
-
-    # Define reliability problems:
-    Problem = ReliabilityProblem(X, ρˣ, g)
-
-    # Perform the reliability analysis using SSM:
-    Solution = solve(Problem, SSM())
-
-    # Test the results:
-    @test isapprox(Solution.PoF, 0.000499399, rtol=0.30)
-end
-
-@testset "Reliability Analysis: SSM #3" begin
-    # Define a random vector of uncorrelated marginal distributions:
-    X₁  = randomvariable("Normal", "M", [0, 1])
-    X₂  = randomvariable("Normal", "M", [0, 1])
-    X   = [X₁, X₂]
-    ρˣ  = [1 0; 0 1]
-
-    # Define a limit state function:
-    g(x::Vector) = minimum([3.2 + (x[1] + x[2]) / sqrt(2), 0.1 * (x[1] - x[2])^2 - (x[1] + x[2]) / sqrt(2) + 2.5])
-
-    # Define reliability problems:
-    Problem = ReliabilityProblem(X, ρˣ, g)
-
-    # Perform the reliability analysis using SSM:
-    Solution = solve(Problem, SSM())
-
-    # Test the results:
-    @test isapprox(Solution.PoF, 0.0049, rtol=0.30)
-end
-
-@testset "Reliability Analysis: SSM #4" begin
-    # Define a random vector of uncorrelated marginal distributions:
-    X₁  = randomvariable("Normal", "M", [0, 1])
-    X₂  = randomvariable("Normal", "M", [0, 1])
-    X   = [X₁, X₂]
-    ρˣ  = [1 0; 0 1]
-
-    # Define a limit state function:
-    g(x::Vector) = 5 - x[2] - 0.5 * (x[1] - 0.1)^2
-
-    # Define reliability problems:
-    Problem = ReliabilityProblem(X, ρˣ, g)
-
-    # Perform the reliability analysis using SSM:
-    Solution = solve(Problem, SSM())
-
-    # Test the results:
-    @test isapprox(Solution.PoF, 0.00301, rtol=0.30)
+        # Test the results:
+        @test isapprox(Solution.PoF, cdf(Normal(), -βList[i]), rtol = 0.05)
+    end
 end

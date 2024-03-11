@@ -16,6 +16,12 @@ The HLRF method overcomes the invariance problem faced by the MCFOSM method by u
 ## API
 
 ```@docs
-FORM
 solve(Problem::ReliabilityProblem, AnalysisMethod::FORM)
+FORM
+MCFOSM
+MCFOSMCache
+HLRF
+HLRFCache
+iHLRF
+iHLRFCache
 ```

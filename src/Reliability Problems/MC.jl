@@ -1,7 +1,7 @@
 """
-    struct MC <: AbstractReliabililyAnalysisMethod
+    MC <: AbstractReliabililyAnalysisMethod
 
-Type used to perform reliability analysis using Monte Carlo simulations.
+Type used to perform reliability analysis using Monte Carlo (MC) simulations.
 
 $(TYPEDFIELDS)
 """
@@ -13,9 +13,9 @@ Base.@kwdef struct MC <: AbstractReliabililyAnalysisMethod
 end
 
 """
-    struct MCCache
+    MCCache
 
-Type used to store results of reliability analysis performed using Monte Carlo simulations.
+Type used to store results of reliability analysis performed using Monte Carlo (MC) simulations.
 
 $(TYPEDFIELDS)
 """
@@ -29,7 +29,7 @@ end
 """
     solve(Problem::ReliabilityProblem, AnalysisMethod::MC)
 
-Function used to solve reliability analysis using Monte Carlo simulations.
+Function used to solve reliability problems using Monte Carlo (MC) simulations.
 """
 function solve(Problem::ReliabilityProblem, AnalysisMethod::MC)
     # Extract the analysis details:

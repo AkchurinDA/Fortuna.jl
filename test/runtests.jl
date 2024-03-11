@@ -26,6 +26,10 @@ end
     include("TestSORM.jl")
 end
 
+@testset "Subset Simulation Method" begin
+    include("TestSSM.jl")
+end
+
 @testset "Sensitivity Problems" begin
     include("TestSensitivityProblems.jl")
 end

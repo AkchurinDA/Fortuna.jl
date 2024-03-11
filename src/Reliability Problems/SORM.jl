@@ -1,5 +1,5 @@
 """
-    struct SORM <: AbstractReliabililyAnalysisMethod
+    SORM <: AbstractReliabililyAnalysisMethod
 
 Type used to perform reliability analysis using Second-Order Reliability Method (SORM).
 
@@ -10,18 +10,19 @@ Base.@kwdef struct SORM <: AbstractReliabililyAnalysisMethod
 end
 
 """
-    struct CF <: SORMSubmethod
+    CF <: SORMSubmethod
 
 Type used to perform reliability analysis using Curve-Fitting (CF) method.
 
 $(TYPEDFIELDS)
 """
 Base.@kwdef struct CF <: SORMSubmethod # Curve-Fitting method
+    "Step size used to compute the Hessian at the design point in ``U``-space"
     ϵ::Real = 1 / 1000
 end
 
 """
-    struct PF <: SORMSubmethod
+    PF <: SORMSubmethod
 
 Type used to perform reliability analysis using Point-Fitting (PF) method.
 
@@ -32,7 +33,7 @@ Base.@kwdef struct PF <: SORMSubmethod # Point-Fitting method
 end
 
 """
-    struct CFCache
+    CFCache
 
 Type used to perform reliability analysis using Point-Fitting (PF) method.
 
@@ -43,14 +44,14 @@ struct CFCache # Curve-Fitting method
     FORMSolution    ::iHLRFCache
     "Generalized reliability indices ``\\beta``"
     β₂              ::Vector{Float64}
-    "Probabilities of failure ``\\text{PoF}``"
+    "Probabilities of failure ``P_{f}``"
     PoF₂            ::Vector{Float64}
     "Principal curvatures ``\\kappa``"
     κ               ::Vector{Float64}
 end
 
 """
-    struct PFCache
+    PFCache
 
 Type used to perform reliability analysis using Point-Fitting (PF) method.
 
@@ -61,22 +62,22 @@ struct PFCache # Point-Fitting method
     FORMSolution    ::iHLRFCache
     "Generalized reliability index ``\\beta``"
     β₂              ::Vector{Float64}
-    "Probabilities of failure ``\\text{PoF}``"
+    "Probabilities of failure ``P_{f}``"
     PoF₂            ::Vector{Float64}
-    "Fitting points on the negative side of the hypercylinder"
+    "Fitting points on the negative side of the hyper-cylinder"
     FittingPoints⁻  ::Matrix{Float64}
-    "Fitting points on the positive side of the hypercylinder"
+    "Fitting points on the positive side of the hyper-cylinder"
     FittingPoints⁺  ::Matrix{Float64}
-    "Principal curvatures on the negative side of the hypercylinder ``\\kappa^{-}``"
-    κ⁻              ::Vector{Float64}
-    "Principal curvatures on the positive side of the hypercylinder ``\\kappa^{+}``"
-    κ⁺              ::Vector{Float64}
+    "Principal curvatures on the negative and positive sides"
+    κ₁              ::Matrix{Float64}
+    "Principal curvatures of each hyper-semiparabola"
+    κ₂              ::Matrix{Float64}
 end
 
 """
     solve(Problem::ReliabilityProblem, AnalysisMethod::SORM)
 
-Function used to solve reliability analysis using Second-Order Reliability Method (SORM).
+Function used to solve reliability problems using Second-Order Reliability Method (SORM).
 """
 function solve(Problem::ReliabilityProblem, AnalysisMethod::SORM)
     # Extract the analysis method:
@@ -197,9 +198,6 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::SORM)
             κ₁[i, 2] = 2 * (FittingPoints⁺[i, 2] - β₁) / (FittingPoints⁺[i, 1] ^ 2) # Positive side
         end
 
-        κ⁻ = κ₁[:, 1]
-        κ⁺ = κ₁[:, 2]
-
         # Compute number of hyperquadrants used to fit semiparabolas:
         NumHyperquadrants = 2 ^ (NumDimensions - 1)
 
@@ -248,7 +246,7 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::SORM)
         β₂ = -Distributions.quantile.(Distributions.Normal(), PoF₂)
 
         # Return results:
-        return PFCache(FORMSolution, β₂, PoF₂, FittingPoints⁻, FittingPoints⁺, κ⁻, κ⁺)
+        return PFCache(FORMSolution, β₂, PoF₂, FittingPoints⁻, FittingPoints⁺, κ₁, κ₂)
     end
 end
 

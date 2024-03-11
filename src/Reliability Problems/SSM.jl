@@ -1,5 +1,5 @@
 """
-    struct SSM <: AbstractReliabililyAnalysisMethod
+    SSM <: AbstractReliabililyAnalysisMethod
 
 Type used to perform reliability analysis using Subset Simulation Method (SSM).
 
@@ -9,13 +9,13 @@ Base.@kwdef struct SSM <: AbstractReliabililyAnalysisMethod
     "Probability of failure for each subset ``P_{0}``"
     P₀              ::Real = 0.10
     "Number of samples generated within each subset ``N``"
-    NumSamples      ::Integer = 10000
+    NumSamples      ::Integer = 10 ^ 6
     "Maximum number of subsets ``M``"
-    MaxNumSubsets   ::Integer = 25
+    MaxNumSubsets   ::Integer = 50
 end
 
 """
-    struct SSM <: AbstractReliabililyAnalysisMethod
+    SSMCache
 
 Type used to perform reliability analysis using Subset Simulation Method (SSM).
 
@@ -34,25 +34,33 @@ struct SSMCache
     PoF             ::Float64
 end
 
+"""
+    solve(Problem::ReliabilityProblem, AnalysisMethod::SSM)
+
+Function used to solve reliability problems using Subset Simulation Method (SSM).
+"""
 function solve(Problem::ReliabilityProblem, AnalysisMethod::SSM)
-    # Extract the analysis method:
-    P₀ = AnalysisMethod.P₀
-    NumSamples = AnalysisMethod.NumSamples
-    MaxNumSubsets = AnalysisMethod.MaxNumSubsets
+    # Extract analysis details:
+    P₀              = AnalysisMethod.P₀
+    NumSamples      = AnalysisMethod.NumSamples
+    MaxNumSubsets   = AnalysisMethod.MaxNumSubsets
 
-    # Extract the problem data:
-    X = Problem.X
-    ρˣ = Problem.ρˣ
-    g = Problem.g
+    # Extract problem data:
+    X   = Problem.X
+    ρˣ  = Problem.ρˣ
+    g   = Problem.g
 
-    # Compute the number of marginal distributions:
-    NumDims = length(X)
+    # Perform Nataf Transformation:
+    NatafObject = NatafTransformation(X, ρˣ)
 
-    # Compute the number of samples to keep within each subset:
-    NumSamplesKeep = floor(Integer, P₀ * NumSamples)
+    # Compute number of dimensions: 
+    NumDimensions = length(X)
 
-    # Compute the number of samples to generate within each chain:
-    NumSamplesChain = floor(Integer, NumSamples / NumSamplesKeep)
+    # Compute number of Markov chains within each subset:
+    NumMarkovChains = floor(Integer, P₀ * NumSamples)
+
+    # Compute number of samples to generate within each Markov chain:
+    NumSamplesChain = floor(Integer, NumSamples / NumMarkovChains)
 
     # Preallocate:
     USamplesSubset  = Vector{Matrix{Float64}}()
@@ -60,21 +68,19 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::SSM)
     CSubset         = Vector{Float64}(undef, MaxNumSubsets)
     PoFSubset       = Vector{Float64}(undef, MaxNumSubsets)
 
-    # Perform the Nataf Transformation:
-    NatafObject = NatafTransformation(X, ρˣ)
-
     # Loop through each subset:
     for i in 1:MaxNumSubsets
         if i == 1
             # Generate samples in the standard normal space:
-            USamples = randn(NumSamples, NumDims)
+            USamples = Distributions.randn(NumDimensions, NumSamples)
         else
             # Preallocate:
-            USamples = zeros(NumSamplesKeep * NumSamplesChain, NumDims)
+            USamples = zeros(NumDimensions, NumMarkovChains * NumSamplesChain)
 
-            # Generate MCMCs according to the modified Metropolis-Hastings algorithm:
-            for j in 1:NumSamplesKeep
-                USamples[(NumSamplesChain*(j-1)+1):(NumSamplesChain*j), :] = MMH(USamplesSubset[i-1][j, :], CSubset[i-1], NumDims, NumSamplesChain, NatafObject, g)
+            # Generate samples using the Modified Metropolis-Hastings algorithm:
+            for j in 1:NumMarkovChains
+                USamples[:, (NumSamplesChain * (j - 1) + 1):(NumSamplesChain * j)] = 
+                ModifiedMetropolisHastings(USamplesSubset[i - 1][:, j], CSubset[i - 1], NumDimensions, NumSamplesChain, NatafObject, g)
             end
         end
 
@@ -85,84 +91,89 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::SSM)
         GSamplesSorted = sort(GSamples)
 
         # Compute the threshold:
-        CSubset[i] = quantile(GSamplesSorted, P₀)
+        CSubset[i] = Distributions.quantile(GSamplesSorted, P₀)
 
         # Check for convergance:
-        if CSubset[i] > 0
-            # Retain samples below the threshold:
-            Indices = findall(x -> x ≤ CSubset[i], GSamples)
-            push!(USamplesSubset, USamples[Indices, :])
-            push!(XSamplesSubset, transformsamples(NatafObject, USamples[Indices, :], "U2X"))
-
-            # Compute the probability of failure:
-            PoFSubset[i] = length(Indices) / size(GSamples)[1]
-        else
+        if CSubset[i] < 0
             # Redefine the threshold:
             CSubset[i] = 0
 
             # Retain samples below the threshold:
             Indices = findall(x -> x ≤ CSubset[i], GSamples)
-            push!(USamplesSubset, USamples[Indices, :])
-            push!(XSamplesSubset, transformsamples(NatafObject, USamples[Indices, :], "U2X"))
+            push!(USamplesSubset, USamples[:, Indices])
+            push!(XSamplesSubset, transformsamples(NatafObject, USamples[:, Indices], "U2X"))
 
             # Compute the probability of failure:
             PoFSubset[i] = length(Indices) / size(GSamples)[1]
 
             # Clean up the result:
-            CSubset = CSubset[1:i]
-            PoFSubset = PoFSubset[1:i]
+            CSubset     = CSubset[1:i]
+            PoFSubset   = PoFSubset[1:i]
 
             # Break out:
             break
+        else
+            # # Check for convergance:
+            # if i == MaxNumSubsets
+            #     error("SSM did not converge. Try increasing the maximum number of subsets (MaxNumSubsets) or number of samples to generate within with subset (NumSamples).")
+            # end
+
+            # Retain samples below the threshold:
+            Indices = findall(x -> x ≤ CSubset[i], GSamples)
+            push!(USamplesSubset, USamples[:, Indices])
+            push!(XSamplesSubset, transformsamples(NatafObject, USamples[:, Indices], "U2X"))
+
+            # Compute the probability of failure:
+            PoFSubset[i] = length(Indices) / size(GSamples)[1]        
         end
     end
 
-    # Compute the probability of failure:
+    # Compute the final probability of failure:
     PoF = prod(PoFSubset)
 
     # Return the result:
     return SSMCache(XSamplesSubset, USamplesSubset, CSubset, PoFSubset, PoF)
 end
 
-function MMH(StartingPoint::Vector{Float64}, CurrentThreshold::Float64, NumDims::Integer, NumSamples::Integer, NatafObject::NatafTransformation, g::Function)
+function ModifiedMetropolisHastings(StartingPoint::Vector{Float64}, CurrentThreshold::Float64, NumDimensions::Integer, NumSamplesChain::Integer, NatafObject::NatafTransformation, g::Function)
     # Preallocate:
-    ChainSamples        = zeros(NumSamples, NumDims)
-    ChainSamples[1, :]  = StartingPoint
+    ChainSamples        = zeros(NumDimensions, NumSamplesChain)
+    ChainSamples[:, 1]  = StartingPoint
 
     # Define a standard multivariate normal PDF:
-    M       = zeros(NumDims)
-    Σ       = I(NumDims)
-    MVN     = MvNormal(M, Σ)
+    M = zeros(NumDimensions)
+    Σ = Matrix(1.0 * LinearAlgebra.I, NumDimensions, NumDimensions)
+    ϕ = Distributions.MvNormal(M, Σ)
 
     # Pregenerate uniformly-distributed samples:
-    U = rand(NumSamples)
+    U = Distributions.rand(NumSamplesChain)
 
     # Generate samples:
-    for i in 1:NumSamples-1
+    for i in 1:(NumSamplesChain - 1)
         # Define a proposal density:
-        M = ChainSamples[i, :]
-        Σ = I(NumDims)
-        ProposalDensity = MvNormal(M, Σ)
+        M = ChainSamples[:, i]
+        Σ = Matrix(1.0 * LinearAlgebra.I, NumDimensions, NumDimensions)
+        q = Distributions.MvNormal(M, Σ)
 
         # Propose a new state:
-        ProposedState = rand(ProposalDensity, 1)
+        ProposedState = Distributions.rand(q, 1)
         ProposedState = vec(ProposedState)
 
         # Compute the indicator function:
         XProposedState = transformsamples(NatafObject, ProposedState, "U2X")
-        gProposedState = g(XProposedState)
-        if gProposedState ≤ CurrentThreshold
+        GProposedState = g(XProposedState)
+        if GProposedState ≤ CurrentThreshold
             IF = 1
         else
             IF = 0
         end
 
         # Accept or reject the proposed state:
-        α = (pdf(MVN, ProposedState) * IF) / pdf(MVN, ChainSamples[i, :]) # Acceptance ratio
+        α = (pdf(ϕ, ProposedState) * IF) / pdf(ϕ, ChainSamples[:, i]) # Acceptance ratio
         if U[i] <= α # Accept
-            ChainSamples[i+1, :] = ProposedState
+            ChainSamples[:, i + 1] = ProposedState
         else # Reject
-            ChainSamples[i+1, :] = ChainSamples[i, :]
+            ChainSamples[:, i + 1] = ChainSamples[:, i]
         end
     end
 
@@ -170,16 +181,16 @@ function MMH(StartingPoint::Vector{Float64}, CurrentThreshold::Float64, NumDims:
     return ChainSamples
 end
 
-function G(g::Function, NatafObject::NatafTransformation, USamples::Matrix{Float64})
-    # Transform samples:
+function G(g::Function, NatafObject::NatafTransformation, USamples::AbstractMatrix)
+    # Transform the samples:
     XSamples = transformsamples(NatafObject, USamples, "U2X")
 
     # Clean up the transformed samples:
-    XSamples = eachrow(XSamples)
-    XSamples = Vector.(XSamples)
-
+    XSamplesClean = eachcol(XSamples)
+    XSamplesClean = Vector.(XSamplesClean)
+    
     # Evaluate the limit state function at the transform samples:
-    GSamples = g.(XSamples)
+    GSamples = g.(XSamplesClean)
 
     # Return the result:
     return GSamples

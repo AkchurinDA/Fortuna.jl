@@ -1,5 +1,5 @@
 """
-    mutable struct RosenblattTransformation <: AbstractTransformation
+    RosenblattTransformation <: AbstractTransformation
 
 Type used to perform Rosenblatt Transformation.
 

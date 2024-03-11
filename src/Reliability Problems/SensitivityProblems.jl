@@ -1,16 +1,42 @@
+"""
+    SensitivityProblem <: AbstractReliabilityProblem
+
+Type used to define sensitivity problems.
+
+$(TYPEDFIELDS)
+"""
 mutable struct SensitivityProblem <: AbstractReliabilityProblem
-    X   ::AbstractVector{<:Distributions.Sampleable}
+    "Random vector ``\\vec{X}``"
+    X   ::AbstractVector{<:Distributions.UnivariateDistribution}
+    "Correlation matrix ``\\rho^{X}``"
     ρˣ  ::AbstractMatrix{<:Real}
+    "Limit state function ``g(\\vec{X}, \\vec{\\Theta})``"
     g   ::Function
+    "Parameters of limit state function ``\\vec{\\theta}``"
     θ   ::AbstractVector{<:Real}
 end
 
+"""
+    SensitivityProblemCache
+
+Type used to store results of reliability analysis performed using Mean-Centered First-Order Second-Moment (MCFOSM) method.
+
+$(TYPEDFIELDS)
+"""
 struct SensitivityProblemCache
+    "Results of reliability analysis performed using First-Order Reliability Method (FORM)"
     FORMSolution    ::iHLRFCache
+    "Sensivity vector of reliability index ``\\vec{\\nabla}_{\\vec{\\Theta}} \\beta``"
     ∇β              ::Vector{Float64}
+    "Sensivity vector of probability of failure ``\\vec{\\nabla}_{\\vec{\\Theta}} P_{f}``"
     ∇PoF            ::Vector{Float64}
 end
 
+"""
+    solve(Problem::SensitivityProblem)
+
+Function used to solve sensitivity problems.
+"""
 function solve(Problem::SensitivityProblem)
     # Extract the problem data:
     X   = Problem.X

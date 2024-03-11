@@ -59,7 +59,7 @@ end
     @test isapprox(Solution.FittingPoints⁺[1, :], [+2.47, +2.34], rtol = 0.05)
     @test isapprox(Solution.FittingPoints⁺[2, :], [+2.47, +2.44], rtol = 0.05)
     @test isapprox(Solution.FittingPoints⁺[3, :], [+2.47, +2.13], rtol = 0.05)
-    @test isapprox([Solution.κ⁻[1, :], Solution.κ⁺[1, :]], [-0.0630, -0.0405], rtol = 0.05)
-    @test isapprox([Solution.κ⁻[2, :], Solution.κ⁺[2, :]], [-0.0097, -0.0120], rtol = 0.05)
-    @test isapprox([Solution.κ⁻[3, :], Solution.κ⁺[3, :]], [-0.1380, -0.1110], rtol = 0.05)
+    @test isapprox(Solution.κ₁[1, :], [-0.0630, -0.0405], rtol = 0.05)
+    @test isapprox(Solution.κ₁[2, :], [-0.0097, -0.0120], rtol = 0.05)
+    @test isapprox(Solution.κ₁[3, :], [-0.1380, -0.1110], rtol = 0.05)
 end

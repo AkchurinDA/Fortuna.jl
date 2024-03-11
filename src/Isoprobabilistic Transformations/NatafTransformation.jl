@@ -1,5 +1,5 @@
 """
-    mutable struct NatafTransformation <: AbstractTransformation
+    NatafTransformation <: AbstractTransformation
 
 Type used to perform Nataf Transformation.
 

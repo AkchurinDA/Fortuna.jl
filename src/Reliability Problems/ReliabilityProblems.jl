@@ -1,7 +1,9 @@
 """
-    mutable struct ReliabilityProblem <: AbstractReliabilityProblem
+    ReliabilityProblem <: AbstractReliabilityProblem
 
 Type used to define reliability problems.
+
+$(TYPEDFIELDS)
 """
 mutable struct ReliabilityProblem <: AbstractReliabilityProblem
     "Random vector ``\\vec{X}``"
@@ -16,4 +18,4 @@ include("MC.jl")
 include("IS.jl")
 include("FORM.jl")
 include("SORM.jl")
-# include("SSM.jl")
+include("SSM.jl")

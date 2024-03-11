@@ -29,7 +29,7 @@ nothing # hide
 ```
 
 ```@raw html
-<img src="../../assets/SampleRandomVariable.svg" class="center" style="max-height:400px; border-radius:2.5px;"/>
+<img src="../../assets/Plots (Theory)/Sampling-1.svg" class="center" style="max-height:350px; border-radius:2.5px;"/>
 ```
 
 ## Sampling Random Vectors with Uncorrelated Marginals
@@ -62,10 +62,13 @@ nothing # hide
 ```
 
 ```@raw html
-<img src="../../assets/SampleUncorrelatedRandomVector.svg" class="center" style="max-height:400px; border-radius:2.5px;"/>
+<img src="../../assets/Plots (Theory)/Sampling-2.svg" class="center" style="max-height:350px; border-radius:2.5px;"/>
 ```
 
 ## Sampling Random Vectors with Correlated Marginals
+
+!!! note
+    When sampling random vectors with correlated marginals, the sampling technique determines how samples are generated in the space of uncorrelated standard normal random variables (referred to as ``U``-space). These generated samples are then transformed into the target space of correlated non-normal random variables (referred to as ``X``-space). For more information see [Nataf Transformation](@ref NatafTransformationPage) and [Rosenblatt Transformation](@ref RosenblattTransformationPage).
 
 To generate samples of a random vector with *correlated* marginals:
 
@@ -111,7 +114,7 @@ nothing # hide
 ```
 
 ```@raw html
-<img src="../../assets/SampleCorrelatedRandomVector.svg" class="center" style="max-height:400px; border-radius:2.5px;"/>
+<img src="../../assets/Plots (Theory)/Sampling-3.svg" class="center" style="max-height:350px; border-radius:2.5px;"/>
 ```
 
 ## API

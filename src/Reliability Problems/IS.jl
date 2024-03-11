@@ -1,7 +1,7 @@
 """
-    struct IS <: AbstractReliabililyAnalysisMethod
+    IS <: AbstractReliabililyAnalysisMethod
 
-Type used to perform reliability analysis using Importance Sampling method.
+Type used to perform reliability analysis using Importance Sampling (IS) method.
 """
 Base.@kwdef struct IS <: AbstractReliabililyAnalysisMethod
     "Proposal probability density function ``q``"
@@ -11,9 +11,9 @@ Base.@kwdef struct IS <: AbstractReliabililyAnalysisMethod
 end
 
 """
-    struct ISCache
+    ISCache
 
-Type used to store results of reliability analysis performed using Importance Sampling method.
+Type used to store results of reliability analysis performed using Importance Sampling (IS) method.
 """
 struct ISCache
     "Generated samples"
@@ -25,7 +25,7 @@ end
 """
     solve(Problem::ReliabilityProblem, AnalysisMethod::IS)
 
-Function used to solve reliability analysis using Importance Sampling method.
+Function used to solve reliability problems using Importance Sampling (IS) method.
 """
 function solve(Problem::ReliabilityProblem, AnalysisMethod::IS)
     # Extract the analysis details:

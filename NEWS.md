@@ -24,10 +24,12 @@ solve(Problem, FORM(iHLRF(x₀ = [150, 275])))
 ISSolution = solve(Problem, IS())
 ```
 
+- Updated the Subset Simulation Method. It is now slightly faster and more tested.
+
 - Isoprobabilistic transformation objects (`NatafTransformation` and `RosenblattTransformation`) are now broadcastable.
 
 ```julia
-pdf.(TransformationObject, XSamples)
+pdf.(TransformationObject, x)
 ```
 
 - Documentation is updated to include all possible functionality.

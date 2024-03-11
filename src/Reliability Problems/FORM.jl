@@ -1,5 +1,5 @@
 """
-    struct FORM <: AbstractReliabililyAnalysisMethod
+    FORM <: AbstractReliabililyAnalysisMethod
 
 Type used to perform reliability analysis using First-Order Reliability Method (FORM).
 
@@ -10,7 +10,7 @@ Base.@kwdef struct FORM <: AbstractReliabililyAnalysisMethod
 end
 
 """
-    struct MCFOSM <: FORMSubmethod
+    MCFOSM <: FORMSubmethod
 
 Type used to perform reliability analysis using Mean-Centered First-Order Second-Moment (MCFOSM) method.
 
@@ -29,7 +29,7 @@ Base.@kwdef struct RF <: FORMSubmethod # Rackwitz-Fiessler method
 end
 
 """
-    struct HLRF <: FORMSubmethod
+    HLRF <: FORMSubmethod
 
 Type used to perform reliability analysis using Hasofer-Lind Rackwitz-Fiessler (HLRF) method.
 
@@ -47,7 +47,7 @@ Base.@kwdef struct HLRF <: FORMSubmethod # Hasofer-Lind Rackwitz-Fiessler method
 end
 
 """
-    struct iHLRF <: FORMSubmethod
+    iHLRF <: FORMSubmethod
 
 Type used to perform reliability analysis using improved Hasofer-Lind Rackwitz-Fiessler (iHLRF) method.
 
@@ -65,7 +65,7 @@ Base.@kwdef struct iHLRF <: FORMSubmethod # Improved Hasofer-Lind Rackwitz-Fiess
 end
 
 """
-    struct MCFOSMCache
+    MCFOSMCache
 
 Type used to store results of reliability analysis performed using Mean-Centered First-Order Second-Moment (MCFOSM) method.
 
@@ -85,7 +85,7 @@ struct RFCache
 end
 
 """
-    struct HLRFCache
+    HLRFCache
 
 Type used to store results of reliability analysis performed using Hasofer-Lind Rackwitz-Fiessler (HLRF) method.
 
@@ -108,12 +108,12 @@ struct HLRFCache
     α   ::Matrix{Float64}
     "Search direction at each iteration ``\\vec{d}_{i}``"
     d   ::Matrix{Float64}
-    "Importance vector``\\vec{\\gamma}``"
+    "Importance vector ``\\vec{\\gamma}``"
     γ   ::Vector{Float64}
 end
 
 """
-    struct iHLRFCache
+    iHLRFCache
 
 Type used to store results of reliability analysis performed using improved Hasofer-Lind Rackwitz-Fiessler (iHLRF) method.
 
@@ -132,7 +132,7 @@ struct iHLRFCache
     G   ::Vector{Float64}
     "Gradient of the limit state function at each iteration ``\\nabla G(\\vec{u}_{i}^{*})``"
     ∇G  ::Matrix{Float64}
-    "Normalized negative gradient of the limit state function at each iteration ``\\vec{\alpha}_{i}``"
+    "Normalized negative gradient of the limit state function at each iteration ``\\vec{\\alpha}_{i}``"
     α   ::Matrix{Float64}
     "Search direction at each iteration ``\\vec{d}_{i}``"
     d   ::Matrix{Float64}
@@ -142,14 +142,14 @@ struct iHLRFCache
     m   ::Vector{Float64}
     "Step size at each iteration ``\\lambda_{i}``"
     λ   ::Vector{Float64}
-    "Importance vector``\\vec{\\gamma}``"
+    "Importance vector ``\\vec{\\gamma}``"
     γ   ::Vector{Float64}
 end
 
 """
     solve(Problem::ReliabilityProblem, AnalysisMethod::FORM)
 
-Function used to solve reliability analysis using First-Order Reliability Method (FORM).
+Function used to solve reliability problems using First-Order Reliability Method (FORM).
 """
 function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM)
     # Extract the analysis method:
@@ -276,6 +276,7 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM)
                 # Break out:
                 continue
             else
+                # Check for convergance:
                 if i == MaxNumIterations - 1
                     error("HL-RF did not converge. Try increasing the maximum number of iterations (MaxNumIterations) or relaxing the convergance criterions (ϵ₁ and ϵ₂).")
                 end
@@ -409,6 +410,7 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM)
                 # Break out:
                 continue
             else
+                # Check for convergance:
                 if i == MaxNumIterations - 1
                     error("iHL-RF did not converge. Try increasing the maximum number of iterations (MaxNumIterations) or relaxing the convergance criterions (ϵ₁ and ϵ₂).")
                 end
