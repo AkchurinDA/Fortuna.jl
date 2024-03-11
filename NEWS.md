@@ -1,5 +1,9 @@
 # News
 
+## Release V0.6.1
+
+- Added functionality to solve reliability problems using Rackwitz-Fiessler (RF) method.
+
 ## Release V0.6.0
 
 - The internals of the module were completely reworked to use `import` instead of `using` for most of the dependencies to avoid pollution of the global variable scope of the module and improve its performance. The code was also completely reorganized to allow for easier contributions from other people in the future.
