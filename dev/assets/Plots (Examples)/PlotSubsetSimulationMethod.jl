@@ -81,7 +81,6 @@ begin
         offset = 0, outline_linewidth = 1,
         fontsize = 12)
 
-
     display(F)
 end
 
