@@ -23,11 +23,10 @@ Problem = ReliabilityProblem(X, ρˣ, g)
 # Solve reliability problem using Subset Simulation Method:
 Solution = solve(Problem, SSM())
 
-# Plot:
-xRange₁ = range(-9, +9, 500)
-xRange₂ = range(-9, +9, 500)
-gSamples = [g([x₁, x₂]) for x₁ in xRange₁, x₂ in xRange₂]
-
+# Plot the solution:
+xRange₁     = range(-9, +9, 500)
+xRange₂     = range(-9, +9, 500)
+gSamples    = [g([x₁, x₂]) for x₁ in xRange₁, x₂ in xRange₂]
 begin
     F = Figure(size = 72 .* (6, 6), fonts = (; regular = texfont()), fontsize = 14)
 

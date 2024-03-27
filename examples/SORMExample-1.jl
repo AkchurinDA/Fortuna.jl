@@ -22,5 +22,6 @@ Problem = ReliabilityProblem(X, ρˣ, g)
 Solution = solve(Problem, SORM(CF()))
 Solution.PoF₂
 
+# Solve reliability problem using Point-Fitting Method:
 Solution = solve(Problem, SORM(PF()))
 Solution.PoF₂
