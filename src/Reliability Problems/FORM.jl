@@ -266,14 +266,6 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM)
             x[:, i + 1] = μ[:, i] + σ[:, i] .* u[:, i + 1]
 
             # Force the design point to lay on the failure boundary:
-            function F(u, p)
-                x′                  = zeros(eltype(u), NumDimensions)
-                x′[1:(end - 1)]     = p[1:(end - 1)]
-                x′[end]             = u
-            
-                return g(x′)
-            end
-    
             Problem         = NonlinearSolve.NonlinearProblem(F, x[end, i + 1], x[:, i + 1])
             Solution        = NonlinearSolve.solve(Problem, NonlinearSolve.NewtonRaphson(), abstol=10 ^ (-9), reltol=10 ^ (-9))
             x[end, i + 1]   = Solution.u

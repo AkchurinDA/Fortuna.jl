@@ -135,7 +135,35 @@ end
     # Note: There is a typo in the book for this example. The last coordinate of the design point in U-space must be -1.80.
 end
 
-@testset "FORM #6 - iHLRF" begin
+@testset "FORM #6 - HLRF" begin
+    # https://www.researchgate.net/publication/370230768_Structural_reliability_analysis_by_line_sampling_A_Bayesian_active_learning_treatment
+
+    # Define random vector:
+    m   = randomvariable("LogNormal", "M", [1.0, 1.0 * 0.05])
+    k₁  = randomvariable("LogNormal", "M", [1.0, 1.0 * 0.10])
+    k₂  = randomvariable("LogNormal", "M", [0.2, 0.2 * 0.10])
+    r   = randomvariable("LogNormal", "M", [0.5, 0.5 * 0.10])
+    F₁  = randomvariable("LogNormal", "M", [0.4, 0.4 * 0.20])
+    t₁  = randomvariable("LogNormal", "M", [1.0, 1.0 * 0.20])
+    X   = [m, k₁, k₂, r, F₁, t₁]
+
+    # Define correlation matrix:
+    ρˣ  = Matrix(1.0 * I, 6, 6)
+
+    # Define limit state function:
+    g(x::Vector) = 3 * x[4] - abs(((2 * x[5]) / (x[2] + x[3])) * sin((x[6] / 2) * sqrt((x[2] + x[3]) / x[1])))
+
+    # Define reliability problem:
+    Problem = ReliabilityProblem(X, ρˣ, g)
+
+    # Perform the reliability analysis using HLRF:
+    Solution = solve(Problem, FORM(HLRF()))
+    
+    # Test the results:
+    @test isapprox(Solution.PoF, 4.88 * 10 ^ (-8), rtol = 0.01)
+end
+
+@testset "FORM #7 - iHLRF" begin
     # Example 5.2 (p. 118) from "Structural and System Reliability" book by Armen Der Kiureghian
 
     # Define a random vector of correlated marginal distributions:
@@ -165,7 +193,7 @@ end
     @test isapprox(Solution₂.u[:, end], [-1.928, 0.852], rtol = 0.01)
 end
 
-@testset "FORM #7 - iHLRF" begin
+@testset "FORM #8 - iHLRF" begin
     # Test from UQPy package (https://github.com/SURGroup/UQpy/tree/master)
 
     # Define a random vector of correlated marginal distributions:
@@ -190,7 +218,7 @@ end
     @test isapprox(Solution.u[:, end], [-2, 1], rtol = 10 ^ (-9))
 end
 
-@testset "FORM #8 - iHLRF" begin
+@testset "FORM #9 - iHLRF" begin
     # Example 6.5 (p. 147) from "Structural and System Reliability" book by Armen Der Kiureghian
 
     # Define a random vector of correlated marginal distributions:
@@ -220,4 +248,32 @@ end
     @test isapprox(Solution.u[:, end], [1.210, 0.699, 0.941, -1.80], rtol = 0.01)
     @test isapprox(Solution.γ, [0.269, 0.269, 0.451, -0.808], rtol = 0.01)
     # Note: There is a typo in the book for this example. The last coordinate of the design point in U-space must be -1.80.
+end
+
+@testset "FORM #10 - iHLRF" begin
+    # https://www.researchgate.net/publication/370230768_Structural_reliability_analysis_by_line_sampling_A_Bayesian_active_learning_treatment
+
+    # Define random vector:
+    m   = randomvariable("LogNormal", "M", [1.0, 1.0 * 0.05])
+    k₁  = randomvariable("LogNormal", "M", [1.0, 1.0 * 0.10])
+    k₂  = randomvariable("LogNormal", "M", [0.2, 0.2 * 0.10])
+    r   = randomvariable("LogNormal", "M", [0.5, 0.5 * 0.10])
+    F₁  = randomvariable("LogNormal", "M", [0.4, 0.4 * 0.20])
+    t₁  = randomvariable("LogNormal", "M", [1.0, 1.0 * 0.20])
+    X   = [m, k₁, k₂, r, F₁, t₁]
+
+    # Define correlation matrix:
+    ρˣ  = Matrix(1.0 * I, 6, 6)
+
+    # Define limit state function:
+    g(x::Vector) = 3 * x[4] - abs(((2 * x[5]) / (x[2] + x[3])) * sin((x[6] / 2) * sqrt((x[2] + x[3]) / x[1])))
+
+    # Define reliability problem:
+    Problem = ReliabilityProblem(X, ρˣ, g)
+
+    # Perform the reliability analysis using iHLRF:
+    Solution = solve(Problem, FORM(iHLRF()))
+
+    # Test the results:
+    @test isapprox(Solution.PoF, 4.88 * 10 ^ (-8), rtol = 0.01)
 end

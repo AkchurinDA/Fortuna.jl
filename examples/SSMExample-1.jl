@@ -2,6 +2,8 @@ using Fortuna
 using CairoMakie, MathTeXEngine
 CairoMakie.activate!(type = :svg)
 
+# https://www.researchgate.net/publication/370230768_Structural_reliability_analysis_by_line_sampling_A_Bayesian_active_learning_treatment
+
 # Define random vector:
 X₁  = randomvariable("Normal", "M", [0, 1])
 X₂  = randomvariable("Normal", "M", [0, 1])
