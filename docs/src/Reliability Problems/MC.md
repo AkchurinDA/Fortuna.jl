@@ -24,7 +24,7 @@ Therefore, the probability of failure ``P_{f}`` is defined as the expectation of
 \hat{P}_{f} = \dfrac{1}{N} \sum_{i = 1}^{N} \mathbb{I}(\vec{x}_{i})
 ```
 
-where ``N`` is the number of generated sampled. The estimator ``\hat{P}_{f}`` is unbiased, i.e., it correctly predicts the true probability of failure, such that  ``\mathbb{E}(\hat{P}_{f}) = P_{f}``. The main drawback of using the MCS is that is becomes prohibitively expensive to use if the true probability is too small, e.g., ``P_{f} \leq 10^{-3}``, given that the variance of the estimator is inversely proportional to the number of generated samples, such that,
+where ``N`` is the number of generated sampled. The estimator ``\hat{P}_{f}`` is unbiased, i.e., it correctly predicts the true probability of failure, such that  ``\mathbb{E}(\hat{P}_{f}) = P_{f}``. The main drawback of using the MCS is that is becomes prohibitively expensive to use if the true probability is too small, e.g., ``P_{f} \leq 10^{-6}``, given that the variance of the estimator is inversely proportional to the number of generated samples, such that,
 
 ```math
 \text{Var}(\hat{P}_{f}) = \frac{1}{N} P_{f} (1 - P_{f})
@@ -34,7 +34,7 @@ where ``N`` is the number of generated sampled. The estimator ``\hat{P}_{f}`` is
     For typical structural reliability problems with true probabilities of failure ``P_{f}`` of ``\approx 10^{-3}``, it is recommended to use ``N = 10^{6}`` samples to get the coefficient of variation of the estimator ``V_{P_{f}}`` of ``\approx 0.10``.
 
     ```@raw html
-    <img src="../../assets/Plots (Theory)/MonteCarlo-1.svg" class="center" style="max-height:400px; border-radius:2.5px;"/>
+    <img src="../../assets/Plots (Theory)/MonteCarlo-1.svg" class="center" style="max-height:350px; border-radius:2.5px;"/>
     ```
 
 
