@@ -1,66 +1,72 @@
 @testset "Sampling Techniques #1" begin
+    # Set an RNG seed:
+    Random.seed!(123)
+
     # Generate a random vector X with uncorrelated marginal random variables X₁ and X₂:
-    X₁  = randomvariable("Gamma", "M", [10, 1.5])
-    X₂  = randomvariable("Gamma", "M", [15, 2.5])
-    X   = [X₁, X₂]
+    X₁ = randomvariable("Gamma", "M", [10, 1.5])
+    X₂ = randomvariable("Gamma", "M", [15, 2.5])
+    X  = [X₁, X₂]
 
     # Generate samples:
-    NumSamples      = 10 ^ 6
-    XSamplesITS     = rand(X, NumSamples, ITS())
-    XSamplesLHS     = rand(X, NumSamples, LHS())
+    NumSamples  = 10 ^ 6
+    XSamplesITS = rand(X, NumSamples, ITS())
+    XSamplesLHS = rand(X, NumSamples, LHS())
 
     # Test the results:
-    @test isapprox(mean(XSamplesITS[1, :]), 10, rtol = 0.01) # Inverse Transform Sampling
-    @test isapprox(mean(XSamplesITS[2, :]), 15, rtol = 0.01)
-    @test isapprox(std(XSamplesITS[1, :]), 1.5, rtol = 0.01)
-    @test isapprox(std(XSamplesITS[2, :]), 2.5, rtol = 0.01)
+    @test isapprox(mean(XSamplesITS[1, :]),    10,         rtol = 0.01) # Inverse Transform Sampling
+    @test isapprox(mean(XSamplesITS[2, :]),    15,         rtol = 0.01)
+    @test isapprox(std(XSamplesITS[1, :]),     1.5,        rtol = 0.01)
+    @test isapprox(std(XSamplesITS[2, :]),     2.5,        rtol = 0.01)
     @test isapprox(cor(XSamplesITS, dims = 2), [1 0; 0 1], rtol = 0.01)
-    @test isapprox(mean(XSamplesLHS[1, :]), 10, rtol = 0.01) # Latin Hypercube Sampling
-    @test isapprox(mean(XSamplesLHS[2, :]), 15, rtol = 0.01)
-    @test isapprox(std(XSamplesLHS[1, :]), 1.5, rtol = 0.01)
-    @test isapprox(std(XSamplesLHS[2, :]), 2.5, rtol = 0.01)
+    @test isapprox(mean(XSamplesLHS[1, :]),    10,         rtol = 0.01) # Latin Hypercube Sampling
+    @test isapprox(mean(XSamplesLHS[2, :]),    15,         rtol = 0.01)
+    @test isapprox(std(XSamplesLHS[1, :]),     1.5,        rtol = 0.01)
+    @test isapprox(std(XSamplesLHS[2, :]),     2.5,        rtol = 0.01)
     @test isapprox(cor(XSamplesLHS, dims = 2), [1 0; 0 1], rtol = 0.01)
 end
 
 @testset "Sampling Techniques #2" begin
+    # Set an RNG seed:
+    Random.seed!(123)
+
     # Define a list of reliability indices of interest:
     ρList = (-0.75):(0.25):(+0.75)
 
     for i in eachindex(ρList)
         # Generate a random vector X of correlated marginal distributions:
-        X₁  = randomvariable("Gamma", "M", [10, 1.5])
-        X₂  = randomvariable("Gamma", "M", [15, 2.5])
-        X   = [X₁, X₂]
-        ρˣ  = [1 ρList[i]; ρList[i] 1]
+        X₁ = randomvariable("Gamma", "M", [10, 1.5])
+        X₂ = randomvariable("Gamma", "M", [15, 2.5])
+        X  = [X₁, X₂]
+        ρˣ = [1 ρList[i]; ρList[i] 1]
 
         # Perform Nataf transformation of the correlated marginal random variables:
         NatafObject = NatafTransformation(X, ρˣ)
 
         # Generate samples:
-        NumSamples          = 10 ^ 6
-        XSamplesITS, _, _   = rand(NatafObject, NumSamples, ITS())
-        XSamplesLHS, _, _   = rand(NatafObject, NumSamples, LHS())
+        NumSamples        = 10 ^ 6
+        XSamplesITS, _, _ = rand(NatafObject, NumSamples, ITS())
+        XSamplesLHS, _, _ = rand(NatafObject, NumSamples, LHS())
 
         # Test the results:
-        @test isapprox(mean(XSamplesITS[1, :]), 10, rtol = 0.01) # Inverse Transform Sampling
-        @test isapprox(mean(XSamplesITS[2, :]), 15, rtol = 0.01)
-        @test isapprox(std(XSamplesITS[1, :]), 1.5, rtol = 0.01)
-        @test isapprox(std(XSamplesITS[2, :]), 2.5, rtol = 0.01)
-        @test isapprox(cor(XSamplesITS, dims = 2), ρˣ, rtol = 0.01)
-        @test isapprox(mean(XSamplesLHS[1, :]), 10, rtol = 0.01) # Latin Hypercube Sampling
-        @test isapprox(mean(XSamplesLHS[2, :]), 15, rtol = 0.01)
-        @test isapprox(std(XSamplesLHS[1, :]), 1.5, rtol = 0.01)
-        @test isapprox(std(XSamplesLHS[2, :]), 2.5, rtol = 0.01)
-        @test isapprox(cor(XSamplesLHS, dims = 2), ρˣ, rtol = 0.01)
+        @test isapprox(mean(XSamplesITS[1, :]),    10,  rtol = 0.01) # Inverse Transform Sampling
+        @test isapprox(mean(XSamplesITS[2, :]),    15,  rtol = 0.01)
+        @test isapprox(std(XSamplesITS[1, :]),     1.5, rtol = 0.01)
+        @test isapprox(std(XSamplesITS[2, :]),     2.5, rtol = 0.01)
+        @test isapprox(cor(XSamplesITS, dims = 2), ρˣ,  rtol = 0.01)
+        @test isapprox(mean(XSamplesLHS[1, :]),    10,  rtol = 0.01) # Latin Hypercube Sampling
+        @test isapprox(mean(XSamplesLHS[2, :]),    15,  rtol = 0.01)
+        @test isapprox(std(XSamplesLHS[1, :]),     1.5, rtol = 0.01)
+        @test isapprox(std(XSamplesLHS[2, :]),     2.5, rtol = 0.01)
+        @test isapprox(cor(XSamplesLHS, dims = 2), ρˣ,  rtol = 0.01)
     end
 end
 
 @testset "Sampling Techniques #3" begin
     # Generate a random vector X of correlated marginal distributions:
-    X₁  = randomvariable("Gamma", "M", [10, 1.5])
-    X₂  = randomvariable("Gamma", "M", [15, 2.5])
-    X   = [X₁, X₂]
-    ρˣ  = [1 0.75; 0.75 1]
+    X₁ = randomvariable("Gamma", "M", [10, 1.5])
+    X₂ = randomvariable("Gamma", "M", [15, 2.5])
+    X  = [X₁, X₂]
+    ρˣ = [1 0.75; 0.75 1]
 
     # Perform Nataf transformation of the correlated marginal random variables:
     NatafObject = NatafTransformation(X, ρˣ)
@@ -70,7 +76,6 @@ end
 
     # Generate samples from a random variable:
     Random.seed!(123)
-    
     XSamplesITS₁ = rand(X₁, NumSamples, ITS())
     XSamplesLHS₁ = rand(X₁, NumSamples, LHS())
 

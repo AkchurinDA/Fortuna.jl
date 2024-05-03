@@ -127,8 +127,8 @@ function convert(Distribution::AbstractString, Moments::Union{Real, AbstractVect
         STD  = Moments[2]
 
         # Error catching:
-        if Mean != STD
-            throw(DomainError(Moments, "Mean and standard deviation values of must be the same!"))
+        if !(Mean ≈ (STD ^ 2))
+            throw(DomainError(Moments, "Standard deviation must be equal to square root of mean!"))
         end
 
         # Convert moments to parameters:

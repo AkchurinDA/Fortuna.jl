@@ -2,16 +2,15 @@ module Fortuna
 # --------------------------------------------------
 # IMPORT PACKAGES
 # --------------------------------------------------
-import  Base
-import  Random
-import  Distributions
-import  FastGaussQuadrature
-import  LinearAlgebra
-import  NonlinearSolve
-import  SciMLBase
-import  SpecialFunctions
-import  ForwardDiff
-using   DocStringExtensions
+import Base
+import Random
+import Distributions
+import FastGaussQuadrature
+import LinearAlgebra
+import NonlinearSolve
+import SpecialFunctions
+import ForwardDiff
+using  DocStringExtensions
 
 # --------------------------------------------------
 # REEXPORT PACKAGES

@@ -10,12 +10,12 @@ end
     include("TestSamplingTechniques.jl")
 end
 
-@testset "Monte Carlo" begin
-    include("TestMC.jl") 
-end
-
 @testset "Nataf Transformation" begin
     include("TestNatafTransformation.jl")
+end
+
+@testset "Monte Carlo" begin
+    include("TestMC.jl") 
 end
 
 @testset "Importance Sampling" begin
