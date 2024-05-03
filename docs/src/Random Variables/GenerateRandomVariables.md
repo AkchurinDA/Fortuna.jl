@@ -37,6 +37,7 @@ println("θ = $(params(Q)[2])")
 
 `Fortuna.jl` package currently supports the following distributions:
 - [Exponential](https://juliastats.org/Distributions.jl/latest/univariate/#Distributions.Exponential)
+- [Frechet](https://juliastats.org/Distributions.jl/stable/univariate/#Distributions.Frechet)
 - [Gamma](https://juliastats.org/Distributions.jl/latest/univariate/#Distributions.Gamma)
 - [Gumbel](https://juliastats.org/Distributions.jl/latest/univariate/#Distributions.Gumbel)
 - [LogNormal](https://juliastats.org/Distributions.jl/latest/univariate/#Distributions.LogNormal)

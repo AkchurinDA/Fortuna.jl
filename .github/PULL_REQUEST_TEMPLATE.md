@@ -1,6 +1,6 @@
 # Description
 
-**Fixes #(issue).**
+**Closes #(issue).**
 
 Add a description of your pull request here.
 
