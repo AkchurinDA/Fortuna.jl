@@ -1,5 +1,13 @@
 # News
 
+## Release V0.6.3
+
+- Added Frechet distribution.
+
+## Release V0.6.2
+
+- Added more examples to the documentation and cleaned up a few bugs.
+
 ## Release V0.6.1
 
 - Added functionality to solve reliability problems using Rackwitz-Fiessler (RF) method.
