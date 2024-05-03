@@ -2,8 +2,8 @@ using Test
 using Fortuna
 using Random, Distributions
 
-@testset "Nataf Transformation" begin
-    include("TestNatafTransformation.jl")
+@testset "Random Variables" begin
+    include("TestRandomVariables.jl")
 end
 
 @testset "Sampling Techniques" begin
@@ -12,6 +12,10 @@ end
 
 @testset "Monte Carlo" begin
     include("TestMC.jl") 
+end
+
+@testset "Nataf Transformation" begin
+    include("TestNatafTransformation.jl")
 end
 
 @testset "Importance Sampling" begin

@@ -10,7 +10,7 @@ function randomvariable(Distribution::AbstractString, DefineBy::AbstractString, 
 
     # Error-catching:
     if DefineBy != "m" && DefineBy != "p"
-        error("""Random variables can only be defined by "Moments" ("M") and "Parameters ("P")".""")
+        throw(ArgumentError("""Random variables can only be defined by "Moments" ("M") and "Parameters ("P")"!"""))
     end
 
     # Convert moments of a random variable into its parameters if the random variable is defined by its moments:
@@ -20,25 +20,25 @@ function randomvariable(Distribution::AbstractString, DefineBy::AbstractString, 
 
     # Create a random variable:
     if Distribution == "exponential"
-        RandomVariable = Distributions.Exponential(Values)
+        RandomVariable = Distributions.Exponential(Values...)
     elseif Distribution == "frechet"
-        RandomVariable = Distributions.Frechet(Values[1], Values[2])
+        RandomVariable = Distributions.Frechet(Values...)
     elseif Distribution == "gamma"
-        RandomVariable = Distributions.Gamma(Values[1], Values[2])
+        RandomVariable = Distributions.Gamma(Values...)
     elseif Distribution == "gumbel"
-        RandomVariable = Distributions.Gumbel(Values[1], Values[2])
+        RandomVariable = Distributions.Gumbel(Values...)
     elseif Distribution == "lognormal"
-        RandomVariable = Distributions.LogNormal(Values[1], Values[2])
+        RandomVariable = Distributions.LogNormal(Values...)
     elseif Distribution == "normal"
-        RandomVariable = Distributions.Normal(Values[1], Values[2])
+        RandomVariable = Distributions.Normal(Values...)
     elseif Distribution == "poisson"
-        RandomVariable = Distributions.Poisson(Values)
+        RandomVariable = Distributions.Poisson(Values...)
     elseif Distribution == "uniform"
-        RandomVariable = Distributions.Uniform(Values[1], Values[2])
+        RandomVariable = Distributions.Uniform(Values...)
     elseif Distribution == "weibull"
-        RandomVariable = Distributions.Weibull(Values[1], Values[2])
+        RandomVariable = Distributions.Weibull(Values...)
     else
-        error("Provided distribution is not supported.")
+        error("Provided distribution is not supported!")
     end
 
     # Return the result:
@@ -51,7 +51,7 @@ function convert(Distribution::AbstractString, Moments::Union{Real, AbstractVect
 
     # Error-catching:
     if length(Moments) > 2
-        error("Too many moments are provided.")
+        throw(ArgumentError("Too many moments are provided!"))
     end
 
     # Convert moments to parameters:
@@ -62,7 +62,7 @@ function convert(Distribution::AbstractString, Moments::Union{Real, AbstractVect
 
         # Error catching:
         if Mean != STD
-            error("Mean and standard deviation values of Exponential random variables must be the same.")
+            throw(DomainError(Moments, "Mean and standard deviation values of must be the same!"))
         end
 
         # Convert moments to parameters:
@@ -74,10 +74,13 @@ function convert(Distribution::AbstractString, Moments::Union{Real, AbstractVect
         STD  = Moments[2]
 
         # Convert moments to parameters:
-        FFrechet(u, p) = sqrt(SpecialFunctions.gamma(1 - 2 / u) - SpecialFunctions.gamma(1 - 1 / u)^2) / SpecialFunctions.gamma(1 - 1 / u) - STD / Mean
-        u₀             = (2 + eps(), 1000)
+        FFrechet(u, p) = sqrt(SpecialFunctions.gamma(1 - 2 / u) - SpecialFunctions.gamma(1 - 1 / u) ^ 2) / SpecialFunctions.gamma(1 - 1 / u) - STD / Mean
+        u₀             = (2 + 0.1, 10000)
         Problem        = NonlinearSolve.IntervalNonlinearProblem(FFrechet, u₀)
-        Solution       = NonlinearSolve.solve(Problem, NonlinearSolve.Bisection(), abstol=10^(-9), reltol=10^(-9))
+        Solution       = NonlinearSolve.solve(Problem, NonlinearSolve.Bisection(), abstol = 10 ^ (-9))
+        if !isapprox(FFrechet(Solution.u, 0), 0, atol = 10 ^ (-9))
+            throw(DomainError(Moments, "Conversion of the provided moments to parameters has failed!"))
+        end
         α              = Solution.u
         θ              = Mean / SpecialFunctions.gamma(1 - 1 / α)
         Parameters     = [α, θ]
@@ -87,8 +90,8 @@ function convert(Distribution::AbstractString, Moments::Union{Real, AbstractVect
         STD  = Moments[2]
 
         # Convert moments to parameters:
-        α          = Mean^2 / STD^2
-        θ          = STD^2 / Mean
+        α          = Mean ^ 2 / STD ^ 2
+        θ          = STD ^ 2 / Mean
         Parameters = [α, θ]
     elseif Distribution == "gumbel"
         # Extract moments:
@@ -106,8 +109,8 @@ function convert(Distribution::AbstractString, Moments::Union{Real, AbstractVect
         STD  = Moments[2]
 
         # Convert moments to parameters:
-        μ          = log(Mean) - log(sqrt(1 + (STD / Mean)^2))
-        σ          = sqrt(log(1 + (STD / Mean)^2))
+        μ          = log(Mean) - log(sqrt(1 + (STD / Mean) ^ 2))
+        σ          = sqrt(log(1 + (STD / Mean) ^ 2))
         Parameters = [μ, σ]
     elseif Distribution == "normal"
         # Extract moments:
@@ -125,7 +128,7 @@ function convert(Distribution::AbstractString, Moments::Union{Real, AbstractVect
 
         # Error catching:
         if Mean != STD
-            error("Mean and standard deviation values of Poisson random variables must be the same.")
+            throw(DomainError(Moments, "Mean and standard deviation values of must be the same!"))
         end
 
         # Convert moments to parameters:
@@ -146,15 +149,18 @@ function convert(Distribution::AbstractString, Moments::Union{Real, AbstractVect
         STD  = Moments[2]
 
         # Convert moments to parameters:
-        FWeibull(u, p) = sqrt(SpecialFunctions.gamma(1 + 2 / u) - SpecialFunctions.gamma(1 + 1 / u)^2) / SpecialFunctions.gamma(1 + 1 / u) - STD / Mean
-        u₀             = (eps(), 1000)
+        FWeibull(u, p) = sqrt(SpecialFunctions.gamma(1 + 2 / u) - SpecialFunctions.gamma(1 + 1 / u) ^ 2) / SpecialFunctions.gamma(1 + 1 / u) - STD / Mean
+        u₀             = (0.1, 10000)
         Problem        = NonlinearSolve.IntervalNonlinearProblem(FWeibull, u₀)
-        Solution       = NonlinearSolve.solve(Problem, NonlinearSolve.Bisection(), abstol=10^(-9), reltol=10^(-9))
+        Solution       = NonlinearSolve.solve(Problem, NonlinearSolve.Bisection(), abstol = 10 ^ (-9))
+        if !isapprox(FWeibull(Solution.u, 0), 0, atol = 10 ^ (-9))
+            throw(DomainError(Moments, "Conversion of the provided moments to parameters has failed!"))
+        end
         α              = Solution.u
         θ              = Mean / SpecialFunctions.gamma(1 + 1 / α)
         Parameters     = [α, θ]
     else
-        error("Provided distribution is not supported.")
+        error("Provided distribution is not supported!")
     end
 
     # Return the result:

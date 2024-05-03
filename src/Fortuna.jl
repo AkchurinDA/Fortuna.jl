@@ -8,6 +8,7 @@ import  Distributions
 import  FastGaussQuadrature
 import  LinearAlgebra
 import  NonlinearSolve
+import  SciMLBase
 import  SpecialFunctions
 import  ForwardDiff
 using   DocStringExtensions
