@@ -60,14 +60,14 @@ function getdistortedcorrelation(X::AbstractVector{<:Distributions.UnivariateDis
     IPLocations1D, IPWeights1D = FastGaussQuadrature.gausslegendre(NumIP)
 
     # Transform the locations and weights of the integration points from 1D into 2D:
-    ξ       = Vector{Float64}(undef, NumIP^2)
-    η       = Vector{Float64}(undef, NumIP^2)
-    Wᵢⱼ     = Vector{Float64}(undef, NumIP^2)
+    ξ   = Vector{Float64}(undef, NumIP^2)
+    η   = Vector{Float64}(undef, NumIP^2)
+    Wᵢⱼ = Vector{Float64}(undef, NumIP^2)
     for i in 1:NumIP
         for j in 1:NumIP
-            ξ[(i-1)*NumIP+j]    = IPLocations1D[i]
-            η[(i-1)*NumIP+j]    = IPLocations1D[j]
-            Wᵢⱼ[(i-1)*NumIP+j]  = IPWeights1D[i] * IPWeights1D[j]
+            ξ[(i - 1) * NumIP + j]   = IPLocations1D[i]
+            η[(i - 1) * NumIP + j]   = IPLocations1D[j]
+            Wᵢⱼ[(i - 1) * NumIP + j] = IPWeights1D[i] * IPWeights1D[j]
         end
     end
 
@@ -102,7 +102,7 @@ function getdistortedcorrelation(X::AbstractVector{<:Distributions.UnivariateDis
     end
 
     # Compute the lower triangular matrix of the Cholesky decomposition of the distorted correlation matrix and its inverse:
-    L       = LinearAlgebra.cholesky(ρᶻ, check=true).L
+    L       = LinearAlgebra.cholesky(ρᶻ, check = true).L
     L⁻¹     = LinearAlgebra.inv(L)
 
     # Return the result:
@@ -128,8 +128,8 @@ function transformsamples(TransformationObject::NatafTransformation, Samples::Ab
         error("Invalid transformation direction.")
     elseif TransformationDirection == "x2u"
         # Extract data:
-        X       = TransformationObject.X
-        L⁻¹     = TransformationObject.L⁻¹
+        X   = TransformationObject.X
+        L⁻¹ = TransformationObject.L⁻¹
 
         # Preallocate:
         ZSamples = Vector{Float64}(undef, NumDimensions)
@@ -168,7 +168,7 @@ end
 function transformsamples(TransformationObject::NatafTransformation, Samples::AbstractMatrix{<:Real}, TransformationDirection::AbstractString)
     # Compute number of samples and dimensions:
     NumDimensions = size(Samples, 1)
-    NumSamples = size(Samples, 2)
+    NumSamples    = size(Samples, 2)
 
     # Error-catching:
     if NumDimensions != length(TransformationObject.X)
@@ -228,9 +228,9 @@ function getjacobian(TransformationObject::NatafTransformation, Samples::Abstrac
         J = D * L
     elseif TransformationDirection == "u2x"
         # Extract data:
-        X       = TransformationObject.X
-        L       = TransformationObject.L
-        L⁻¹     = TransformationObject.L⁻¹
+        X   = TransformationObject.X
+        L   = TransformationObject.L
+        L⁻¹ = TransformationObject.L⁻¹
 
         # Convert samples to the space of correlated standard normal random variables Z:
         ZSamples = L * Samples
@@ -261,7 +261,7 @@ end
 function getjacobian(TransformationObject::NatafTransformation, Samples::AbstractMatrix{<:Real}, TransformationDirection::AbstractString)
     # Compute number of dimensions and samples:
     NumDimensions = size(Samples, 1)
-    NumSamples = size(Samples, 2)
+    NumSamples    = size(Samples, 2)
 
     # Error-catching:
     if NumDimensions != length(TransformationObject.X)
@@ -287,8 +287,8 @@ Function used to compute the joint PDF in ``X``-space.
 """
 function Distributions.pdf(TransformationObject::NatafTransformation, x::AbstractVector{<:Real})
     # Extract data:
-    X   = TransformationObject.X
-    ρᶻ  = TransformationObject.ρᶻ
+    X  = TransformationObject.X
+    ρᶻ = TransformationObject.ρᶻ
 
     # Compute the number of samples and number of marginal distributions:
     NumDimensions = length(x)
@@ -323,7 +323,7 @@ end
 function Distributions.pdf(TransformationObject::NatafTransformation, x::AbstractMatrix{<:Real})
     # Compute number of dimensions and samples:
     NumDimensions = size(x, 1)
-    NumSamples = size(x, 2)
+    NumSamples    = size(x, 2)
 
     # Error-catching:
     if NumDimensions != length(TransformationObject.X)

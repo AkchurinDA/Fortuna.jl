@@ -29,13 +29,13 @@ Function used to solve reliability problems using Importance Sampling (IS) metho
 """
 function solve(Problem::ReliabilityProblem, AnalysisMethod::IS)
     # Extract the analysis details:
-    q                   = AnalysisMethod.q
-    NumSamples          = AnalysisMethod.NumSamples
+    q          = AnalysisMethod.q
+    NumSamples = AnalysisMethod.NumSamples
 
     # Extract data:
-    g   = Problem.g
-    X   = Problem.X
-    ρˣ  = Problem.ρˣ
+    g  = Problem.g
+    X  = Problem.X
+    ρˣ = Problem.ρˣ
 
     # Check dimensions:
     if length(q) != length(X)

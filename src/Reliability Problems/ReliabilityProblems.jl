@@ -7,11 +7,11 @@ $(TYPEDFIELDS)
 """
 mutable struct ReliabilityProblem <: AbstractReliabilityProblem
     "Random vector ``\\vec{X}``"
-    X   ::AbstractVector{<:Distributions.UnivariateDistribution}
+    X::AbstractVector{<:Distributions.UnivariateDistribution}
     "Correlation matrix ``\\rho^{X}``"
-    ρˣ  ::AbstractMatrix{<:Real}
+    ρˣ::AbstractMatrix{<:Real}
     "Limit state function ``g(\\vec{X})``"
-    g   ::Function
+    g::Function
 end
 
 include("MC.jl")

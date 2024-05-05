@@ -33,13 +33,13 @@ Function used to solve reliability problems using Monte Carlo (MC) simulations.
 """
 function solve(Problem::ReliabilityProblem, AnalysisMethod::MC)
     # Extract the analysis details:
-    NumSamples          = AnalysisMethod.NumSamples
-    SamplingTechnique   = AnalysisMethod.SamplingTechnique
+    NumSamples        = AnalysisMethod.NumSamples
+    SamplingTechnique = AnalysisMethod.SamplingTechnique
 
     # Extract data:
-    g   = Problem.g
-    X   = Problem.X
-    ρˣ  = Problem.ρˣ
+    g  = Problem.g
+    X  = Problem.X
+    ρˣ = Problem.ρˣ
 
     # If the marginal distrbutions are correlated, define a Nataf object:
     NatafObject = NatafTransformation(X, ρˣ)
