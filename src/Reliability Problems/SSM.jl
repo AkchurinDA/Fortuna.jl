@@ -7,11 +7,11 @@ $(TYPEDFIELDS)
 """
 Base.@kwdef struct SSM <: AbstractReliabililyAnalysisMethod
     "Probability of failure for each subset ``P_{0}``"
-    P₀              ::Real = 0.10
+    P₀::Real = 0.10
     "Number of samples generated within each subset ``N``"
-    NumSamples      ::Integer = 10 ^ 6
+    NumSamples::Integer = 10 ^ 6
     "Maximum number of subsets ``M``"
-    MaxNumSubsets   ::Integer = 50
+    MaxNumSubsets::Integer = 50
 end
 
 """
@@ -23,15 +23,15 @@ $(TYPEDFIELDS)
 """
 struct SSMCache
     "Samples generated within each subset in ``X``-space"
-    XSamplesSubset  ::Vector{Matrix{Float64}}
+    XSamplesSubset::Vector{Matrix{Float64}}
     "Samples generated within each subset in ``U``-space"
-    USamplesSubset  ::Vector{Matrix{Float64}}
+    USamplesSubset::Vector{Matrix{Float64}}
     "Threshold for each subset ``C_{i}``"
-    CSubset         ::Vector{Float64}
+    CSubset::Vector{Float64}
     "Probability of failure for each subset ``P_{f_{i}}``"
-    PoFSubset       ::Vector{Float64}
+    PoFSubset::Vector{Float64}
     "Probability of failure ``P_{f}``"
-    PoF             ::Float64
+    PoF::Float64
 end
 
 """
@@ -41,14 +41,14 @@ Function used to solve reliability problems using Subset Simulation Method (SSM)
 """
 function solve(Problem::ReliabilityProblem, AnalysisMethod::SSM)
     # Extract analysis details:
-    P₀              = AnalysisMethod.P₀
-    NumSamples      = AnalysisMethod.NumSamples
-    MaxNumSubsets   = AnalysisMethod.MaxNumSubsets
+    P₀            = AnalysisMethod.P₀
+    NumSamples    = AnalysisMethod.NumSamples
+    MaxNumSubsets = AnalysisMethod.MaxNumSubsets
 
     # Extract problem data:
-    X   = Problem.X
-    ρˣ  = Problem.ρˣ
-    g   = Problem.g
+    X  = Problem.X
+    ρˣ = Problem.ρˣ
+    g  = Problem.g
 
     # Perform Nataf Transformation:
     NatafObject = NatafTransformation(X, ρˣ)
@@ -63,10 +63,10 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::SSM)
     NumSamplesChain = floor(Integer, NumSamples / NumMarkovChains)
 
     # Preallocate:
-    USamplesSubset  = Vector{Matrix{Float64}}()
-    XSamplesSubset  = Vector{Matrix{Float64}}()
-    CSubset         = Vector{Float64}(undef, MaxNumSubsets)
-    PoFSubset       = Vector{Float64}(undef, MaxNumSubsets)
+    USamplesSubset = Vector{Matrix{Float64}}()
+    XSamplesSubset = Vector{Matrix{Float64}}()
+    CSubset        = Vector{Float64}(undef, MaxNumSubsets)
+    PoFSubset      = Vector{Float64}(undef, MaxNumSubsets)
 
     # Loop through each subset:
     for i in 1:MaxNumSubsets
@@ -107,8 +107,8 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::SSM)
             PoFSubset[i] = length(Indices) / size(GSamples)[1]
 
             # Clean up the result:
-            CSubset     = CSubset[1:i]
-            PoFSubset   = PoFSubset[1:i]
+            CSubset   = CSubset[1:i]
+            PoFSubset = PoFSubset[1:i]
 
             # Break out:
             break

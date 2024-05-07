@@ -29,9 +29,9 @@ $(TYPEDFIELDS)
 """
 Base.@kwdef struct RF <: FORMSubmethod # Rackwitz-Fiessler method
     "Maximum number of iterations"
-    MaxNumIterations    ::Integer = 250
+    MaxNumIterations::Integer = 250
     "Convergance criterion ``\\epsilon``"
-    ϵ                   ::Real = 10^(-9)
+    ϵ::Real = 10^(-9)
 end
 
 """
@@ -43,13 +43,13 @@ $(TYPEDFIELDS)
 """
 Base.@kwdef struct HLRF <: FORMSubmethod # Hasofer-Lind Rackwitz-Fiessler method
     "Maximum number of iterations"
-    MaxNumIterations    ::Integer = 250
+    MaxNumIterations::Integer = 250
     "Convergance criterion #1 ``\\epsilon_{1}``"
-    ϵ₁                  ::Real = 10^(-9)
+    ϵ₁::Real = 10^(-9)
     "Convergance criterion #1 ``\\epsilon_{2}``"
-    ϵ₂                  ::Real = 10^(-9)
+    ϵ₂::Real = 10^(-9)
     "Starting point ``x_{0}``"
-    x₀                  ::Union{Nothing, Vector{<:Real}} = nothing
+    x₀::Union{Nothing, Vector{<:Real}} = nothing
 end
 
 """
@@ -61,13 +61,13 @@ $(TYPEDFIELDS)
 """
 Base.@kwdef struct iHLRF <: FORMSubmethod # Improved Hasofer-Lind Rackwitz-Fiessler method
     "Maximum number of iterations"
-    MaxNumIterations    ::Integer = 250
+    MaxNumIterations::Integer = 250
     "Convergance criterion #1 ``\\epsilon_{1}``"
-    ϵ₁                  ::Real = 10^(-9)
+    ϵ₁::Real = 10^(-9)
     "Convergance criterion #1 ``\\epsilon_{2}``"
-    ϵ₂                  ::Real = 10^(-9)
+    ϵ₂::Real = 10^(-9)
     "Starting point ``x_{0}``"
-    x₀                  ::Union{Nothing, Vector{<:Real}} = nothing
+    x₀::Union{Nothing, Vector{<:Real}} = nothing
 end
 
 """
@@ -101,9 +101,9 @@ struct RFCache
     "Standard deviations of equivalent normal marginals at each iteration ``\\vec{\\sigma}_{i}``"
     σ::Matrix{Float64}
     "Gradient of the limit state function at each iteration ``\\nabla G(\\vec{u}_{i}^{*})``"
-    ∇G  ::Matrix{Float64}
+    ∇G::Matrix{Float64}
     "Normalized negative gradient of the limit state function at each iteration ``\\vec{\\alpha}_{i}``"
-    α   ::Matrix{Float64}
+    α::Matrix{Float64}
 end
 
 """
@@ -115,23 +115,23 @@ $(TYPEDFIELDS)
 """
 struct HLRFCache
     "Reliability index ``\\beta``"
-    β   ::Float64
+    β::Float64
     "Probability of failure ``P_{f}``"
-    PoF ::Float64
+    PoF::Float64
     "Design points in X-space at each iteration ``\\vec{x}_{i}^{*}``"
-    x   ::Matrix{Float64}
+    x::Matrix{Float64}
     "Design points in U-space at each iteration ``\\vec{u}_{i}^{*}``"
-    u   ::Matrix{Float64}
+    u::Matrix{Float64}
     "Limit state function at each iteration ``G(\\vec{u}_{i}^{*})``"
-    G   ::Vector{Float64}
+    G::Vector{Float64}
     "Gradient of the limit state function at each iteration ``\\nabla G(\\vec{u}_{i}^{*})``"
-    ∇G  ::Matrix{Float64}
+    ∇G::Matrix{Float64}
     "Normalized negative gradient of the limit state function at each iteration ``\\vec{\\alpha}_{i}``"
-    α   ::Matrix{Float64}
+    α::Matrix{Float64}
     "Search direction at each iteration ``\\vec{d}_{i}``"
-    d   ::Matrix{Float64}
+    d::Matrix{Float64}
     "Importance vector ``\\vec{\\gamma}``"
-    γ   ::Vector{Float64}
+    γ::Vector{Float64}
 end
 
 """
@@ -143,29 +143,29 @@ $(TYPEDFIELDS)
 """
 struct iHLRFCache
     "Reliability index ``\\beta``"
-    β   ::Float64
+    β::Float64
     "Probability of failure ``P_{f}``"
-    PoF ::Float64
+    PoF::Float64
     "Design points in X-space at each iteration ``\\vec{x}_{i}^{*}``"
-    x   ::Matrix{Float64}
+    x::Matrix{Float64}
     "Design points in U-space at each iteration ``\\vec{u}_{i}^{*}``"
-    u   ::Matrix{Float64}
+    u::Matrix{Float64}
     "Limit state function at each iteration ``G(\\vec{u}_{i}^{*})``"
-    G   ::Vector{Float64}
+    G::Vector{Float64}
     "Gradient of the limit state function at each iteration ``\\nabla G(\\vec{u}_{i}^{*})``"
-    ∇G  ::Matrix{Float64}
+    ∇G::Matrix{Float64}
     "Normalized negative gradient of the limit state function at each iteration ``\\vec{\\alpha}_{i}``"
-    α   ::Matrix{Float64}
+    α::Matrix{Float64}
     "Search direction at each iteration ``\\vec{d}_{i}``"
-    d   ::Matrix{Float64}
+    d::Matrix{Float64}
     "c-coefficient at each iteration ``c_{i}``"
-    c   ::Vector{Float64}
+    c::Vector{Float64}
     "Merit function at each iteration ``m_{i}``"
-    m   ::Vector{Float64}
+    m::Vector{Float64}
     "Step size at each iteration ``\\lambda_{i}``"
-    λ   ::Vector{Float64}
+    λ::Vector{Float64}
     "Importance vector ``\\vec{\\gamma}``"
-    γ   ::Vector{Float64}
+    γ::Vector{Float64}
 end
 
 """
@@ -178,9 +178,9 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM)
     Submethod = AnalysisMethod.Submethod
 
     # Extract the problem data:
-    X   = Problem.X
-    ρˣ  = Problem.ρˣ
-    g   = Problem.g
+    X  = Problem.X
+    ρˣ = Problem.ρˣ
+    g  = Problem.g
 
     if !isa(Submethod, MCFOSM) && !isa(Submethod, RF) && !isa(Submethod, HLRF) && !isa(Submethod, iHLRF)
         error("Invalid FORM submethod.")
@@ -203,8 +203,8 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM)
         return MCFOSMCache(β)
     elseif isa(Submethod, RF)
         # Extract the analysis details:
-        MaxNumIterations    = Submethod.MaxNumIterations
-        ϵ                   = Submethod.ϵ
+        MaxNumIterations = Submethod.MaxNumIterations
+        ϵ                = Submethod.ϵ
 
         # Error-catching:
         if ρˣ != LinearAlgebra.I
@@ -215,36 +215,36 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM)
         NumDimensions = length(X)
 
         # Preallocate:
-        β   = Vector{Float64}(undef, MaxNumIterations)
-        x   = Matrix{Float64}(undef, NumDimensions, MaxNumIterations)
-        u   = Matrix{Float64}(undef, NumDimensions, MaxNumIterations)
-        μ   = Matrix{Float64}(undef, NumDimensions, MaxNumIterations)
-        σ   = Matrix{Float64}(undef, NumDimensions, MaxNumIterations)
-        ∇G  = Matrix{Float64}(undef, NumDimensions, MaxNumIterations)
-        α   = Matrix{Float64}(undef, NumDimensions, MaxNumIterations)
+        β  = Vector{Float64}(undef, MaxNumIterations)
+        x  = Matrix{Float64}(undef, NumDimensions, MaxNumIterations)
+        u  = Matrix{Float64}(undef, NumDimensions, MaxNumIterations)
+        μ  = Matrix{Float64}(undef, NumDimensions, MaxNumIterations)
+        σ  = Matrix{Float64}(undef, NumDimensions, MaxNumIterations)
+        ∇G = Matrix{Float64}(undef, NumDimensions, MaxNumIterations)
+        α  = Matrix{Float64}(undef, NumDimensions, MaxNumIterations)
 
         # Initialize the design point in X-space:
         x[:, 1] = mean.(X)
 
         # Force the design point to lay on the failure boundary:
         function F(u, p)
-            x′                  = zeros(eltype(u), NumDimensions)
-            x′[1:(end - 1)]     = p[1:(end - 1)]
-            x′[end]             = u
+            x′              = zeros(eltype(u), NumDimensions)
+            x′[1:(end - 1)] = p[1:(end - 1)]
+            x′[end]         = u
         
             return g(x′)
         end
 
-        Problem     = NonlinearSolve.NonlinearProblem(F, mean(X[end]), x[:, 1])
-        Solution    = NonlinearSolve.solve(Problem, NonlinearSolve.NewtonRaphson(), abstol=10 ^ (-9), reltol=10 ^ (-9))
-        x[end, 1]   = Solution.u
+        Problem   = NonlinearSolve.NonlinearProblem(F, mean(X[end]), x[:, 1])
+        Solution  = NonlinearSolve.solve(Problem, NonlinearSolve.NewtonRaphson(), abstol = 10 ^ (-9), reltol = 10 ^ (-9))
+        x[end, 1] = Solution.u
         
         # Start iterating:
         for i in 1:(MaxNumIterations - 1)
             # Compute the mean and standard deviation values of the equivalient normal marginals:
             for j in 1:NumDimensions
                 σ[j, i] = Distributions.pdf(Distributions.Normal(), Distributions.quantile(Distributions.Normal(), Distributions.cdf(X[j], x[j, i]))) / Distributions.pdf(X[j], x[j, i])
-                μ[j, i] = x[j, i] - σ[j, i] * Distributions.quantile(Distributions.Normal(), Distributions.cdf(X[j], x[j, i]));
+                μ[j, i] = x[j, i] - σ[j, i] * Distributions.quantile(Distributions.Normal(), Distributions.cdf(X[j], x[j, i]))
             end
 
             # Compute the design point in U-space:
@@ -266,9 +266,9 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM)
             x[:, i + 1] = μ[:, i] + σ[:, i] .* u[:, i + 1]
 
             # Force the design point to lay on the failure boundary:
-            Problem         = NonlinearSolve.NonlinearProblem(F, x[end, i + 1], x[:, i + 1])
-            Solution        = NonlinearSolve.solve(Problem, NonlinearSolve.NewtonRaphson(), abstol=10 ^ (-9), reltol=10 ^ (-9))
-            x[end, i + 1]   = Solution.u
+            Problem       = NonlinearSolve.NonlinearProblem(F, x[end, i + 1], x[:, i + 1])
+            Solution      = NonlinearSolve.solve(Problem, NonlinearSolve.NewtonRaphson(), abstol=10 ^ (-9), reltol=10 ^ (-9))
+            x[end, i + 1] = Solution.u
 
             # Check for convergance:
             if i != 1
@@ -308,12 +308,12 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM)
         NumDimensions = length(X)
 
         # Preallocate:
-        x   = Matrix{Float64}(undef, NumDimensions, MaxNumIterations)
-        u   = Matrix{Float64}(undef, NumDimensions, MaxNumIterations)
-        G   = Vector{Float64}(undef, MaxNumIterations)
-        ∇G  = Matrix{Float64}(undef, NumDimensions, MaxNumIterations)
-        α   = Matrix{Float64}(undef, NumDimensions, MaxNumIterations)
-        d   = Matrix{Float64}(undef, NumDimensions, MaxNumIterations)
+        x  = Matrix{Float64}(undef, NumDimensions, MaxNumIterations)
+        u  = Matrix{Float64}(undef, NumDimensions, MaxNumIterations)
+        G  = Vector{Float64}(undef, MaxNumIterations)
+        ∇G = Matrix{Float64}(undef, NumDimensions, MaxNumIterations)
+        α  = Matrix{Float64}(undef, NumDimensions, MaxNumIterations)
+        d  = Matrix{Float64}(undef, NumDimensions, MaxNumIterations)
 
         # Perform the Nataf Transformation:
         NatafObject = NatafTransformation(X, ρˣ)
@@ -377,12 +377,12 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM)
                 γ   = vec((LinearAlgebra.transpose(α[:, i]) * L⁻¹) / LinearAlgebra.norm(LinearAlgebra.transpose(α[:, i]) * L⁻¹))
 
                 # Clean up the results:
-                x   = x[:, 1:i]
-                u   = u[:, 1:i]
-                G   = G[1:i]
-                ∇G  = ∇G[:, 1:i]
-                α   = α[:, 1:i]
-                d   = d[:, 1:i]
+                x  = x[:, 1:i]
+                u  = u[:, 1:i]
+                G  = G[1:i]
+                ∇G = ∇G[:, 1:i]
+                α  = α[:, 1:i]
+                d  = d[:, 1:i]
 
                 # Return results:
                 return HLRFCache(β, PoF, x, u, G, ∇G, α, d, γ)
@@ -407,15 +407,15 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM)
         NumDimensions = length(X)
 
         # Preallocate:
-        x   = Matrix{Float64}(undef, NumDimensions, MaxNumIterations)
-        u   = Matrix{Float64}(undef, NumDimensions, MaxNumIterations)
-        G   = Vector{Float64}(undef, MaxNumIterations)
-        ∇G  = Matrix{Float64}(undef, NumDimensions, MaxNumIterations)
-        α   = Matrix{Float64}(undef, NumDimensions, MaxNumIterations)
-        d   = Matrix{Float64}(undef, NumDimensions, MaxNumIterations)
-        c   = Vector{Float64}(undef, MaxNumIterations)
-        m   = Vector{Float64}(undef, MaxNumIterations)
-        λ   = Vector{Float64}(undef, MaxNumIterations)
+        x  = Matrix{Float64}(undef, NumDimensions, MaxNumIterations)
+        u  = Matrix{Float64}(undef, NumDimensions, MaxNumIterations)
+        G  = Vector{Float64}(undef, MaxNumIterations)
+        ∇G = Matrix{Float64}(undef, NumDimensions, MaxNumIterations)
+        α  = Matrix{Float64}(undef, NumDimensions, MaxNumIterations)
+        d  = Matrix{Float64}(undef, NumDimensions, MaxNumIterations)
+        c  = Vector{Float64}(undef, MaxNumIterations)
+        m  = Vector{Float64}(undef, MaxNumIterations)
+        λ  = Vector{Float64}(undef, MaxNumIterations)
 
         # Perform the Nataf Transformation:
         NatafObject = NatafTransformation(X, ρˣ)
@@ -508,15 +508,15 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM)
                 γ   = vec((LinearAlgebra.transpose(α[:, i]) * L⁻¹) / LinearAlgebra.norm(LinearAlgebra.transpose(α[:, i]) * L⁻¹))
 
                 # Clean up the results:
-                x   = x[:, 1:i]
-                u   = u[:, 1:i]
-                G   = G[1:i]
-                ∇G  = ∇G[:, 1:i]
-                α   = α[:, 1:i]
-                d   = d[:, 1:i]
-                c   = c[1:i]
-                m   = m[1:i]
-                λ   = λ[1:i]
+                x  = x[:, 1:i]
+                u  = u[:, 1:i]
+                G  = G[1:i]
+                ∇G = ∇G[:, 1:i]
+                α  = α[:, 1:i]
+                d  = d[:, 1:i]
+                c  = c[1:i]
+                m  = m[1:i]
+                λ  = λ[1:i]
 
                 # Return results:
                 return iHLRFCache(β, PoF, x, u, G, ∇G, α, d, c, m, λ, γ)

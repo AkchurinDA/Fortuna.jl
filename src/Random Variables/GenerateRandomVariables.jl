@@ -18,6 +18,8 @@ function randomvariable(Distribution::AbstractString, DefineBy::AbstractString, 
         Values = convert(Distribution, Values)
     end
 
+    
+
     # Create a random variable:
     if Distribution == "exponential"
         RandomVariable = Distributions.Exponential(Values...)
@@ -156,9 +158,9 @@ function convert(Distribution::AbstractString, Moments::Union{Real, AbstractVect
         if !isapprox(FWeibull(Solution.u, 0), 0, atol = 10 ^ (-9))
             throw(DomainError(Moments, "Conversion of the provided moments to parameters has failed!"))
         end
-        α              = Solution.u
-        θ              = Mean / SpecialFunctions.gamma(1 + 1 / α)
-        Parameters     = [α, θ]
+        α          = Solution.u
+        θ          = Mean / SpecialFunctions.gamma(1 + 1 / α)
+        Parameters = [α, θ]
     else
         error("Provided distribution is not supported!")
     end
