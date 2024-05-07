@@ -1,5 +1,3 @@
-# Fortuna
-
 > **Audentes Fortuna Iuvat**
 
 ## Description

@@ -3,7 +3,7 @@
 
 Function used to define random variables.
 """
-function randomvariable(Distribution::S, DefineBy::S, Values::Union{T, AbstractVector{T}}) where {S<:AbstractString, T<:Real}
+function randomvariable(Distribution::AbstractString, DefineBy::AbstractString, Values::Union{Real, AbstractVector{<:Real}})
     # Convert strings to lowercase:
     Distribution = lowercase(Distribution)
     DefineBy     = lowercase(DefineBy)
