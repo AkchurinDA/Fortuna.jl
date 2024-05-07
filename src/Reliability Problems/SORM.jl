@@ -41,13 +41,13 @@ $(TYPEDFIELDS)
 """
 struct CFCache # Curve-Fitting method
     "Results of reliability analysis performed using First-Order Reliability Method (FORM)"
-    FORMSolution    ::iHLRFCache
+    FORMSolution::iHLRFCache
     "Generalized reliability indices ``\\beta``"
-    β₂              ::Vector{Float64}
+    β₂::Vector{Float64}
     "Probabilities of failure ``P_{f}``"
-    PoF₂            ::Vector{Float64}
+    PoF₂::Vector{Float64}
     "Principal curvatures ``\\kappa``"
-    κ               ::Vector{Float64}
+    κ::Vector{Float64}
 end
 
 """
@@ -59,19 +59,19 @@ $(TYPEDFIELDS)
 """
 struct PFCache # Point-Fitting method
     "Results of reliability analysis performed using First-Order Reliability Method (FORM)"
-    FORMSolution    ::iHLRFCache
+    FORMSolution::iHLRFCache
     "Generalized reliability index ``\\beta``"
-    β₂              ::Vector{Float64}
+    β₂::Vector{Float64}
     "Probabilities of failure ``P_{f}``"
-    PoF₂            ::Vector{Float64}
+    PoF₂::Vector{Float64}
     "Fitting points on the negative side of the hyper-cylinder"
-    FittingPoints⁻  ::Matrix{Float64}
+    FittingPoints⁻::Matrix{Float64}
     "Fitting points on the positive side of the hyper-cylinder"
-    FittingPoints⁺  ::Matrix{Float64}
+    FittingPoints⁺::Matrix{Float64}
     "Principal curvatures on the negative and positive sides"
-    κ₁              ::Matrix{Float64}
+    κ₁::Matrix{Float64}
     "Principal curvatures of each hyper-semiparabola"
-    κ₂              ::Matrix{Float64}
+    κ₂::Matrix{Float64}
 end
 
 """
@@ -84,16 +84,16 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::SORM)
     Submethod = AnalysisMethod.Submethod
 
     # Determine the design point using FORM:
-    FORMSolution    = solve(Problem, FORM())
-    u               = FORMSolution.u[:, end]
-    ∇G              = FORMSolution.∇G[:, end]
-    α               = FORMSolution.α[:, end]
-    β₁              = FORMSolution.β
+    FORMSolution = solve(Problem, FORM())
+    u            = FORMSolution.u[:, end]
+    ∇G           = FORMSolution.∇G[:, end]
+    α            = FORMSolution.α[:, end]
+    β₁           = FORMSolution.β
 
     # Extract the problem data:
-    X   = Problem.X
-    ρˣ  = Problem.ρˣ
-    g   = Problem.g
+    X  = Problem.X
+    ρˣ = Problem.ρˣ
+    g  = Problem.g
 
     if !isa(Submethod, CF) && !isa(Submethod, PF)
         error("Invalid SORM submethod.")
@@ -169,29 +169,29 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::SORM)
         end
 
         # Compute fitting points:
-        FittingPoints⁺  = Matrix{Float64}(undef, NumDimensions - 1, 2)
-        FittingPoints⁻  = Matrix{Float64}(undef, NumDimensions - 1, 2)
-        κ₁              = Matrix{Float64}(undef, NumDimensions - 1, 2)
+        FittingPoints⁺ = Matrix{Float64}(undef, NumDimensions - 1, 2)
+        FittingPoints⁻ = Matrix{Float64}(undef, NumDimensions - 1, 2)
+        κ₁             = Matrix{Float64}(undef, NumDimensions - 1, 2)
         for i in 1:(NumDimensions - 1)
             function F(u, p)
-                UPrime          = zeros(eltype(u), NumDimensions)
-                UPrime[i]       = p
-                UPrime[end]     = u
+                UPrime      = zeros(eltype(u), NumDimensions)
+                UPrime[i]   = p
+                UPrime[end] = u
             
                 return G′(g, NatafObject, R, UPrime)
             end
 
             # Negative side:
-            Problem⁻                = NonlinearSolve.NonlinearProblem(F, β₁, -H)
-            Solution⁻               = NonlinearSolve.solve(Problem⁻, NonlinearSolve.NewtonRaphson(), abstol=10^(-9), reltol=10^(-9))
-            FittingPoints⁻[i, 1]    = -H
-            FittingPoints⁻[i, 2]    = Solution⁻.u
+            Problem⁻             = NonlinearSolve.NonlinearProblem(F, β₁, -H)
+            Solution⁻            = NonlinearSolve.solve(Problem⁻, NonlinearSolve.NewtonRaphson(), abstol=10^(-9), reltol=10^(-9))
+            FittingPoints⁻[i, 1] = -H
+            FittingPoints⁻[i, 2] = Solution⁻.u
 
             # Positive side:
-            Problem⁺                = NonlinearSolve.NonlinearProblem(F, β₁, +H)
-            Solution⁺               = NonlinearSolve.solve(Problem⁺, NonlinearSolve.NewtonRaphson(), abstol=10^(-9), reltol=10^(-9))
-            FittingPoints⁺[i, 1]    = +H
-            FittingPoints⁺[i, 2]    = Solution⁺.u
+            Problem⁺             = NonlinearSolve.NonlinearProblem(F, β₁, +H)
+            Solution⁺            = NonlinearSolve.solve(Problem⁺, NonlinearSolve.NewtonRaphson(), abstol=10^(-9), reltol=10^(-9))
+            FittingPoints⁺[i, 1] = +H
+            FittingPoints⁺[i, 2] = Solution⁺.u
 
             # Curvatures:
             κ₁[i, 1] = 2 * (FittingPoints⁻[i, 2] - β₁) / (FittingPoints⁻[i, 1] ^ 2) # Negative side
@@ -291,7 +291,7 @@ end
 function getorthonormal(α::Vector{Float64}, NumDimensions::Integer)
     # Initilize the matrix:
     A = Matrix(1.0 * I, NumDimensions, NumDimensions)
-    A = reverse(A, dims=2)
+    A = reverse(A, dims = 2)
     A[:, 1] = LinearAlgebra.transpose(α)
 
     # Perform QR factorization:

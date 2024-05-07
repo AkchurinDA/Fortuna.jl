@@ -7,9 +7,9 @@ $(TYPEDFIELDS)
 """
 Base.@kwdef struct MC <: AbstractReliabililyAnalysisMethod
     "Number of samples ``N``"
-    NumSamples          ::Integer = 10 ^ 6
+    NumSamples::Integer = 10 ^ 6
     "Sampling technique"
-    SamplingTechnique   ::AbstractSamplingTechnique = ITS()
+    SamplingTechnique::AbstractSamplingTechnique = ITS()
 end
 
 """
@@ -21,9 +21,9 @@ $(TYPEDFIELDS)
 """
 struct MCCache
     "Generated samples"
-    Samples ::Matrix{Float64}
+    Samples::Matrix{Float64}
     "Probability of failure ``P_{f}``"
-    PoF     ::Float64
+    PoF::Float64
 end
 
 """

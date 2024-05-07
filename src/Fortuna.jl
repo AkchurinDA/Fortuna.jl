@@ -86,7 +86,7 @@ export IS, ISCache
 export FORM, MCFOSM, MCFOSMCache, RF, RFCache, HLRF, HLRFCache, iHLRF, iHLRFCache
 export SORM, CF, CFCache, PF, PFCache
 export SSM, SSMCache
-export SensitivityProblem, SensitivityProblemCache
+export SensitivityProblemTypeI, SensitivityProblemTypeII, SensitivityProblemCache
 export InverseReliabilityProblem, InverseReliabilityProblemCache
 export randomvariable
 export getdistortedcorrelation, transformsamples, getjacobian

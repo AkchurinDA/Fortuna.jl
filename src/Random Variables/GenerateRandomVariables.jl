@@ -45,7 +45,7 @@ function randomvariable(Distribution::AbstractString, DefineBy::AbstractString, 
     return RandomVariable
 end
 
-function convert(Distribution::AbstractString, Moments::Union{Real, AbstractVector{<:Real}})
+function convert(Distribution::S, Moments::Union{T, AbstractVector{T}}) where {S<:AbstractString, T<:Real}
     # Convert strings to lowercase:
     Distribution = lowercase(Distribution)
 
@@ -75,13 +75,13 @@ function convert(Distribution::AbstractString, Moments::Union{Real, AbstractVect
 
         # Convert moments to parameters:
         FFrechet(u, p) = sqrt(SpecialFunctions.gamma(1 - 2 / u) - SpecialFunctions.gamma(1 - 1 / u) ^ 2) / SpecialFunctions.gamma(1 - 1 / u) - STD / Mean
-        u₀             = (2 + 0.1, 10000)
+        u₀             = (2 + 1E-1, 1E+6)
         Problem        = NonlinearSolve.IntervalNonlinearProblem(FFrechet, u₀)
-        Solution       = NonlinearSolve.solve(Problem, NonlinearSolve.Bisection(), abstol = 10 ^ (-9))
-        if !isapprox(FFrechet(Solution.u, 0), 0, atol = 10 ^ (-9))
+        Solution       = NonlinearSolve.solve(Problem, nothing, abstol = 1E-6, reltol = 1E-6)
+        α              = Solution.u
+        if !isapprox(FFrechet(α, 0), 0, atol = 1E-6)
             throw(DomainError(Moments, "Conversion of the provided moments to parameters has failed!"))
         end
-        α              = Solution.u
         θ              = Mean / SpecialFunctions.gamma(1 - 1 / α)
         Parameters     = [α, θ]
     elseif Distribution == "gamma"
@@ -150,15 +150,15 @@ function convert(Distribution::AbstractString, Moments::Union{Real, AbstractVect
 
         # Convert moments to parameters:
         FWeibull(u, p) = sqrt(SpecialFunctions.gamma(1 + 2 / u) - SpecialFunctions.gamma(1 + 1 / u) ^ 2) / SpecialFunctions.gamma(1 + 1 / u) - STD / Mean
-        u₀             = (0.1, 10000)
+        u₀             = (1E-1, 1E+6)
         Problem        = NonlinearSolve.IntervalNonlinearProblem(FWeibull, u₀)
-        Solution       = NonlinearSolve.solve(Problem, NonlinearSolve.Bisection(), abstol = 10 ^ (-9))
-        if !isapprox(FWeibull(Solution.u, 0), 0, atol = 10 ^ (-9))
+        Solution       = NonlinearSolve.solve(Problem, nothing, abstol = 1E-6, reltol = 1E-6)
+        α              = Solution.u
+        if !isapprox(FWeibull(α, 0), 0, atol = 1E-6)
             throw(DomainError(Moments, "Conversion of the provided moments to parameters has failed!"))
         end
-        α              = Solution.u
-        θ              = Mean / SpecialFunctions.gamma(1 + 1 / α)
-        Parameters     = [α, θ]
+        θ          = Mean / SpecialFunctions.gamma(1 + 1 / α)
+        Parameters = [α, θ]
     else
         error("Provided distribution is not supported!")
     end

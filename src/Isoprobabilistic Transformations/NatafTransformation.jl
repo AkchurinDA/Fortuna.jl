@@ -7,17 +7,17 @@ $(TYPEDFIELDS)
 """
 mutable struct NatafTransformation <: AbstractIsoprobabilisticTransformation
     "Random vector ``\\vec{X}``"
-    X   ::AbstractVector{<:Distributions.UnivariateDistribution}
+    X::AbstractVector{<:Distributions.UnivariateDistribution}
     "Correlation matrix ``\\rho^{X}``"
-    ρˣ  ::AbstractMatrix{<:Real}
+    ρˣ::AbstractMatrix{<:Real}
     "Distorted correlation matrix ``\\rho^{Z}``"
-    ρᶻ  ::AbstractMatrix{Float64}
+    ρᶻ::AbstractMatrix{<:Real}
     "Lower triangular matrix of the Cholesky decomposition of the distorted correlation matrix ``L``"
-    L   ::AbstractMatrix{Float64}
+    L::AbstractMatrix{<:Real}
     "Inverse of the lower triangular matrix of the Cholesky decomposition of the distorted correlation matrix ``L^{-1}``"
-    L⁻¹ ::AbstractMatrix{Float64}
+    L⁻¹::AbstractMatrix{<:Real}
 
-    function NatafTransformation(X::AbstractVector{<:Distributions.UnivariateDistribution}, ρˣ::AbstractMatrix{<:Real})
+    function NatafTransformation(X::AbstractVector{<:Distributions.UnivariateDistribution}, ρˣ::AbstractMatrix)
         # Compute the distorted correlation matrix:
         ρᶻ, L, L⁻¹ = getdistortedcorrelation(X, ρˣ)
 
@@ -32,13 +32,13 @@ Base.broadcastable(x::NatafTransformation) = Ref(x)
 
 Function used to compute the distorted correlation matrix ``\\rho^{Z}``.
 """
-function getdistortedcorrelation(X::AbstractVector{<:Distributions.UnivariateDistribution}, ρˣ::AbstractMatrix{<:Real})
+function getdistortedcorrelation(X::AbstractVector{<:Distributions.UnivariateDistribution}, ρˣ::AbstractMatrix)
     # Compute number of dimensions:
     NumDimensions = length(X)
 
     # Error-catching:
     if size(ρˣ) != (NumDimensions, NumDimensions)
-        error("Size of the correlation matrix ρₓ is not compatible with the number of the marginal distributions.")
+        error("Size of the correlation matrix ρₓ is not compatible with the number of marginal distributions.")
     end
 
     if !LinearAlgebra.isposdef(ρˣ)
@@ -51,23 +51,18 @@ function getdistortedcorrelation(X::AbstractVector{<:Distributions.UnivariateDis
     end
 
     # Compute the locations and weights of the integration points in 1D:
-    if MaxCorrelationValue ≤ 0.9
-        NumIP = 64
-    else
-        NumIP = 1024
-    end
-
+    MaxCorrelationValue ≤ 0.9 ? NumIP = 64 : NumIP = 1024
     IPLocations1D, IPWeights1D = FastGaussQuadrature.gausslegendre(NumIP)
 
     # Transform the locations and weights of the integration points from 1D into 2D:
-    ξ   = Vector{Float64}(undef, NumIP^2)
-    η   = Vector{Float64}(undef, NumIP^2)
-    Wᵢⱼ = Vector{Float64}(undef, NumIP^2)
+    ξ = Vector{Float64}(undef, NumIP ^ 2)
+    η = Vector{Float64}(undef, NumIP ^ 2)
+    W = Vector{Float64}(undef, NumIP ^ 2)
     for i in 1:NumIP
         for j in 1:NumIP
-            ξ[(i - 1) * NumIP + j]   = IPLocations1D[i]
-            η[(i - 1) * NumIP + j]   = IPLocations1D[j]
-            Wᵢⱼ[(i - 1) * NumIP + j] = IPWeights1D[i] * IPWeights1D[j]
+            ξ[(i - 1) * NumIP + j] = IPLocations1D[i]
+            η[(i - 1) * NumIP + j] = IPLocations1D[j]
+            W[(i - 1) * NumIP + j] = IPWeights1D[i] * IPWeights1D[j]
         end
     end
 
@@ -80,30 +75,39 @@ function getdistortedcorrelation(X::AbstractVector{<:Distributions.UnivariateDis
     zⱼ = ((ZMax - ZMin) / 2) * η .+ (ZMax + ZMin) / 2
 
     # Compute the entries of the distorted correlation matrix:
-    ρᶻ = Matrix{Float64}(I, NumDimensions, NumDimensions)
+    Parameters = params.(X)
+    Parameters = [Parameters[i][j] for i in eachindex(X) for j in eachindex(Parameters[i])]
+    Parameters = promote(Parameters...)
+    ρᶻ         = Matrix{eltype(Parameters)}(I, NumDimensions, NumDimensions)
     for i in 1:NumDimensions
-        for j in i+1:NumDimensions
+        for j in (i + 1):NumDimensions
             # Check if the marginal distributions are uncorrelated:
             if ρˣ[i, j] == 0
                 continue
             end
 
             # Define a function from which we will compute the entries of the distorted correlation matrix:
-            hᵢ          = (Distributions.quantile.(X[i], Distributions.cdf.(Distributions.Normal(0, 1), zᵢ)) .- Distributions.mean(X[i])) / Distributions.std(X[i])
-            hⱼ          = (Distributions.quantile.(X[j], Distributions.cdf.(Distributions.Normal(0, 1), zⱼ)) .- Distributions.mean(X[j])) / Distributions.std(X[j])
-            F(ρ, p)     = ((ZMax - ZMin) / 2)^2 * LinearAlgebra.dot(Wᵢⱼ .* (hᵢ .* hⱼ), ((1 / (2 * π * sqrt(1 - ρ^2))) * exp.((2 * ρ * (zᵢ .* zⱼ) - zᵢ .^ 2 - zⱼ .^ 2) / (2 * (1 - ρ^2))))) - ρˣ[i, j]
+            hᵢ      = (Distributions.quantile.(X[i], Distributions.cdf.(Distributions.Normal(), zᵢ)) .- Distributions.mean(X[i])) / Distributions.std(X[i])
+            hⱼ      = (Distributions.quantile.(X[j], Distributions.cdf.(Distributions.Normal(), zⱼ)) .- Distributions.mean(X[j])) / Distributions.std(X[j])
+            F(ρ, p) = ((ZMax - ZMin) / 2) ^ 2 * LinearAlgebra.dot(W .* (hᵢ .* hⱼ), ((1 / (2 * π * sqrt(1 - ρ ^ 2))) * exp.((2 * ρ * (zᵢ .* zⱼ) - zᵢ .^ 2 - zⱼ .^ 2) / (2 * (1 - ρ ^ 2))))) - ρˣ[i, j]
 
             # Compute the entries of the correlation matrix of the distorted correlation matrix:
-            Problem     = NonlinearSolve.NonlinearProblem(F, ρˣ[i, j])
-            Solution    = NonlinearSolve.solve(Problem, NonlinearSolve.NewtonRaphson(), abstol=10^(-6), reltol=10^(-6))
-            ρᶻ[i, j]    = Solution.u
-            ρᶻ[j, i]    = ρᶻ[i, j]
+            try
+                Problem  = NonlinearSolve.NonlinearProblem(F, ρˣ[i, j])
+                Solution = NonlinearSolve.solve(Problem, nothing)
+                ρᶻ[i, j] = Solution.u
+            catch
+                Problem  = NonlinearSolve.IntervalNonlinearProblem(F, (-(1 - 1E-3), +(1 - 1E-3)))
+                Solution = NonlinearSolve.solve(Problem, nothing)
+                ρᶻ[i, j] = Solution.u
+            end
+            ρᶻ[j, i] = ρᶻ[i, j]
         end
     end
 
     # Compute the lower triangular matrix of the Cholesky decomposition of the distorted correlation matrix and its inverse:
-    L       = LinearAlgebra.cholesky(ρᶻ, check = true).L
-    L⁻¹     = LinearAlgebra.inv(L)
+    L   = LinearAlgebra.cholesky(ρᶻ).L
+    L⁻¹ = LinearAlgebra.inv(L)
 
     # Return the result:
     return ρᶻ, L, L⁻¹

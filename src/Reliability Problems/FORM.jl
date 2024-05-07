@@ -29,9 +29,9 @@ $(TYPEDFIELDS)
 """
 Base.@kwdef struct RF <: FORMSubmethod # Rackwitz-Fiessler method
     "Maximum number of iterations"
-    MaxNumIterations    ::Integer = 250
+    MaxNumIterations::Integer = 250
     "Convergance criterion ``\\epsilon``"
-    ϵ                   ::Real = 10^(-9)
+    ϵ::Real = 10^(-9)
 end
 
 """
@@ -43,13 +43,13 @@ $(TYPEDFIELDS)
 """
 Base.@kwdef struct HLRF <: FORMSubmethod # Hasofer-Lind Rackwitz-Fiessler method
     "Maximum number of iterations"
-    MaxNumIterations    ::Integer = 250
+    MaxNumIterations::Integer = 250
     "Convergance criterion #1 ``\\epsilon_{1}``"
-    ϵ₁                  ::Real = 10^(-9)
-    "Convergance criterion #2 ``\\epsilon_{2}``"
-    ϵ₂                  ::Real = 10^(-9)
+    ϵ₁::Real = 10^(-9)
+    "Convergance criterion #1 ``\\epsilon_{2}``"
+    ϵ₂::Real = 10^(-9)
     "Starting point ``x_{0}``"
-    x₀                  ::Union{Nothing, Vector{<:Real}} = nothing
+    x₀::Union{Nothing, Vector{<:Real}} = nothing
 end
 
 """
@@ -61,13 +61,13 @@ $(TYPEDFIELDS)
 """
 Base.@kwdef struct iHLRF <: FORMSubmethod # Improved Hasofer-Lind Rackwitz-Fiessler method
     "Maximum number of iterations"
-    MaxNumIterations    ::Integer = 250
+    MaxNumIterations::Integer = 250
     "Convergance criterion #1 ``\\epsilon_{1}``"
-    ϵ₁                  ::Real = 10^(-9)
-    "Convergance criterion #2 ``\\epsilon_{2}``"
-    ϵ₂                  ::Real = 10^(-9)
+    ϵ₁::Real = 10^(-9)
+    "Convergance criterion #1 ``\\epsilon_{2}``"
+    ϵ₂::Real = 10^(-9)
     "Starting point ``x_{0}``"
-    x₀                  ::Union{Nothing, Vector{<:Real}} = nothing
+    x₀::Union{Nothing, Vector{<:Real}} = nothing
 end
 
 """
@@ -100,10 +100,10 @@ struct RFCache
     μ::Matrix{Float64}
     "Standard deviations of equivalent normal marginals at each iteration ``\\vec{\\sigma}_{i}``"
     σ::Matrix{Float64}
-    "Gradient of the limit state function at each iteration ``\\vec{\\nabla} G(\\vec{u}_{i}^{*})``"
-    ∇G  ::Matrix{Float64}
+    "Gradient of the limit state function at each iteration ``\\nabla G(\\vec{u}_{i}^{*})``"
+    ∇G::Matrix{Float64}
     "Normalized negative gradient of the limit state function at each iteration ``\\vec{\\alpha}_{i}``"
-    α   ::Matrix{Float64}
+    α::Matrix{Float64}
 end
 
 """
@@ -115,23 +115,23 @@ $(TYPEDFIELDS)
 """
 struct HLRFCache
     "Reliability index ``\\beta``"
-    β   ::Float64
+    β::Float64
     "Probability of failure ``P_{f}``"
-    PoF ::Float64
+    PoF::Float64
     "Design points in X-space at each iteration ``\\vec{x}_{i}^{*}``"
-    x   ::Matrix{Float64}
+    x::Matrix{Float64}
     "Design points in U-space at each iteration ``\\vec{u}_{i}^{*}``"
-    u   ::Matrix{Float64}
+    u::Matrix{Float64}
     "Limit state function at each iteration ``G(\\vec{u}_{i}^{*})``"
-    G   ::Vector{Float64}
-    "Gradient of the limit state function at each iteration ``\\vec{\\nabla} G(\\vec{u}_{i}^{*})``"
-    ∇G  ::Matrix{Float64}
+    G::Vector{Float64}
+    "Gradient of the limit state function at each iteration ``\\nabla G(\\vec{u}_{i}^{*})``"
+    ∇G::Matrix{Float64}
     "Normalized negative gradient of the limit state function at each iteration ``\\vec{\\alpha}_{i}``"
-    α   ::Matrix{Float64}
+    α::Matrix{Float64}
     "Search direction at each iteration ``\\vec{d}_{i}``"
-    d   ::Matrix{Float64}
+    d::Matrix{Float64}
     "Importance vector ``\\vec{\\gamma}``"
-    γ   ::Vector{Float64}
+    γ::Vector{Float64}
 end
 
 """
@@ -143,29 +143,29 @@ $(TYPEDFIELDS)
 """
 struct iHLRFCache
     "Reliability index ``\\beta``"
-    β   ::Float64
+    β::Float64
     "Probability of failure ``P_{f}``"
-    PoF ::Float64
+    PoF::Float64
     "Design points in X-space at each iteration ``\\vec{x}_{i}^{*}``"
-    x   ::Matrix{Float64}
+    x::Matrix{Float64}
     "Design points in U-space at each iteration ``\\vec{u}_{i}^{*}``"
-    u   ::Matrix{Float64}
+    u::Matrix{Float64}
     "Limit state function at each iteration ``G(\\vec{u}_{i}^{*})``"
-    G   ::Vector{Float64}
-    "Gradient of the limit state function at each iteration ``\\vec{\\nabla} G(\\vec{u}_{i}^{*})``"
-    ∇G  ::Matrix{Float64}
+    G::Vector{Float64}
+    "Gradient of the limit state function at each iteration ``\\nabla G(\\vec{u}_{i}^{*})``"
+    ∇G::Matrix{Float64}
     "Normalized negative gradient of the limit state function at each iteration ``\\vec{\\alpha}_{i}``"
-    α   ::Matrix{Float64}
+    α::Matrix{Float64}
     "Search direction at each iteration ``\\vec{d}_{i}``"
-    d   ::Matrix{Float64}
+    d::Matrix{Float64}
     "c-coefficient at each iteration ``c_{i}``"
-    c   ::Vector{Float64}
+    c::Vector{Float64}
     "Merit function at each iteration ``m_{i}``"
-    m   ::Vector{Float64}
+    m::Vector{Float64}
     "Step size at each iteration ``\\lambda_{i}``"
-    λ   ::Vector{Float64}
+    λ::Vector{Float64}
     "Importance vector ``\\vec{\\gamma}``"
-    γ   ::Vector{Float64}
+    γ::Vector{Float64}
 end
 
 """
@@ -236,7 +236,7 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM)
         end
 
         Problem   = NonlinearSolve.NonlinearProblem(F, mean(X[end]), x[:, 1])
-        Solution  = NonlinearSolve.solve(Problem, NonlinearSolve.NewtonRaphson(), abstol=10 ^ (-9), reltol=10 ^ (-9))
+        Solution  = NonlinearSolve.solve(Problem, NonlinearSolve.NewtonRaphson(), abstol = 10 ^ (-9), reltol = 10 ^ (-9))
         x[end, 1] = Solution.u
         
         # Start iterating:
@@ -244,7 +244,7 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM)
             # Compute the mean and standard deviation values of the equivalient normal marginals:
             for j in 1:NumDimensions
                 σ[j, i] = Distributions.pdf(Distributions.Normal(), Distributions.quantile(Distributions.Normal(), Distributions.cdf(X[j], x[j, i]))) / Distributions.pdf(X[j], x[j, i])
-                μ[j, i] = x[j, i] - σ[j, i] * Distributions.quantile(Distributions.Normal(), Distributions.cdf(X[j], x[j, i]));
+                μ[j, i] = x[j, i] - σ[j, i] * Distributions.quantile(Distributions.Normal(), Distributions.cdf(X[j], x[j, i]))
             end
 
             # Compute the design point in U-space:

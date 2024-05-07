@@ -5,9 +5,9 @@ Type used to perform reliability analysis using Importance Sampling (IS) method.
 """
 Base.@kwdef struct IS <: AbstractReliabililyAnalysisMethod
     "Proposal probability density function ``q``"
-    q                   ::Distributions.Sampleable
+    q::Distributions.Sampleable
     "Number of samples to generate ``N``"
-    NumSamples          ::Integer = 10 ^ 6
+    NumSamples::Integer = 10 ^ 6
 end
 
 """
@@ -17,9 +17,9 @@ Type used to store results of reliability analysis performed using Importance Sa
 """
 struct ISCache
     "Generated samples"
-    Samples ::Matrix{Float64}
+    Samples::Matrix{Float64}
     "Probability of failure ``P_{f}``"
-    PoF     ::Float64
+    PoF::Float64
 end
 
 """

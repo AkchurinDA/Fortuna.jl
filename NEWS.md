@@ -1,8 +1,12 @@
 # News
 
-## Release V0.6.3
+## Release V0.7.0
 
 - Added Frechet distribution.
+- Added functionality to perform sensitivity analysis w.r.t. to parameters of distributions involved in the reliability problem. To avoid confusion with sensitivity analysis w.r.t. to parameters of limit state function, the following categorization of sensitivity problems was employed:
+  - `SensitivityProblemTypeI`:  Sensitivities w.r.t. the parameters of the limit state function.
+  - `SensitivityProblemTypeII`: Sensitivities w.r.t. the parameters of the random vector.
+- Cleaned up the documentation.
 
 ## Release V0.6.2
 
