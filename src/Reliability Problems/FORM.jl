@@ -276,13 +276,13 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM)
 
                 if Criterion < ϵ
                     # Clean up the results:
-                    β   = β[i]
-                    x   = x[:, 1:i]
-                    u   = u[:, 1:i]
-                    μ   = μ[:, 1:i]
-                    σ   = σ[:, 1:i]
-                    ∇G  = ∇G[:, 1:i]
-                    α   = α[:, 1:i]
+                    β  = β[i]
+                    x  = x[:, 1:i]
+                    u  = u[:, 1:i]
+                    μ  = μ[:, 1:i]
+                    σ  = σ[:, 1:i]
+                    ∇G = ∇G[:, 1:i]
+                    α  = α[:, 1:i]
 
                     # Return results:
                     return RFCache(β, x, u, μ, σ, ∇G, α)
