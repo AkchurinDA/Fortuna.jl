@@ -62,3 +62,5 @@ The following functionality is planned to be added:
   - [x] Subset Simulation Method
 - [ ] Inverse Reliability Analysis Methods
 - [x] Sensitivity Analysis
+  - [x] w.r.t. the parameters of the limit state function.
+  - [x] w.r.t. the parameters and moments of the random vector.
