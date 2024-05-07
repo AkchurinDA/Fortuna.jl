@@ -7,13 +7,13 @@ $(TYPEDFIELDS)
 """
 mutable struct NatafTransformation <: AbstractIsoprobabilisticTransformation
     "Random vector ``\\vec{X}``"
-    X  ::AbstractVector{<:Distributions.UnivariateDistribution}
+    X::AbstractVector{<:Distributions.UnivariateDistribution}
     "Correlation matrix ``\\rho^{X}``"
-    ρˣ ::AbstractMatrix{<:Real}
+    ρˣ::AbstractMatrix{<:Real}
     "Distorted correlation matrix ``\\rho^{Z}``"
-    ρᶻ ::AbstractMatrix{<:Real}
+    ρᶻ::AbstractMatrix{<:Real}
     "Lower triangular matrix of the Cholesky decomposition of the distorted correlation matrix ``L``"
-    L  ::AbstractMatrix{<:Real}
+    L::AbstractMatrix{<:Real}
     "Inverse of the lower triangular matrix of the Cholesky decomposition of the distorted correlation matrix ``L^{-1}``"
     L⁻¹::AbstractMatrix{<:Real}
 
@@ -75,9 +75,12 @@ function getdistortedcorrelation(X::AbstractVector{<:Distributions.UnivariateDis
     zⱼ = ((ZMax - ZMin) / 2) * η .+ (ZMax + ZMin) / 2
 
     # Compute the entries of the distorted correlation matrix:
-    ρᶻ = Matrix{Float64}(I, NumDimensions, NumDimensions)
+    Parameters = params.(X)
+    Parameters = [Parameters[i][j] for i in eachindex(X) for j in eachindex(Parameters[i])]
+    Parameters = promote(Parameters...)
+    ρᶻ         = Matrix{eltype(Parameters)}(I, NumDimensions, NumDimensions)
     for i in 1:NumDimensions
-        for j in i+1:NumDimensions
+        for j in (i + 1):NumDimensions
             # Check if the marginal distributions are uncorrelated:
             if ρˣ[i, j] == 0
                 continue
@@ -89,9 +92,15 @@ function getdistortedcorrelation(X::AbstractVector{<:Distributions.UnivariateDis
             F(ρ, p) = ((ZMax - ZMin) / 2) ^ 2 * LinearAlgebra.dot(W .* (hᵢ .* hⱼ), ((1 / (2 * π * sqrt(1 - ρ ^ 2))) * exp.((2 * ρ * (zᵢ .* zⱼ) - zᵢ .^ 2 - zⱼ .^ 2) / (2 * (1 - ρ ^ 2))))) - ρˣ[i, j]
 
             # Compute the entries of the correlation matrix of the distorted correlation matrix:
-            Problem  = NonlinearSolve.NonlinearProblem(F, ρˣ[i, j])
-            Solution = NonlinearSolve.solve(Problem, NonlinearSolve.NewtonRaphson(), abstol = 1e-6, reltol = 1e-6)
-            ρᶻ[i, j] = Solution.u
+            try
+                Problem  = NonlinearSolve.NonlinearProblem(F, ρˣ[i, j])
+                Solution = NonlinearSolve.solve(Problem, nothing)
+                ρᶻ[i, j] = Solution.u
+            catch
+                Problem  = NonlinearSolve.IntervalNonlinearProblem(F, (-(1 - 1E-3), +(1 - 1E-3)))
+                Solution = NonlinearSolve.solve(Problem, nothing)
+                ρᶻ[i, j] = Solution.u
+            end
             ρᶻ[j, i] = ρᶻ[i, j]
         end
     end

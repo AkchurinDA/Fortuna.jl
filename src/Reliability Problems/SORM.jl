@@ -291,7 +291,7 @@ end
 function getorthonormal(α::Vector{Float64}, NumDimensions::Integer)
     # Initilize the matrix:
     A = Matrix(1.0 * I, NumDimensions, NumDimensions)
-    A = reverse(A, dims=2)
+    A = reverse(A, dims = 2)
     A[:, 1] = LinearAlgebra.transpose(α)
 
     # Perform QR factorization:
