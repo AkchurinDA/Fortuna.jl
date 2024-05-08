@@ -1,4 +1,4 @@
-# Generating Random Variables
+# Defining Random Variables
 
 `Fortuna.jl` package builds its capacity to define random variables using `randomvariable()` wrapper function by utilizing the widely-adopted [`Distributions.jl`](https://github.com/JuliaStats/Distributions.jl) package, enabling seamless integration with other probabilistic programming Julia packages such as [`Copulas.jl`](https://github.com/lrnv/Copulas.jl), [`Turing.jl`](https://github.com/TuringLang/Turing.jl) and [`RxInfer.jl`](https://github.com/biaslab/RxInfer.jl). However, unlike [`Distributions.jl`](https://github.com/JuliaStats/Distributions.jl) package, `Fortuna.jl` package allows to define random variables not only using their *parameters*, but also using their *moments*, which often useful in the field of Structural and System Reliability Analysis.
 

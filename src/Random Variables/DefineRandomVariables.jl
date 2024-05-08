@@ -4,58 +4,37 @@
 Function used to define random variables.
 """
 function randomvariable(Distribution::AbstractString, DefineBy::AbstractString, Values::Union{Real, AbstractVector{<:Real}})
-    # Convert strings to lowercase:
-    Distribution = lowercase(Distribution)
-    DefineBy     = lowercase(DefineBy)
+    # Check if the distribution is supported:
+    SupportedDistributions = ["Exponential", "Frechet", "Gamma", "Gumbel", "LogNormal", "Normal", "Poisson", "Uniform", "Weibull"]
+    if Distribution ∉ SupportedDistributions
+        throw(ArgumentError("Provided distribution is not supported!"))
+    end
 
-    # Error-catching:
-    if DefineBy != "m" && DefineBy != "p"
+    # Check if the random variable is defined by moments or parameters:
+    if DefineBy != "M" && DefineBy != "P"
         throw(ArgumentError("""Random variables can only be defined by "Moments" ("M") and "Parameters ("P")"!"""))
     end
 
-    # Convert moments of a random variable into its parameters if the random variable is defined by its moments:
-    if DefineBy == "m"
-        Values = convert(Distribution, Values)
+    # Convert moments into parameters if needed:
+    if DefineBy == "M"
+        Values = convertmoments(Distribution, Values)
     end
 
-    # Create a random variable:
-    if Distribution == "exponential"
-        RandomVariable = Distributions.Exponential(Values...)
-    elseif Distribution == "frechet"
-        RandomVariable = Distributions.Frechet(Values...)
-    elseif Distribution == "gamma"
-        RandomVariable = Distributions.Gamma(Values...)
-    elseif Distribution == "gumbel"
-        RandomVariable = Distributions.Gumbel(Values...)
-    elseif Distribution == "lognormal"
-        RandomVariable = Distributions.LogNormal(Values...)
-    elseif Distribution == "normal"
-        RandomVariable = Distributions.Normal(Values...)
-    elseif Distribution == "poisson"
-        RandomVariable = Distributions.Poisson(Values...)
-    elseif Distribution == "uniform"
-        RandomVariable = Distributions.Uniform(Values...)
-    elseif Distribution == "weibull"
-        RandomVariable = Distributions.Weibull(Values...)
-    else
-        error("Provided distribution is not supported!")
-    end
+    # Define a random variable:
+    RandomVariable = getfield(Main.Distributions, Symbol(Distribution))(Values...)
 
     # Return the result:
     return RandomVariable
 end
 
-function convert(Distribution::S, Moments::Union{T, AbstractVector{T}}) where {S<:AbstractString, T<:Real}
-    # Convert strings to lowercase:
-    Distribution = lowercase(Distribution)
-
+function convertmoments(Distribution::AbstractString, Moments::Union{Real, AbstractVector{<:Real}})
     # Error-catching:
-    if length(Moments) > 2
-        throw(ArgumentError("Too many moments are provided!"))
+    if length(Moments) != 2
+        throw(ArgumentError("Too few or many moments are provided! Provide only the mean (μ) and standard deviation (σ) in a vector format (i.e., [μ, σ])."))
     end
 
     # Convert moments to parameters:
-    if Distribution == "exponential"
+    if Distribution == "Exponential"
         # Extract moments:
         Mean = Moments[1]
         STD  = Moments[2]
@@ -68,23 +47,28 @@ function convert(Distribution::S, Moments::Union{T, AbstractVector{T}}) where {S
         # Convert moments to parameters:
         θ          = Mean
         Parameters = θ
-    elseif Distribution == "frechet"
+    end
+
+    if Distribution == "Frechet"
         # Extract moments:
         Mean = Moments[1]
         STD  = Moments[2]
 
         # Convert moments to parameters:
-        FFrechet(u, p) = sqrt(SpecialFunctions.gamma(1 - 2 / u) - SpecialFunctions.gamma(1 - 1 / u) ^ 2) / SpecialFunctions.gamma(1 - 1 / u) - STD / Mean
+        FFrechet(u, p) = sqrt(SpecialFunctions.gamma(1 - 2 / u) - SpecialFunctions.gamma(1 - 1 / u) ^ 2) / SpecialFunctions.gamma(1 - 1 / u) - p
         u₀             = (2 + 1E-1, 1E+6)
-        Problem        = NonlinearSolve.IntervalNonlinearProblem(FFrechet, u₀)
-        Solution       = NonlinearSolve.solve(Problem, nothing, abstol = 1E-6, reltol = 1E-6)
+        p₀             = STD / Mean
+        Problem        = NonlinearSolve.IntervalNonlinearProblem(FFrechet, u₀, p₀)
+        Solution       = NonlinearSolve.solve(Problem, nothing, abstol = 1E-9, reltol = 1E-9)
         α              = Solution.u
-        if !isapprox(FFrechet(α, 0), 0, atol = 1E-6)
+        if !isapprox(FFrechet(α, p₀), 0, atol = 1E-9)
             throw(DomainError(Moments, "Conversion of the provided moments to parameters has failed!"))
         end
         θ              = Mean / SpecialFunctions.gamma(1 - 1 / α)
         Parameters     = [α, θ]
-    elseif Distribution == "gamma"
+    end
+
+    if Distribution == "Gamma"
         # Extract moments:
         Mean = Moments[1]
         STD  = Moments[2]
@@ -93,7 +77,9 @@ function convert(Distribution::S, Moments::Union{T, AbstractVector{T}}) where {S
         α          = Mean ^ 2 / STD ^ 2
         θ          = STD ^ 2 / Mean
         Parameters = [α, θ]
-    elseif Distribution == "gumbel"
+    end
+    
+    if Distribution == "Gumbel"
         # Extract moments:
         Mean = Moments[1]
         STD  = Moments[2]
@@ -103,7 +89,9 @@ function convert(Distribution::S, Moments::Union{T, AbstractVector{T}}) where {S
         μ          = Mean - (STD * γ * sqrt(6)) / π
         θ          = (STD * sqrt(6)) / π
         Parameters = [μ, θ]
-    elseif Distribution == "lognormal"
+    end
+    
+    if Distribution == "LogNormal"
         # Extract moments:
         Mean = Moments[1]
         STD  = Moments[2]
@@ -112,7 +100,9 @@ function convert(Distribution::S, Moments::Union{T, AbstractVector{T}}) where {S
         μ          = log(Mean) - log(sqrt(1 + (STD / Mean) ^ 2))
         σ          = sqrt(log(1 + (STD / Mean) ^ 2))
         Parameters = [μ, σ]
-    elseif Distribution == "normal"
+    end
+    
+    if Distribution == "Normal"
         # Extract moments:
         Mean = Moments[1]
         STD  = Moments[2]
@@ -121,7 +111,9 @@ function convert(Distribution::S, Moments::Union{T, AbstractVector{T}}) where {S
         μ          = Mean
         σ          = STD
         Parameters = [μ, σ]
-    elseif Distribution == "poisson"
+    end
+    
+    if Distribution == "Poisson"
         # Extract moments:
         Mean = Moments[1]
         STD  = Moments[2]
@@ -134,7 +126,9 @@ function convert(Distribution::S, Moments::Union{T, AbstractVector{T}}) where {S
         # Convert moments to parameters:
         λ          = Mean
         Parameters = λ
-    elseif Distribution == "uniform"
+    end
+    
+    if Distribution == "Uniform"
         # Extract moments:
         Mean = Moments[1]
         STD  = Moments[2]
@@ -143,24 +137,25 @@ function convert(Distribution::S, Moments::Union{T, AbstractVector{T}}) where {S
         a          = Mean - STD * sqrt(3)
         b          = Mean + STD * sqrt(3)
         Parameters = [a, b]
-    elseif Distribution == "weibull"
+    end
+    
+    if Distribution == "Weibull"
         # Extract moments:
         Mean = Moments[1]
         STD  = Moments[2]
 
         # Convert moments to parameters:
-        FWeibull(u, p) = sqrt(SpecialFunctions.gamma(1 + 2 / u) - SpecialFunctions.gamma(1 + 1 / u) ^ 2) / SpecialFunctions.gamma(1 + 1 / u) - STD / Mean
+        FWeibull(u, p) = sqrt(SpecialFunctions.gamma(1 + 2 / u) - SpecialFunctions.gamma(1 + 1 / u) ^ 2) / SpecialFunctions.gamma(1 + 1 / u) - p
         u₀             = (1E-1, 1E+6)
-        Problem        = NonlinearSolve.IntervalNonlinearProblem(FWeibull, u₀)
-        Solution       = NonlinearSolve.solve(Problem, nothing, abstol = 1E-6, reltol = 1E-6)
+        p₀             = STD / Mean
+        Problem        = NonlinearSolve.IntervalNonlinearProblem(FWeibull, u₀, p₀)
+        Solution       = NonlinearSolve.solve(Problem, nothing, abstol = 1E-9, reltol = 1E-9)
         α              = Solution.u
-        if !isapprox(FWeibull(α, 0), 0, atol = 1E-6)
+        if !isapprox(FWeibull(α, p₀), 0, atol = 1E-9)
             throw(DomainError(Moments, "Conversion of the provided moments to parameters has failed!"))
         end
         θ          = Mean / SpecialFunctions.gamma(1 + 1 / α)
         Parameters = [α, θ]
-    else
-        error("Provided distribution is not supported!")
     end
 
     # Return the result:

@@ -70,7 +70,7 @@ abstract type SORMSubmethod end
 # --------------------------------------------------
 include("Isoprobabilistic Transformations/NatafTransformation.jl")
 include("Isoprobabilistic Transformations/RosenblattTransformation.jl")
-include("Random Variables/GenerateRandomVariables.jl")
+include("Random Variables/DefineRandomVariables.jl")
 include("Random Variables/SampleRandomVariables.jl")
 include("Reliability Problems/ReliabilityProblems.jl")
 include("Reliability Problems/InverseReliabilityProblems.jl")
