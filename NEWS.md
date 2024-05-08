@@ -1,5 +1,12 @@
 # News
 
+## Release V0.7.1
+
+- Dual number can now be propagated as moments of random variables.
+- Fixed a bug with `randomvariables()` function.
+- Transformation direction for `transformsamples()` and `getjacobian()` functions now must be given by a symbol, i.e. `:X2U` or `:U2X`.
+- Performance enhancement.
+
 ## Release V0.7.0
 
 - Added Frechet distribution.

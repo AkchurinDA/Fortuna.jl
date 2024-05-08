@@ -326,7 +326,7 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM)
         end
 
         # Compute the initial design point in U-space:
-        u[:, 1] = transformsamples(NatafObject, x[:, 1], "X2U")
+        u[:, 1] = transformsamples(NatafObject, x[:, 1], :X2U)
 
         # Evaluate the limit state function at the initial design point:
         G₀ = g(x[:, 1])
@@ -338,11 +338,11 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM)
         for i in 1:MaxNumIterations-1
             # Compute the design point in X-space:
             if i != 1
-                x[:, i] = transformsamples(NatafObject, u[:, i], "U2X")
+                x[:, i] = transformsamples(NatafObject, u[:, i], :U2X)
             end
 
             # Compute the Jacobian of the transformation of the design point from X- to U-space:
-            Jₓᵤ = getjacobian(NatafObject, x[:, i], "X2U")
+            Jₓᵤ = getjacobian(NatafObject, x[:, i], :X2U)
 
             # Evaluate the limit state function at the design point in X-space:
             G[i] = g(x[:, i])
@@ -428,7 +428,7 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM)
         end
 
         # Compute the initial design point in U-space:
-        u[:, 1] = transformsamples(NatafObject, x[:, 1], "X2U")
+        u[:, 1] = transformsamples(NatafObject, x[:, 1], :X2U)
 
         # Evaluate the limit state function at the initial design point:
         G₀ = g(x[:, 1])
@@ -437,11 +437,11 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM)
         for i in 1:MaxNumIterations-1
             # Compute the design point in X-space:
             if i != 1
-                x[:, i] = transformsamples(NatafObject, u[:, i], "U2X")
+                x[:, i] = transformsamples(NatafObject, u[:, i], :U2X)
             end
 
             # Compute the Jacobian of the transformation of the design point from X- to U-space:
-            Jₓᵤ = getjacobian(NatafObject, x[:, i], "X2U")
+            Jₓᵤ = getjacobian(NatafObject, x[:, i], :X2U)
 
             # Evaluate the limit state function at the design point in X-space:
             G[i] = g(x[:, i])
@@ -467,7 +467,7 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM)
             # Find a step size that satisfies m(uᵢ + λᵢdᵢ) < m(uᵢ):
             λₜ = 1
             uₜ = u[:, i] + λₜ * d[:, i]
-            xₜ = transformsamples(NatafObject, uₜ, "U2X")
+            xₜ = transformsamples(NatafObject, uₜ, :U2X)
             Gₜ = g(xₜ)
             mₜ = 0.5 * LinearAlgebra.norm(uₜ)^2 + c[i] * abs(Gₜ)
             while mₜ ≥ m[i]
@@ -479,7 +479,7 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM)
 
                 # Recalculate the merit function:
                 uₜ = u[:, i] + λₜ * d[:, i]
-                xₜ = transformsamples(NatafObject, uₜ, "U2X")
+                xₜ = transformsamples(NatafObject, uₜ, :U2X)
                 Gₜ = g(xₜ)
                 mₜ = 0.5 * LinearAlgebra.norm(uₜ)^2 + c[i] * abs(Gₜ)
             end
@@ -491,7 +491,7 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM)
             u[:, i + 1] = u[:, i] + λ[i] * d[:, i]
 
             # Compute the new design point in X-space:
-            x[:, i + 1] = transformsamples(NatafObject, u[:, i + 1], "U2X")
+            x[:, i + 1] = transformsamples(NatafObject, u[:, i + 1], :U2X)
 
             # Check for convergance:
             Criterion₁ = abs(g(x[:, i]) / G₀) # Check if the limit state function is close to zero.

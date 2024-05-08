@@ -115,7 +115,7 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::SORM)
 
         # Evaluate the principal curvatures:
         A = R * H * LinearAlgebra.transpose(R) / LinearAlgebra.norm(∇G)
-        κ = LinearAlgebra.eigen(A[1:end-1, 1:end-1]).values
+        κ = LinearAlgebra.eigen(A[1:(end - 1), 1:(end - 1)]).values
 
         # Compute the probabilities of failure:
         PoF₂ = Vector{Float64}(undef, 2)
@@ -269,10 +269,10 @@ function gethessian(g::Function, NatafObject::NatafTransformation, NumDimensions
             u₄ = u - ϵ * eᵢ - ϵ * eⱼ
 
             # Transform the perturbed design points from X- to U-space:
-            x₁ = transformsamples(NatafObject, u₁, "U2X")
-            x₂ = transformsamples(NatafObject, u₂, "U2X")
-            x₃ = transformsamples(NatafObject, u₃, "U2X")
-            x₄ = transformsamples(NatafObject, u₄, "U2X")
+            x₁ = transformsamples(NatafObject, u₁, :U2X)
+            x₂ = transformsamples(NatafObject, u₂, :U2X)
+            x₃ = transformsamples(NatafObject, u₃, :U2X)
+            x₄ = transformsamples(NatafObject, u₄, :U2X)
 
             # Evaluate the limit state function at the perturbed points:
             G₁ = g(x₁)
@@ -290,8 +290,8 @@ end
 
 function getorthonormal(α::Vector{Float64}, NumDimensions::Integer)
     # Initilize the matrix:
-    A = Matrix(1.0 * I, NumDimensions, NumDimensions)
-    A = reverse(A, dims = 2)
+    A       = Matrix(1.0 * I, NumDimensions, NumDimensions)
+    A       = reverse(A, dims = 2)
     A[:, 1] = LinearAlgebra.transpose(α)
 
     # Perform QR factorization:
@@ -308,7 +308,7 @@ end
 function G′(g::Function, NatafObject::NatafTransformation, R::Matrix{Float64}, UPrimeSamples::AbstractVector)
     # Transform samples from U'- to X-space:
     USamples = LinearAlgebra.transpose(R) * UPrimeSamples
-    XSamples = transformsamples(NatafObject, USamples, "U2X")
+    XSamples = transformsamples(NatafObject, USamples, :U2X)
 
     # Evaluate the limit state function at the transform samples:
     GPrimeSamples = g(XSamples)

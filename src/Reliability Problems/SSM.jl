@@ -101,7 +101,7 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::SSM)
             # Retain samples below the threshold:
             Indices = findall(x -> x ≤ CSubset[i], GSamples)
             push!(USamplesSubset, USamples[:, Indices])
-            push!(XSamplesSubset, transformsamples(NatafObject, USamples[:, Indices], "U2X"))
+            push!(XSamplesSubset, transformsamples(NatafObject, USamples[:, Indices], :U2X))
 
             # Compute the probability of failure:
             PoFSubset[i] = length(Indices) / size(GSamples)[1]
@@ -121,7 +121,7 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::SSM)
             # Retain samples below the threshold:
             Indices = findall(x -> x ≤ CSubset[i], GSamples)
             push!(USamplesSubset, USamples[:, Indices])
-            push!(XSamplesSubset, transformsamples(NatafObject, USamples[:, Indices], "U2X"))
+            push!(XSamplesSubset, transformsamples(NatafObject, USamples[:, Indices], :U2X))
 
             # Compute the probability of failure:
             PoFSubset[i] = length(Indices) / size(GSamples)[1]        
@@ -160,7 +160,7 @@ function ModifiedMetropolisHastings(StartingPoint::Vector{Float64}, CurrentThres
         ProposedState = vec(ProposedState)
 
         # Compute the indicator function:
-        XProposedState = transformsamples(NatafObject, ProposedState, "U2X")
+        XProposedState = transformsamples(NatafObject, ProposedState, :U2X)
         GProposedState = g(XProposedState)
         if GProposedState ≤ CurrentThreshold
             IF = 1
@@ -183,7 +183,7 @@ end
 
 function G(g::Function, NatafObject::NatafTransformation, USamples::AbstractMatrix)
     # Transform the samples:
-    XSamples = transformsamples(NatafObject, USamples, "U2X")
+    XSamples = transformsamples(NatafObject, USamples, :U2X)
 
     # Clean up the transformed samples:
     XSamplesClean = eachcol(XSamples)

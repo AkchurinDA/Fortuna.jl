@@ -34,8 +34,8 @@ makedocs(
             "Second-Order Reliability Methods"          => "Reliability Problems/SORM.md",
             "Subset Simulation Method"                  => "Reliability Problems/SSM.md"
         ],
-        "Inverse Reliability Problems"                  => "Reliability Problems/InverseReliabilityProblems.md",
-        "Sensitivity Problems"                          => "Reliability Problems/SensitivityProblems.md",
+        "Inverse Reliability Problems"                  => "InverseReliabilityProblems.md",
+        "Sensitivity Problems"                          => "SensitivityProblems.md",
         "Examples"                                      => "Examples.md",
         "Showcases"                                     => "Showcases.md",
         "References"                                    => "References.md"

@@ -46,7 +46,7 @@ end
 
     # Test the results:
     ρᶻ = NatafObject.ρᶻ
-    @test isapprox(ρᶻ, [1 0.8; 0.8 1], rtol = 10 ^ (-6))
+    @test isapprox(ρᶻ, [1 0.8; 0.8 1], rtol = 1E-6)
 end
 
 @testset "Nataf Transformation: Distorted Correlation Matrix #4 (Non-Identity)" begin
@@ -63,7 +63,7 @@ end
 
     # Test the results:
     ρᶻ = NatafObject.ρᶻ
-    @test isapprox(ρᶻ, [1 0.8134732861515996; 0.8134732861515996 1], rtol = 10 ^ (-6))
+    @test isapprox(ρᶻ, [1 0.8134732861515996; 0.8134732861515996 1], rtol = 1E-6)
 end
 
 @testset "Nataf Transformation: Transformed Samples #1 (Identity)" begin
@@ -88,10 +88,12 @@ end
     end
 
     # Perform transformation:
-    TransformedSamplesX2U = transformsamples(NatafObject, Samples, "X2U")
-    TransformedSamplesU2X = transformsamples(NatafObject, Samples, "U2X")
+    TransformedSamplesX2U = transformsamples(NatafObject, Samples, :X2U)
+    TransformedSamplesU2X = transformsamples(NatafObject, Samples, :U2X)
 
     # Test the results:
+    @test all([isapprox(TransformedSamplesX2U[:, i], Samples[:, i], rtol = 1E-6) for i in 1:10000])
+    @test all([isapprox(TransformedSamplesU2X[:, i], Samples[:, i], rtol = 1E-6) for i in 1:10000])
     @test TransformedSamplesX2U == TransformedSamplesU2X
 end
 
@@ -117,9 +119,11 @@ end
     end
 
     # Perform transformation:
-    JX2U = getjacobian(NatafObject, Samples, "X2U")
-    JU2X = getjacobian(NatafObject, Samples, "U2X")
+    JX2U = getjacobian(NatafObject, Samples, :X2U)
+    JU2X = getjacobian(NatafObject, Samples, :U2X)
 
     # Test the results:
+    @test all([isapprox(JX2U[i], [1 0; 0 1], rtol = 1E-6) for i in 1:10000])
+    @test all([isapprox(JU2X[i], [1 0; 0 1], rtol = 1E-6) for i in 1:10000])
     @test JX2U == JU2X
 end
