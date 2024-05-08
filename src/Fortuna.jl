@@ -73,8 +73,9 @@ include("Isoprobabilistic Transformations/RosenblattTransformation.jl")
 include("Random Variables/DefineRandomVariables.jl")
 include("Random Variables/SampleRandomVariables.jl")
 include("Reliability Problems/ReliabilityProblems.jl")
-include("Reliability Problems/InverseReliabilityProblems.jl")
-include("Reliability Problems/SensitivityProblems.jl")
+include("InverseReliabilityProblems.jl")
+include("SensitivityProblems.jl")
+include("Utilities/MakieRecipes.jl")
 export AbstractSamplingTechnique
 export ITS, LHS
 export AbstractTransformation
