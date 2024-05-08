@@ -21,7 +21,7 @@ function randomvariable(Distribution::AbstractString, DefineBy::AbstractString, 
     end
 
     # Define a random variable:
-    RandomVariable = getfield(Main.Distributions, Symbol(Distribution))(Values...)
+    RandomVariable = getfield((@__MODULE__).Distributions, Symbol(Distribution))(Values...)
 
     # Return the result:
     return RandomVariable
