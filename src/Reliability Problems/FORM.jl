@@ -31,7 +31,7 @@ Base.@kwdef struct RF <: FORMSubmethod # Rackwitz-Fiessler method
     "Maximum number of iterations"
     MaxNumIterations::Integer = 250
     "Convergance criterion ``\\epsilon``"
-    ϵ::Real = 10^(-9)
+    ϵ::Real = 1E-9
 end
 
 """
@@ -45,9 +45,9 @@ Base.@kwdef struct HLRF <: FORMSubmethod # Hasofer-Lind Rackwitz-Fiessler method
     "Maximum number of iterations"
     MaxNumIterations::Integer = 250
     "Convergance criterion #1 ``\\epsilon_{1}``"
-    ϵ₁::Real = 10^(-9)
+    ϵ₁::Real = 1E-9
     "Convergance criterion #1 ``\\epsilon_{2}``"
-    ϵ₂::Real = 10^(-9)
+    ϵ₂::Real = 1E-9
     "Starting point ``x_{0}``"
     x₀::Union{Nothing, Vector{<:Real}} = nothing
 end
@@ -63,9 +63,9 @@ Base.@kwdef struct iHLRF <: FORMSubmethod # Improved Hasofer-Lind Rackwitz-Fiess
     "Maximum number of iterations"
     MaxNumIterations::Integer = 250
     "Convergance criterion #1 ``\\epsilon_{1}``"
-    ϵ₁::Real = 10^(-9)
+    ϵ₁::Real = 1E-9
     "Convergance criterion #1 ``\\epsilon_{2}``"
-    ϵ₂::Real = 10^(-9)
+    ϵ₂::Real = 1E-9
     "Starting point ``x_{0}``"
     x₀::Union{Nothing, Vector{<:Real}} = nothing
 end
@@ -183,7 +183,7 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM)
     g  = Problem.g
 
     if !isa(Submethod, MCFOSM) && !isa(Submethod, RF) && !isa(Submethod, HLRF) && !isa(Submethod, iHLRF)
-        error("Invalid FORM submethod.")
+        throw(ArgumentError("Invalid FORM submethod!"))
     elseif isa(Submethod, MCFOSM)
         # Compute the means of marginal distrbutions:
         Mˣ = Distributions.mean.(X)
@@ -207,9 +207,7 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM)
         ϵ                = Submethod.ϵ
 
         # Error-catching:
-        if ρˣ != LinearAlgebra.I
-            error("Rackwitz-Fiessler method is only applicable to random vectors with uncorrelated marginals.")
-        end
+        ρˣ == LinearAlgebra.I || throw(ArgumentError("RF method is only applicable to random vectors with uncorrelated marginals!"))
 
         # Compute number of dimensions: 
         NumDimensions = length(X)
@@ -236,7 +234,7 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM)
         end
 
         Problem   = NonlinearSolve.NonlinearProblem(F, mean(X[end]), x[:, 1])
-        Solution  = NonlinearSolve.solve(Problem, NonlinearSolve.NewtonRaphson(), abstol = 10 ^ (-9), reltol = 10 ^ (-9))
+        Solution  = NonlinearSolve.solve(Problem, nothing, abstol = 1E-9, reltol = 1E-9)
         x[end, 1] = Solution.u
         
         # Start iterating:
@@ -267,7 +265,7 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM)
 
             # Force the design point to lay on the failure boundary:
             Problem       = NonlinearSolve.NonlinearProblem(F, x[end, i + 1], x[:, i + 1])
-            Solution      = NonlinearSolve.solve(Problem, NonlinearSolve.NewtonRaphson(), abstol=10 ^ (-9), reltol=10 ^ (-9))
+            Solution      = NonlinearSolve.solve(Problem, nothing, abstol = 1E-9, reltol = 1E-9)
             x[end, i + 1] = Solution.u
 
             # Check for convergance:
@@ -291,9 +289,7 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM)
                     continue
                 else
                     # Check for convergance:
-                    if i == MaxNumIterations - 1
-                        error("RF did not converge. Try increasing the maximum number of iterations (MaxNumIterations) or relaxing the convergance criterion (ϵ).")
-                    end
+                    i == MaxNumIterations - 1 && error("Rackwitz-Fiessler method did not converge. Try increasing the maximum number of iterations (MaxNumIterations) or relaxing the convergance criterions (ϵ₁ and ϵ₂).")
                 end
             end
         end
@@ -319,11 +315,7 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM)
         NatafObject = NatafTransformation(X, ρˣ)
 
         # Initialize the design point in X-space:
-        if isnothing(x₀) 
-            x[:, 1] = mean.(X)
-        else
-            x[:, 1] = x₀
-        end
+        x[:, 1] = isnothing(x₀) ? mean.(X) : x₀
 
         # Compute the initial design point in U-space:
         u[:, 1] = transformsamples(NatafObject, x[:, 1], :X2U)
@@ -391,9 +383,7 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM)
                 continue
             else
                 # Check for convergance:
-                if i == MaxNumIterations - 1
-                    error("HL-RF did not converge. Try increasing the maximum number of iterations (MaxNumIterations) or relaxing the convergance criterions (ϵ₁ and ϵ₂).")
-                end
+                i == MaxNumIterations - 1 && error("HL-RF method did not converge. Try increasing the maximum number of iterations (MaxNumIterations) or relaxing the convergance criterions (ϵ₁ and ϵ₂).")
             end
         end
     elseif isa(Submethod, iHLRF)
@@ -421,11 +411,7 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM)
         NatafObject = NatafTransformation(X, ρˣ)
 
         # Initialize the design point in X-space:
-        if isnothing(x₀) 
-            x[:, 1] = Distributions.mean.(X)
-        else
-            x[:, 1] = x₀
-        end
+        x[:, 1] = isnothing(x₀) ? mean.(X) : x₀
 
         # Compute the initial design point in U-space:
         u[:, 1] = transformsamples(NatafObject, x[:, 1], :X2U)
@@ -525,9 +511,7 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM)
                 continue
             else
                 # Check for convergance:
-                if i == MaxNumIterations - 1
-                    error("iHL-RF did not converge. Try increasing the maximum number of iterations (MaxNumIterations) or relaxing the convergance criterions (ϵ₁ and ϵ₂).")
-                end
+                i == MaxNumIterations - 1 && error("iHL-RF method did not converge. Try increasing the maximum number of iterations (MaxNumIterations) or relaxing the convergance criterions (ϵ₁ and ϵ₂).")
             end
         end
     end

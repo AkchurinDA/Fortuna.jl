@@ -4,21 +4,15 @@
 Function used to define random variables.
 """
 function randomvariable(Distribution::AbstractString, DefineBy::AbstractString, Values::Union{Real, AbstractVector{<:Real}})
-    # Check if the distribution is supported:
+    # Supported distributions:
     SupportedDistributions = ["Exponential", "Frechet", "Gamma", "Gumbel", "LogNormal", "Normal", "Poisson", "Uniform", "Weibull"]
-    if Distribution ∉ SupportedDistributions
-        throw(ArgumentError("Provided distribution is not supported!"))
-    end
 
-    # Check if the random variable is defined by moments or parameters:
-    if DefineBy != "M" && DefineBy != "P"
-        throw(ArgumentError("""Random variables can only be defined by "Moments" ("M") and "Parameters ("P")"!"""))
-    end
+    # Error-catching:
+    Distribution in SupportedDistributions || throw(ArgumentError("Provided distribution is not supported!"))
+    (DefineBy == "M" || DefineBy == "P")   || throw(ArgumentError("""Random variables can only be defined by "Moments" ("M") and "Parameters ("P")"!"""))
 
     # Convert moments into parameters if needed:
-    if DefineBy == "M"
-        Values = convertmoments(Distribution, Values)
-    end
+    DefineBy == "M" && (Values = convertmoments(Distribution, Values))
 
     # Define a random variable:
     RandomVariable = getfield((@__MODULE__).Distributions, Symbol(Distribution))(Values...)
@@ -29,9 +23,7 @@ end
 
 function convertmoments(Distribution::AbstractString, Moments::Union{Real, AbstractVector{<:Real}})
     # Error-catching:
-    if length(Moments) != 2
-        throw(ArgumentError("Too few or many moments are provided! Provide only the mean (μ) and standard deviation (σ) in a vector format (i.e., [μ, σ])."))
-    end
+    length(Moments) == 2 || throw(ArgumentError("Too few or many moments are provided! Provide only the mean (μ) and standard deviation (σ) in a vector format (i.e., [μ, σ])!"))
 
     # Convert moments to parameters:
     if Distribution == "Exponential"

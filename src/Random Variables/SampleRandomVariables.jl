@@ -25,10 +25,10 @@ If `SamplingTechnique` is:
 - `ITS()` samples are generated using Inverse Transform Sampling technique.
 - `LHS()` samples are generated using Latin Hypercube Sampling technique.
 """
-function Distributions.rand(RNG::Distributions.AbstractRNG, RandomVariable::Distributions.UnivariateDistribution, NumSamples::Int, SamplingTechnique::AbstractSamplingTechnique)
-    # Sample:
+function Distributions.rand(RNG::Distributions.AbstractRNG, RandomVariable::Distributions.ContinuousUnivariateDistribution, NumSamples::Int, SamplingTechnique::AbstractSamplingTechnique)
+    # Generate samples:
     if !isa(SamplingTechnique, ITS) && !isa(SamplingTechnique, LHS)
-        error("Provided sampling technique is not supported.")
+        throw(ArgumentError("Provided sampling technique is not supported!"))
     elseif isa(SamplingTechnique, ITS)
         # Generate samples:
         Samples = Distributions.rand(RNG, RandomVariable, NumSamples)
@@ -50,7 +50,7 @@ function Distributions.rand(RNG::Distributions.AbstractRNG, RandomVariable::Dist
     return Samples
 end
 
-Distributions.rand(RandomVariable::Distributions. UnivariateDistribution, NumSamples::Int, SamplingTechnique::AbstractSamplingTechnique) = 
+Distributions.rand(RandomVariable::Distributions.ContinuousUnivariateDistribution, NumSamples::Int, SamplingTechnique::AbstractSamplingTechnique) = 
 Distributions.rand(Distributions.default_rng(), RandomVariable, NumSamples, SamplingTechnique)
 
 # --------------------------------------------------
@@ -64,23 +64,19 @@ If `SamplingTechnique` is:
 - `ITS()` samples are generated using Inverse Transform Sampling technique.
 - `LHS()` samples are generated using Latin Hypercube Sampling technique.
 """
-function Distributions.rand(RNG::Distributions.AbstractRNG, RandomVector::Vector{<:Distributions.UnivariateDistribution}, NumSamples::Int, SamplingTechnique::AbstractSamplingTechnique)
+function Distributions.rand(RNG::Distributions.AbstractRNG, RandomVector::Vector{<:Distributions.ContinuousUnivariateDistribution}, NumSamples::Int, SamplingTechnique::AbstractSamplingTechnique)
     # Compute number of dimensions:
     NumDimensions = length(RandomVector)
 
-    # Preallocate:
-    Samples = Matrix{Float64}(undef, NumDimensions, NumSamples)
-
-    # Sample:
-    for i in 1:NumDimensions
-        Samples[i, :] = Distributions.rand(RNG, RandomVector[i], NumSamples, SamplingTechnique)
-    end
+    # Generate samples:
+    Samples = [Distributions.rand(RNG, RandomVector[i], NumSamples, SamplingTechnique) for i in 1:NumDimensions]
+    Samples = vcat(Samples'...)
 
     # Return the result:
     return Samples
 end
 
-Distributions.rand(RandomVector::Vector{<:Distributions. UnivariateDistribution}, NumSamples::Int, SamplingTechnique::AbstractSamplingTechnique) = 
+Distributions.rand(RandomVector::Vector{<:Distributions.ContinuousUnivariateDistribution}, NumSamples::Int, SamplingTechnique::AbstractSamplingTechnique) = 
 Distributions.rand(Distributions.default_rng(), RandomVector, NumSamples, SamplingTechnique)
 
 # --------------------------------------------------
@@ -104,19 +100,15 @@ function Distributions.rand(RNG::Distributions.AbstractRNG, TransformationObject
     NumDimensions = length(X)
 
     # Generate samples of uncorrelated normal random variables U:
-    USamples = Matrix{Float64}(undef, NumDimensions, NumSamples)
-    for i in 1:NumDimensions
-        USamples[i, :] = Distributions.rand(RNG, Distributions.Normal(), NumSamples, SamplingTechnique)
-    end
+    USamples = [Distributions.rand(RNG, Distributions.Normal(), NumSamples, SamplingTechnique) for i in 1:NumDimensions]
+    USamples = vcat(USamples'...)
 
     # Generate samples of correlated normal random variables Z:
     ZSamples = L * USamples
 
     # Generate samples of correlated non-normal random variables X:
-    XSamples = Matrix{Float64}(undef, NumDimensions, NumSamples)
-    for i in 1:NumDimensions
-        XSamples[i, :] = Distributions.quantile.(X[i], Distributions.cdf.(Distributions.Normal(), ZSamples[i, :]))
-    end
+    XSamples = [Distributions.quantile.(X[i], Distributions.cdf.(Distributions.Normal(), ZSamples[i, :])) for i in 1:NumDimensions]
+    XSamples = vcat(XSamples'...)
 
     return XSamples, ZSamples, USamples
 end

@@ -122,7 +122,7 @@ nothing # hide
 ```@docs
 ITS
 LHS
-rand(RNG::Distributions.AbstractRNG, RandomVariable::Distributions.UnivariateDistribution, NumSamples::Int, SamplingTechnique::AbstractSamplingTechnique)
-rand(RNG::Distributions.AbstractRNG, RandomVector::Vector{<:Distributions.UnivariateDistribution}, NumSamples::Int, SamplingTechnique::AbstractSamplingTechnique)
+rand(RNG::Distributions.AbstractRNG, RandomVariable::Distributions.ContinuousUnivariateDistribution, NumSamples::Int, SamplingTechnique::AbstractSamplingTechnique)
+rand(RNG::Distributions.AbstractRNG, RandomVector::Vector{<:Distributions.ContinuousUnivariateDistribution}, NumSamples::Int, SamplingTechnique::AbstractSamplingTechnique)
 rand(RNG::Distributions.AbstractRNG, TransformationObject::NatafTransformation, NumSamples::Int, SamplingTechnique::AbstractSamplingTechnique)
 ```

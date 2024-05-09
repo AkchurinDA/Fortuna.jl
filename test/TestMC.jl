@@ -22,7 +22,7 @@
         Solution = solve(Problem, MC())
 
         # Test the results:
-        @test isapprox(Solution.PoF, cdf(Normal(), -βList[i]), rtol = 0.05)
+        @test isapprox(Solution.PoF, cdf(Normal(), -βList[i]), rtol = 5E-2)
     end
 end
 
@@ -51,5 +51,5 @@ end
     Solution = solve(Problem, MC())
 
     # Test the results:
-    @test isapprox(Solution.PoF, 0.00931, rtol = 0.05)
+    @test isapprox(Solution.PoF, 0.00931, rtol = 5E-2)
 end

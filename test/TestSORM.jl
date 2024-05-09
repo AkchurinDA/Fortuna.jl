@@ -22,9 +22,9 @@
     Solution = solve(Problem, SORM(CF()))
 
     # Test the results:
-    @test isapprox(Solution.β₂,   [2.35, 2.35],         rtol = 0.01)
-    @test isapprox(Solution.PoF₂, [0.00960, 0.00914],   rtol = 0.01)
-    @test isapprox(Solution.κ,    [-0.155, -0.0399, 0], rtol = 0.01)
+    @test isapprox(Solution.β₂,   [2.35, 2.35],         rtol = 1E-2)
+    @test isapprox(Solution.PoF₂, [0.00960, 0.00914],   rtol = 1E-2)
+    @test isapprox(Solution.κ,    [-0.155, -0.0399, 0], rtol = 1E-2)
 end
 
 @testset "SORM #2 - CF" begin
@@ -52,8 +52,8 @@ end
     Solution = solve(Problem, SORM(CF()))
 
     # Test the results:
-    @test isapprox(Solution.PoF₂[1], 4.08 * 10 ^ (-8), rtol = 0.05)
-    @test isapprox(Solution.PoF₂[2], 4.08 * 10 ^ (-8), rtol = 0.05)
+    @test isapprox(Solution.PoF₂[1], 4.08 * 10 ^ (-8), rtol = 5E-2)
+    @test isapprox(Solution.PoF₂[2], 4.08 * 10 ^ (-8), rtol = 5E-2)
 end
 
 @testset "SORM #3 - PF" begin
@@ -80,17 +80,17 @@ end
     Solution = solve(Problem, SORM(PF()))
 
     # Test the results:
-    @test isapprox(Solution.β₂,                   [2.36, 2.36],       rtol = 0.05)
-    @test isapprox(Solution.PoF₂,                 [0.00913, 0.00913], rtol = 0.05)
-    @test isapprox(Solution.FittingPoints⁻[1, :], [-2.47, +2.27],     rtol = 0.05)
-    @test isapprox(Solution.FittingPoints⁻[2, :], [-2.47, +2.43],     rtol = 0.05)
-    @test isapprox(Solution.FittingPoints⁻[3, :], [-2.47, +2.05],     rtol = 0.05)
-    @test isapprox(Solution.FittingPoints⁺[1, :], [+2.47, +2.34],     rtol = 0.05)
-    @test isapprox(Solution.FittingPoints⁺[2, :], [+2.47, +2.44],     rtol = 0.05)
-    @test isapprox(Solution.FittingPoints⁺[3, :], [+2.47, +2.13],     rtol = 0.05)
-    @test isapprox(Solution.κ₁[1, :],             [-0.0630, -0.0405], rtol = 0.05)
-    @test isapprox(Solution.κ₁[2, :],             [-0.0097, -0.0120], rtol = 0.05)
-    @test isapprox(Solution.κ₁[3, :],             [-0.1380, -0.1110], rtol = 0.05)
+    @test isapprox(Solution.β₂,                   [2.36, 2.36],       rtol = 5E-2)
+    @test isapprox(Solution.PoF₂,                 [0.00913, 0.00913], rtol = 5E-2)
+    @test isapprox(Solution.FittingPoints⁻[1, :], [-2.47, +2.27],     rtol = 5E-2)
+    @test isapprox(Solution.FittingPoints⁻[2, :], [-2.47, +2.43],     rtol = 5E-2)
+    @test isapprox(Solution.FittingPoints⁻[3, :], [-2.47, +2.05],     rtol = 5E-2)
+    @test isapprox(Solution.FittingPoints⁺[1, :], [+2.47, +2.34],     rtol = 5E-2)
+    @test isapprox(Solution.FittingPoints⁺[2, :], [+2.47, +2.44],     rtol = 5E-2)
+    @test isapprox(Solution.FittingPoints⁺[3, :], [+2.47, +2.13],     rtol = 5E-2)
+    @test isapprox(Solution.κ₁[1, :],             [-0.0630, -0.0405], rtol = 5E-2)
+    @test isapprox(Solution.κ₁[2, :],             [-0.0097, -0.0120], rtol = 5E-2)
+    @test isapprox(Solution.κ₁[3, :],             [-0.1380, -0.1110], rtol = 5E-2)
 end
 
 @testset "SORM #4 - PF" begin
@@ -118,6 +118,6 @@ end
     Solution = solve(Problem, SORM(PF()))
     
     # Test the results:
-    @test isapprox(Solution.PoF₂[1], 4.08 * 10 ^ (-8), rtol = 0.05)
-    @test isapprox(Solution.PoF₂[2], 4.08 * 10 ^ (-8), rtol = 0.05)
+    @test isapprox(Solution.PoF₂[1], 4.08 * 10 ^ (-8), rtol = 5E-2)
+    @test isapprox(Solution.PoF₂[2], 4.08 * 10 ^ (-8), rtol = 5E-2)
 end

@@ -52,5 +52,5 @@ end
     Solution = solve(Problem, SSM())
 
     # Test the results:
-    @test isapprox(Solution.PoF, 3.53 * 10 ^ (-7), rtol = 0.05)
+    @test isapprox(Solution.PoF, 3.53 * 10 ^ (-7), rtol = 5E-2)
 end
