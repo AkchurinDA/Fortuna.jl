@@ -23,6 +23,6 @@
         Solution    = solve(Problem, IS(ProposalPDF, 10 ^ 6))
 
         # Test the results:
-        @test isapprox(Solution.PoF, cdf(Normal(), -βList[i]), rtol = 0.05)
+        @test isapprox(Solution.PoF, cdf(Normal(), -βList[i]), rtol = 5E-2)
     end
 end

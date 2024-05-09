@@ -134,15 +134,11 @@ function G(g::Function, Θ::AbstractVector{<:Real}, NatafObject::NatafTransforma
 end
 
 function T(X::Function, ρˣ::AbstractMatrix{<:Real}, Θ::AbstractVector{<:Real}, x::AbstractVector{<:Real})
-    # Compute the inverse of the lower triangular matrix of the Cholesky decomposition of the distorted correlation matrix:
+    # Perform the Nataf transformation:
     NatafObject = NatafTransformation(X(Θ), ρˣ)
-    L⁻¹         = NatafObject.L⁻¹
-
-    # Compute the design point in the Z-space:
-    z = [Distributions.quantile(Distributions.Normal(), Distributions.cdf(X(Θ)[i], x[i])) for i in eachindex(X(Θ))]
 
     # Compute the design point in the U-space:
-    u = L⁻¹ * z
+    u = transformsamples(NatafObject, x, :X2U)
 
     # Return the result:
     return u

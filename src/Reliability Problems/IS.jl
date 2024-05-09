@@ -5,9 +5,9 @@ Type used to perform reliability analysis using Importance Sampling (IS) method.
 """
 Base.@kwdef struct IS <: AbstractReliabililyAnalysisMethod
     "Proposal probability density function ``q``"
-    q::Distributions.Sampleable
+    q::Distributions.ContinuousMultivariateDistribution
     "Number of samples to generate ``N``"
-    NumSamples::Integer = 10 ^ 6
+    NumSamples::Integer = 1E6
 end
 
 """
@@ -37,10 +37,8 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::IS)
     X  = Problem.X
     ρˣ = Problem.ρˣ
 
-    # Check dimensions:
-    if length(q) != length(X)
-        error("Dimensionality of the proposal distribution does not match the dimensionality of the random vector.")
-    end
+    # Error-catching:
+    length(q) == length(X) || throw(DimensionMismatch("Dimensionality of the proposal distribution does not match the dimensionality of the random vector!"))
 
     # If the marginal distrbutions are correlated, define a Nataf object:
     NatafObject = NatafTransformation(X, ρˣ)

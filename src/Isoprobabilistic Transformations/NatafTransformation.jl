@@ -18,6 +18,14 @@ mutable struct NatafTransformation <: AbstractIsoprobabilisticTransformation
     L⁻¹ ::AbstractMatrix{<:Real}
 
     function NatafTransformation(X::AbstractVector{<:Distributions.ContinuousUnivariateDistribution}, ρˣ::AbstractMatrix{<:Real})
+        # Compute the number of dimensions:
+        NumDimensions = length(X)
+
+         # Error-catching:
+        size(ρˣ) == (NumDimensions, NumDimensions) || throw(DimensionMismatch("Size of the correlation matrix ρˣ is not compatible with the dimensionality of the random vector X!"))
+        maximum(abs.(ρˣ - LinearAlgebra.I)) ≤ 1    || throw(ArgumentError("Off-diagonal entries of the correlation matrix ρˣ must be between -1 and +1!"))
+        LinearAlgebra.isposdef(ρˣ)                 || throw(ArgumentError("Correlation matrix ρˣ must be a positive-definite matrix!"))
+        
         # Compute the distorted correlation matrix:
         ρᶻ, L, L⁻¹ = getdistortedcorrelation(X, ρˣ)
 
@@ -33,24 +41,11 @@ Base.broadcastable(x::NatafTransformation) = Ref(x)
 Function used to compute the distorted correlation matrix ``\\rho^{Z}``.
 """
 function getdistortedcorrelation(X::AbstractVector{<:Distributions.ContinuousUnivariateDistribution}, ρˣ::AbstractMatrix{<:Real}) 
-    # Compute number of dimensions:
+    # Compute the number of dimensions:
     NumDimensions = length(X)
 
-    # Error-catching:
-    if size(ρˣ) != (NumDimensions, NumDimensions)
-        error("Size of the correlation matrix ρₓ is not compatible with the number of marginal distributions.")
-    end
-
-    if !LinearAlgebra.isposdef(ρˣ)
-        error("Correlation matrix ρₓ must be a positive-definite matrix.")
-    end
-
-    MaxCorrelationValue = maximum(abs.(ρˣ - I))
-    if MaxCorrelationValue > 1
-        error("Off-diagonal entries of the correlation matrix ρˣ must be between -1 and +1.")
-    end
-
     # Compute the locations and weights of the integration points in 1D:
+    MaxCorrelationValue        = maximum(abs.(ρˣ - LinearAlgebra.I))
     NumIP                      = MaxCorrelationValue ≤ 0.9 ? 64 : 1024
     IPLocations1D, IPWeights1D = FastGaussQuadrature.gausslegendre(NumIP)
 
@@ -129,7 +124,7 @@ function transformsamples(TransformationObject::NatafTransformation, Samples::Ab
     NumDimensions = length(Samples)
 
     if TransformationDirection != :X2U && TransformationDirection != :U2X
-        error("Invalid transformation direction! Available options are: :X2U and :U2X.")
+        throw(ArgumentError("Invalid transformation direction! Available options are: `:X2U` and `:U2X`!"))
     elseif TransformationDirection == :X2U
         # Extract data:
         X   = TransformationObject.X
@@ -165,11 +160,9 @@ function transformsamples(TransformationObject::NatafTransformation, Samples::Ab
     NumSamples    = size(Samples, 2)
 
     # Error-catching:
-    if NumDimensions != length(TransformationObject.X)
-        error("Number of dimensions of the samples is incorrect!")
-    end
+    length(TransformationObject.X) == NumDimensions || throw(ArgumentError("Number of dimensions of the provided samples is incorrect!"))
 
-    TransformedSamples = [transformsamples(TransformationObject, Samples[:, i], TransformationDirection) for i in 1:NumSamples]
+    TransformedSamples = transformsamples.(TransformationObject, eachcol(Samples), TransformationDirection)
     TransformedSamples = hcat(TransformedSamples...)
 
     # Return the result:
@@ -185,14 +178,11 @@ If `TransformationDirection` is:
 - `:U2X`, then the function returns the Jacobians of the transformations of samples ``\\vec{u}`` from ``U``- to ``X``-space.
 """
 function getjacobian(TransformationObject::NatafTransformation, Samples::AbstractVector{<:Real}, TransformationDirection::Symbol)
-    # # Convert strings to lowercase:
-    # TransformationDirection = lowercase(TransformationDirection)
-
     # Compute number of dimensions:
     NumDimensions = length(Samples)
 
     if TransformationDirection != :X2U && TransformationDirection != :U2X
-        error("Invalid transformation direction.")
+        throw(ArgumentError("Invalid transformation direction! Available options are: `:X2U` and `:U2X`!"))
     elseif TransformationDirection == :X2U
         # Extract data:
         X = TransformationObject.X
@@ -233,12 +223,10 @@ function getjacobian(TransformationObject::NatafTransformation, Samples::Abstrac
     NumSamples    = size(Samples, 2)
 
     # Error-catching:
-    if NumDimensions != length(TransformationObject.X)
-        error("Number of dimensions of the samples is incorrect.")
-    end
+    length(TransformationObject.X) == NumDimensions || throw(ArgumentError("Number of dimensions of the provided samples is incorrect!"))
 
     # Compute the Jacobians:
-    J = [getjacobian(TransformationObject, Samples[:, i], TransformationDirection) for i in 1:NumSamples]
+    J = getjacobian.(TransformationObject, eachcol(Samples), TransformationDirection)
 
     # Return the result:
     return J
@@ -283,12 +271,10 @@ function Distributions.pdf(TransformationObject::NatafTransformation, x::Abstrac
     NumSamples    = size(x, 2)
 
     # Error-catching:
-    if NumDimensions != length(TransformationObject.X)
-        error("Number of dimensions of the samples is incorrect.")
-    end
+    length(TransformationObject.X) == NumDimensions || throw(ArgumentError("Number of dimensions of the provided samples is incorrect!"))
 
     # Compute the joint PDF:
-    JointPDFX = [Distributions.pdf(TransformationObject, x[:, i]) for i in 1:NumSamples]
+    JointPDFX = Distributions.pdf.(TransformationObject, eachcol(x))
 
     # Return the result:
     return JointPDFX

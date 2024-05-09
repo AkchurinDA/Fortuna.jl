@@ -7,7 +7,7 @@ $(TYPEDFIELDS)
 """
 Base.@kwdef struct MC <: AbstractReliabililyAnalysisMethod
     "Number of samples ``N``"
-    NumSamples::Integer = 10 ^ 6
+    NumSamples::Integer = 1E6
     "Sampling technique"
     SamplingTechnique::AbstractSamplingTechnique = ITS()
 end
@@ -46,7 +46,7 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::MC)
 
     # Generate samples:
     if !isa(SamplingTechnique, ITS) && !isa(SamplingTechnique, LHS)
-        error("Invalid sampling technique.")
+        throw(ArgumentError("Provided sampling technique is not supported!"))
     else
         XSamples, _, _ = rand(NatafObject, NumSamples, SamplingTechnique)
     end

@@ -25,8 +25,8 @@
     Solution = solve(Problem)
 
     # Test the results:
-    @test isapprox(Solution.∇β,   [+36.80, +73.60, +9.260], rtol = 0.01)
-    @test isapprox(Solution.∇PoF, [-0.700, -1.400, -0.176], rtol = 0.01)
+    @test isapprox(Solution.∇β,   [+36.80, +73.60, +9.260], rtol = 1E-2)
+    @test isapprox(Solution.∇PoF, [-0.700, -1.400, -0.176], rtol = 1E-2)
 end
 
 @testset "Sensitivity Problems (Type II) #1" begin
@@ -69,8 +69,8 @@ end
     Solution = solve(Problem)
 
     # Test the results:
-    @test isapprox(Solution.∇β,   1E-3 * [-3.240, -3.920, -6.480, -7.840, -0.546, -1.334, +88.8, +0.0951], rtol = 0.05)
-    @test isapprox(Solution.∇PoF, 1E-4 * [+0.617, +0.746, +1.230, +1.490, +0.104, -0.254, -16.9, -0.0181], rtol = 0.05)
+    @test isapprox(Solution.∇β,   1E-3 * [-3.240, -3.920, -6.480, -7.840, -0.546, -1.334, +88.8, +0.0951], rtol = 5E-2)
+    @test isapprox(Solution.∇PoF, 1E-4 * [+0.617, +0.746, +1.230, +1.490, +0.104, -0.254, -16.9, -0.0181], rtol = 5E-2)
 end
 
 @testset "Sensitivity Problems (Type II) #2" begin
@@ -113,7 +113,7 @@ end
     Solution = solve(Problem)
 
     # Test the results:
-    @test isapprox(Solution.∇β, 1E-3 * [-3.240, -3.920, -6.480, -7.840, -0.546, -0.790, 0.124, -0.245], rtol = 0.05)
+    @test isapprox(Solution.∇β, 1E-3 * [-3.240, -3.920, -6.480, -7.840, -0.546, -0.790, 0.124, -0.245], rtol = 5E-2)
 end
 
 @testset "Sensitivity Problems (Type II) #3" begin
@@ -152,7 +152,7 @@ end
     Solution = solve(Problem)
 
     # Test the results:
-    @test isapprox(Solution.∇β, [-0.0059, -0.0079, -0.0009, -0.0006, 1.2602, -1.1942], rtol = 0.01)
+    @test isapprox(Solution.∇β, [-0.0059, -0.0079, -0.0009, -0.0006, 1.2602, -1.1942], rtol = 1E-2)
 end
 
 @testset "Sensitivity Problems (Type II) #4" begin
@@ -188,5 +188,5 @@ end
     Solution = solve(Problem)
 
     # Test the results:
-    @test isapprox(Solution.∇β, [0.5184, -0.2548, -1.3629, 0.0446], rtol = 0.01)
+    @test isapprox(Solution.∇β, [0.5184, -0.2548, -1.3629, 0.0446], rtol = 1E-2)
 end

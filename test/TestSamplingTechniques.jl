@@ -13,16 +13,16 @@
     XSamplesLHS = rand(X, NumSamples, LHS())
 
     # Test the results:
-    @test isapprox(mean(XSamplesITS[1, :]),    10,         rtol = 0.01) # Inverse Transform Sampling
-    @test isapprox(mean(XSamplesITS[2, :]),    15,         rtol = 0.01)
-    @test isapprox(std(XSamplesITS[1, :]),     1.5,        rtol = 0.01)
-    @test isapprox(std(XSamplesITS[2, :]),     2.5,        rtol = 0.01)
-    @test isapprox(cor(XSamplesITS, dims = 2), [1 0; 0 1], rtol = 0.01)
-    @test isapprox(mean(XSamplesLHS[1, :]),    10,         rtol = 0.01) # Latin Hypercube Sampling
-    @test isapprox(mean(XSamplesLHS[2, :]),    15,         rtol = 0.01)
-    @test isapprox(std(XSamplesLHS[1, :]),     1.5,        rtol = 0.01)
-    @test isapprox(std(XSamplesLHS[2, :]),     2.5,        rtol = 0.01)
-    @test isapprox(cor(XSamplesLHS, dims = 2), [1 0; 0 1], rtol = 0.01)
+    @test isapprox(mean(XSamplesITS[1, :]),    10,         rtol = 1E-2) # Inverse Transform Sampling
+    @test isapprox(mean(XSamplesITS[2, :]),    15,         rtol = 1E-2)
+    @test isapprox(std(XSamplesITS[1, :]),     1.5,        rtol = 1E-2)
+    @test isapprox(std(XSamplesITS[2, :]),     2.5,        rtol = 1E-2)
+    @test isapprox(cor(XSamplesITS, dims = 2), [1 0; 0 1], rtol = 1E-2)
+    @test isapprox(mean(XSamplesLHS[1, :]),    10,         rtol = 1E-2) # Latin Hypercube Sampling
+    @test isapprox(mean(XSamplesLHS[2, :]),    15,         rtol = 1E-2)
+    @test isapprox(std(XSamplesLHS[1, :]),     1.5,        rtol = 1E-2)
+    @test isapprox(std(XSamplesLHS[2, :]),     2.5,        rtol = 1E-2)
+    @test isapprox(cor(XSamplesLHS, dims = 2), [1 0; 0 1], rtol = 1E-2)
 end
 
 @testset "Sampling Techniques #2" begin
@@ -48,16 +48,16 @@ end
         XSamplesLHS, _, _ = rand(NatafObject, NumSamples, LHS())
 
         # Test the results:
-        @test isapprox(mean(XSamplesITS[1, :]),    10,  rtol = 0.01) # Inverse Transform Sampling
-        @test isapprox(mean(XSamplesITS[2, :]),    15,  rtol = 0.01)
-        @test isapprox(std(XSamplesITS[1, :]),     1.5, rtol = 0.01)
-        @test isapprox(std(XSamplesITS[2, :]),     2.5, rtol = 0.01)
-        @test isapprox(cor(XSamplesITS, dims = 2), ρˣ,  rtol = 0.01)
-        @test isapprox(mean(XSamplesLHS[1, :]),    10,  rtol = 0.01) # Latin Hypercube Sampling
-        @test isapprox(mean(XSamplesLHS[2, :]),    15,  rtol = 0.01)
-        @test isapprox(std(XSamplesLHS[1, :]),     1.5, rtol = 0.01)
-        @test isapprox(std(XSamplesLHS[2, :]),     2.5, rtol = 0.01)
-        @test isapprox(cor(XSamplesLHS, dims = 2), ρˣ,  rtol = 0.01)
+        @test isapprox(mean(XSamplesITS[1, :]),    10,  rtol = 1E-2) # Inverse Transform Sampling
+        @test isapprox(mean(XSamplesITS[2, :]),    15,  rtol = 1E-2)
+        @test isapprox(std(XSamplesITS[1, :]),     1.5, rtol = 1E-2)
+        @test isapprox(std(XSamplesITS[2, :]),     2.5, rtol = 1E-2)
+        @test isapprox(cor(XSamplesITS, dims = 2), ρˣ,  rtol = 1E-2)
+        @test isapprox(mean(XSamplesLHS[1, :]),    10,  rtol = 1E-2) # Latin Hypercube Sampling
+        @test isapprox(mean(XSamplesLHS[2, :]),    15,  rtol = 1E-2)
+        @test isapprox(std(XSamplesLHS[1, :]),     1.5, rtol = 1E-2)
+        @test isapprox(std(XSamplesLHS[2, :]),     2.5, rtol = 1E-2)
+        @test isapprox(cor(XSamplesLHS, dims = 2), ρˣ,  rtol = 1E-2)
     end
 end
 

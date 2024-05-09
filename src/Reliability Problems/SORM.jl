@@ -96,7 +96,7 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::SORM)
     g  = Problem.g
 
     if !isa(Submethod, CF) && !isa(Submethod, PF)
-        error("Invalid SORM submethod.")
+        error("Invalid SORM submethod!")
     elseif isa(Submethod, CF)
         # Extract the analysis details:
         ϵ = Submethod.ϵ

@@ -9,7 +9,7 @@ Base.@kwdef struct SSM <: AbstractReliabililyAnalysisMethod
     "Probability of failure for each subset ``P_{0}``"
     P₀::Real = 0.10
     "Number of samples generated within each subset ``N``"
-    NumSamples::Integer = 10 ^ 6
+    NumSamples::Integer = 1E6
     "Maximum number of subsets ``M``"
     MaxNumSubsets::Integer = 50
 end

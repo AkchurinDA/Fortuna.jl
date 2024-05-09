@@ -20,8 +20,8 @@
     Solution₂ = solve(Problem₂, FORM(MCFOSM()))
 
     # Test the results:
-    @test isapprox(Solution₁.β, 1.66, rtol = 0.01)
-    @test isapprox(Solution₂.β, 4.29, rtol = 0.01)
+    @test isapprox(Solution₁.β, 1.66, rtol = 1E-2)
+    @test isapprox(Solution₂.β, 4.29, rtol = 1E-2)
 end
 
 @testset "FORM #2 - RF" begin
@@ -43,9 +43,9 @@ end
     Solution = solve(Problem, FORM(RF()))
 
     # Test the results:
-    @test isapprox(Solution.β,         2.236067977499917, rtol = 10 ^ (-9))
-    @test isapprox(Solution.x[:, end], [160, 160],        rtol = 10 ^ (-9))
-    @test isapprox(Solution.u[:, end], [-2, 1],           rtol = 10 ^ (-9))
+    @test isapprox(Solution.β,         2.236067977499917, rtol = 1E-9)
+    @test isapprox(Solution.x[:, end], [160, 160],        rtol = 1E-9)
+    @test isapprox(Solution.u[:, end], [-2, 1],           rtol = 1E-9)
 end
 
 @testset "FORM #3 - HLRF" begin
@@ -70,12 +70,12 @@ end
     Solution₂ = solve(Problem₂, FORM(HLRF()))
 
     # Test the results:
-    @test isapprox(Solution₁.β,         2.11,            rtol = 0.01)
-    @test isapprox(Solution₂.β,         2.11,            rtol = 0.01)
-    @test isapprox(Solution₁.x[:, end], [6.14, 18.9],    rtol = 0.01)
-    @test isapprox(Solution₂.x[:, end], [6.14, 18.9],    rtol = 0.01)
-    @test isapprox(Solution₁.u[:, end], [-1.928, 0.852], rtol = 0.01)
-    @test isapprox(Solution₂.u[:, end], [-1.928, 0.852], rtol = 0.01)
+    @test isapprox(Solution₁.β,         2.11,            rtol = 1E-2)
+    @test isapprox(Solution₂.β,         2.11,            rtol = 1E-2)
+    @test isapprox(Solution₁.x[:, end], [6.14, 18.9],    rtol = 1E-2)
+    @test isapprox(Solution₂.x[:, end], [6.14, 18.9],    rtol = 1E-2)
+    @test isapprox(Solution₁.u[:, end], [-1.928, 0.852], rtol = 1E-2)
+    @test isapprox(Solution₂.u[:, end], [-1.928, 0.852], rtol = 1E-2)
 end
 
 @testset "FORM #4 - HLRF" begin
@@ -97,10 +97,10 @@ end
     Solution = solve(Problem, FORM(HLRF()))
 
     # Test the results:
-    @test isapprox(Solution.β,         2.236067977499917,    rtol = 10 ^ (-9))
-    @test isapprox(Solution.PoF,       0.012673659338729965, rtol = 10 ^ (-9))
-    @test isapprox(Solution.x[:, end], [160, 160],           rtol = 10 ^ (-9))
-    @test isapprox(Solution.u[:, end], [-2, 1],              rtol = 10 ^ (-9))
+    @test isapprox(Solution.β,         2.236067977499917,    rtol = 1E-9)
+    @test isapprox(Solution.PoF,       0.012673659338729965, rtol = 1E-9)
+    @test isapprox(Solution.x[:, end], [160, 160],           rtol = 1E-9)
+    @test isapprox(Solution.u[:, end], [-2, 1],              rtol = 1E-9)
 end
 
 @testset "FORM #5 - HLRF" begin
@@ -127,11 +127,11 @@ end
     Solution = solve(Problem, FORM(HLRF()))
 
     # Test the results:
-    @test isapprox(Solution.β,         2.47,                          rtol = 0.01)
-    @test isapprox(Solution.PoF,       0.00682,                       rtol = 0.01)
-    @test isapprox(Solution.x[:, end], [341, 170, 3223, 31770],       rtol = 0.01)
-    @test isapprox(Solution.u[:, end], [1.210, 0.699, 0.941, -1.80],  rtol = 0.01)
-    @test isapprox(Solution.γ,         [0.269, 0.269, 0.451, -0.808], rtol = 0.01)
+    @test isapprox(Solution.β,         2.47,                          rtol = 1E-2)
+    @test isapprox(Solution.PoF,       0.00682,                       rtol = 1E-2)
+    @test isapprox(Solution.x[:, end], [341, 170, 3223, 31770],       rtol = 1E-2)
+    @test isapprox(Solution.u[:, end], [1.210, 0.699, 0.941, -1.80],  rtol = 1E-2)
+    @test isapprox(Solution.γ,         [0.269, 0.269, 0.451, -0.808], rtol = 1E-2)
     # Note: There is a typo in the book for this example. The last coordinate of the design point in U-space must be -1.80.
 end
 
@@ -158,7 +158,7 @@ end
     Solution = solve(Problem, FORM(HLRF()))
     
     # Test the results:
-    @test isapprox(Solution.PoF, 4.88 * 10 ^ (-8), rtol = 0.01)
+    @test isapprox(Solution.PoF, 4.88 * 10 ^ (-8), rtol = 1E-2)
 end
 
 @testset "FORM #7 - iHLRF" begin
@@ -183,12 +183,12 @@ end
     Solution₂ = solve(Problem₂, FORM(iHLRF()))
 
     # Test the results:
-    @test isapprox(Solution₁.β,         2.11,            rtol = 0.01)
-    @test isapprox(Solution₂.β,         2.11,            rtol = 0.01)
-    @test isapprox(Solution₁.x[:, end], [6.14, 18.9],    rtol = 0.01)
-    @test isapprox(Solution₂.x[:, end], [6.14, 18.9],    rtol = 0.01)
-    @test isapprox(Solution₁.u[:, end], [-1.928, 0.852], rtol = 0.01)
-    @test isapprox(Solution₂.u[:, end], [-1.928, 0.852], rtol = 0.01)
+    @test isapprox(Solution₁.β,         2.11,            rtol = 1E-2)
+    @test isapprox(Solution₂.β,         2.11,            rtol = 1E-2)
+    @test isapprox(Solution₁.x[:, end], [6.14, 18.9],    rtol = 1E-2)
+    @test isapprox(Solution₂.x[:, end], [6.14, 18.9],    rtol = 1E-2)
+    @test isapprox(Solution₁.u[:, end], [-1.928, 0.852], rtol = 1E-2)
+    @test isapprox(Solution₂.u[:, end], [-1.928, 0.852], rtol = 1E-2)
 end
 
 @testset "FORM #8 - iHLRF" begin
@@ -210,10 +210,10 @@ end
     Solution = solve(Problem, FORM(iHLRF()))
 
     # Test the results:
-    @test isapprox(Solution.β,         2.236067977499917,    rtol = 10 ^ (-9))
-    @test isapprox(Solution.PoF,       0.012673659338729965, rtol = 10 ^ (-9))
-    @test isapprox(Solution.x[:, end], [160, 160],           rtol = 10 ^ (-9))
-    @test isapprox(Solution.u[:, end], [-2, 1],              rtol = 10 ^ (-9))
+    @test isapprox(Solution.β,         2.236067977499917,    rtol = 1E-9)
+    @test isapprox(Solution.PoF,       0.012673659338729965, rtol = 1E-9)
+    @test isapprox(Solution.x[:, end], [160, 160],           rtol = 1E-9)
+    @test isapprox(Solution.u[:, end], [-2, 1],              rtol = 1E-9)
 end
 
 @testset "FORM #9 - iHLRF" begin
@@ -240,11 +240,11 @@ end
     Solution = solve(Problem, FORM(iHLRF()))
 
     # Test the results:
-    @test isapprox(Solution.β,         2.47,                          rtol = 0.01)
-    @test isapprox(Solution.PoF,       0.00682,                       rtol = 0.01)
-    @test isapprox(Solution.x[:, end], [341, 170, 3223, 31770],       rtol = 0.01)
-    @test isapprox(Solution.u[:, end], [1.210, 0.699, 0.941, -1.80],  rtol = 0.01)
-    @test isapprox(Solution.γ,         [0.269, 0.269, 0.451, -0.808], rtol = 0.01)
+    @test isapprox(Solution.β,         2.47,                          rtol = 1E-2)
+    @test isapprox(Solution.PoF,       0.00682,                       rtol = 1E-2)
+    @test isapprox(Solution.x[:, end], [341, 170, 3223, 31770],       rtol = 1E-2)
+    @test isapprox(Solution.u[:, end], [1.210, 0.699, 0.941, -1.80],  rtol = 1E-2)
+    @test isapprox(Solution.γ,         [0.269, 0.269, 0.451, -0.808], rtol = 1E-2)
     # Note: There is a typo in the book for this example. The last coordinate of the design point in U-space must be -1.80.
 end
 
@@ -273,5 +273,5 @@ end
     Solution = solve(Problem, FORM(iHLRF()))
 
     # Test the results:
-    @test isapprox(Solution.PoF, 4.88 * 10 ^ (-8), rtol = 0.01)
+    @test isapprox(Solution.PoF, 4.88 * 10 ^ (-8), rtol = 1E-2)
 end
