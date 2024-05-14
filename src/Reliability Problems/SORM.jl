@@ -186,13 +186,29 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::SORM; Differentiatio
 
             # Negative side:
             Problem⁻             = NonlinearSolve.NonlinearProblem(F, β₁, -H)
-            Solution⁻            = NonlinearSolve.solve(Problem⁻, NonlinearSolve.NewtonRaphson(), abstol=10^(-9), reltol=10^(-9))
+            Solution⁻            = if Differentiation == :Automatic
+                try
+                    NonlinearSolve.solve(Problem⁻, nothing, abstol = 1E-9, reltol = 1E-9)
+                catch
+                    NonlinearSolve.solve(Problem⁻, NonlinearSolve.FastShortcutNonlinearPolyalg(autodiff = NonlinearSolve.AutoFiniteDiff()), abstol = 1E-9, reltol = 1E-9)
+                end
+            elseif Differentiation == :Numeric
+                NonlinearSolve.solve(Problem⁻, NonlinearSolve.FastShortcutNonlinearPolyalg(autodiff = NonlinearSolve.AutoFiniteDiff()), abstol = 1E-9, reltol = 1E-9)
+            end
             FittingPoints⁻[i, 1] = -H
             FittingPoints⁻[i, 2] = Solution⁻.u
 
             # Positive side:
             Problem⁺             = NonlinearSolve.NonlinearProblem(F, β₁, +H)
-            Solution⁺            = NonlinearSolve.solve(Problem⁺, NonlinearSolve.NewtonRaphson(), abstol=10^(-9), reltol=10^(-9))
+            Solution⁺            = if Differentiation == :Automatic
+                try
+                    NonlinearSolve.solve(Problem⁺, nothing, abstol = 1E-9, reltol = 1E-9)
+                catch
+                    NonlinearSolve.solve(Problem⁺, NonlinearSolve.FastShortcutNonlinearPolyalg(autodiff = NonlinearSolve.AutoFiniteDiff()), abstol = 1E-9, reltol = 1E-9)
+                end
+            elseif Differentiation == :Numeric
+                NonlinearSolve.solve(Problem⁺, NonlinearSolve.FastShortcutNonlinearPolyalg(autodiff = NonlinearSolve.AutoFiniteDiff()), abstol = 1E-9, reltol = 1E-9)
+            end
             FittingPoints⁺[i, 1] = +H
             FittingPoints⁺[i, 2] = Solution⁺.u
 

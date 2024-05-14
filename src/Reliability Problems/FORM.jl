@@ -245,7 +245,15 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM; Differentiatio
         end
 
         Problem   = NonlinearSolve.NonlinearProblem(F, mean(X[end]), x[:, 1])
-        Solution  = NonlinearSolve.solve(Problem, nothing, abstol = 1E-9, reltol = 1E-9)
+        Solution  = if Differentiation == :Automatic
+            try
+                NonlinearSolve.solve(Problem, nothing, abstol = 1E-9, reltol = 1E-9)
+            catch
+                NonlinearSolve.solve(Problem, NonlinearSolve.FastShortcutNonlinearPolyalg(autodiff = NonlinearSolve.AutoFiniteDiff()), abstol = 1E-9, reltol = 1E-9)
+            end
+        elseif Differentiation == :Numeric
+            NonlinearSolve.solve(Problem, NonlinearSolve.FastShortcutNonlinearPolyalg(autodiff = NonlinearSolve.AutoFiniteDiff()), abstol = 1E-9, reltol = 1E-9)
+        end
         x[end, 1] = Solution.u
         
         # Start iterating:
@@ -284,7 +292,15 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM; Differentiatio
 
             # Force the design point to lay on the failure boundary:
             Problem       = NonlinearSolve.NonlinearProblem(F, x[end, i + 1], x[:, i + 1])
-            Solution      = NonlinearSolve.solve(Problem, nothing, abstol = 1E-9, reltol = 1E-9)
+            Solution      = if Differentiation == :Automatic
+                try
+                    NonlinearSolve.solve(Problem, nothing, abstol = 1E-9, reltol = 1E-9)
+                catch
+                    NonlinearSolve.solve(Problem, NonlinearSolve.FastShortcutNonlinearPolyalg(autodiff = NonlinearSolve.AutoFiniteDiff()), abstol = 1E-9, reltol = 1E-9)
+                end
+            elseif Differentiation == :Numeric
+                NonlinearSolve.solve(Problem, NonlinearSolve.FastShortcutNonlinearPolyalg(autodiff = NonlinearSolve.AutoFiniteDiff()), abstol = 1E-9, reltol = 1E-9)
+            end
             x[end, i + 1] = Solution.u
 
             # Check for convergance:
