@@ -24,7 +24,7 @@ X   = [X₁, X₂]
 NatafObject = NatafTransformation(X, ρˣ)
 
 # Generate 10000 samples of random vector in X-, Z-, and U-spaces using Latin Hypercube Sampling technique:
-XSamples, USamples, ZSamples = rand(NatafObject, 10000, LHS())
+XSamples, USamples, ZSamples = rand(NatafObject, 10000, :LHS)
 
 nothing # hide
 ```

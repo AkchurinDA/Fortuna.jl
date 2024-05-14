@@ -1,10 +1,20 @@
 # News
 
-## Release V0.7.1
+## Release V0.8.0
 
-- Dual number can now be propagated as moments of random variables.
+- Limit state functions can now be given by OpenSeesPy models directly in Julia! This is made possible by using the `PyCall.jl` and `Conda.jl` packages that allow to bring Python functionality into Julia.
+- If `ForwardDiff.jl` package fails to compute gradients, jacobians, etc., then `Fortuna.jl` package will attempt to use `FiniteDiff.jl` package before erroring out. This fixes a problem of differentiating some functions outside of `Fortuna.jl` package that are implemented in specific precisions which are not compatible with `Dual()` numbers.
+- A new `Differentiation` keyword was added to `solve()` function to indicate the desired differentiation scheme:
+  - `Differentiation` = `:Automatic`, then the function will use automatic differentiation (`ForwardDiff.jl`) to compute gradients, jacobians, etc.
+  - `Differentiation` = `:Numeric`, then the function will use numeric differentiation (`FiniteDiff.jl`) to compute gradients, jacobians, etc.
+  - Important to note that if your limit state function is given by an OpenSeesPy model, solving the reliability problem with `Differentiation` = `:Automatic` will not fail because of the fallback onto `FiniteDiff.jl` package; however, it is highly recommended to use `Differentiation` = `:Numeric` from the start to avoid even attempting to use automatic differentiation before falling back onto numeric differentiation.
+- Sampling technique for `rand()` function now must be given by symbols, i.e. `:ITS` or `:LHS`.
+
+## Release V0.7.
+
+- `Dual()` number can now be propagated as moments of random variables.
 - Fixed a bug with `randomvariables()` function.
-- Transformation direction for `transformsamples()` and `getjacobian()` functions now must be given by a symbol, i.e. `:X2U` or `:U2X`.
+- Transformation direction for `transformsamples()` and `getjacobian()` functions now must be given by symbols, i.e. `:X2U` or `:U2X`, which seems to be a more acceptable way of defining keyword arguments in Julia.
 - Added proper error handling and optimized some parts of the code.
 
 ## Release V0.7.0

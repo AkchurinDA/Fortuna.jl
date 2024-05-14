@@ -9,8 +9,8 @@
 
     # Generate samples:
     NumSamples  = 10 ^ 6
-    XSamplesITS = rand(X, NumSamples, ITS())
-    XSamplesLHS = rand(X, NumSamples, LHS())
+    XSamplesITS = rand(X, NumSamples, :ITS)
+    XSamplesLHS = rand(X, NumSamples, :LHS)
 
     # Test the results:
     @test isapprox(mean(XSamplesITS[1, :]),    10,         rtol = 1E-2) # Inverse Transform Sampling
@@ -44,8 +44,8 @@ end
 
         # Generate samples:
         NumSamples        = 10 ^ 6
-        XSamplesITS, _, _ = rand(NatafObject, NumSamples, ITS())
-        XSamplesLHS, _, _ = rand(NatafObject, NumSamples, LHS())
+        XSamplesITS, _, _ = rand(NatafObject, NumSamples, :ITS)
+        XSamplesLHS, _, _ = rand(NatafObject, NumSamples, :LHS)
 
         # Test the results:
         @test isapprox(mean(XSamplesITS[1, :]),    10,  rtol = 1E-2) # Inverse Transform Sampling
@@ -76,12 +76,12 @@ end
 
     # Generate samples from a random variable:
     Random.seed!(123)
-    XSamplesITS₁ = rand(X₁, NumSamples, ITS())
-    XSamplesLHS₁ = rand(X₁, NumSamples, LHS())
+    XSamplesITS₁ = rand(X₁, NumSamples, :ITS)
+    XSamplesLHS₁ = rand(X₁, NumSamples, :LHS)
 
     Random.seed!(123)
-    XSamplesITS₂ = rand(X₁, NumSamples, ITS())
-    XSamplesLHS₂ = rand(X₁, NumSamples, LHS())
+    XSamplesITS₂ = rand(X₁, NumSamples, :ITS)
+    XSamplesLHS₂ = rand(X₁, NumSamples, :LHS)
 
     # Test the results:
     @test XSamplesITS₁ == XSamplesITS₂
@@ -89,12 +89,12 @@ end
 
     # Generate samples from a random variable:
     Random.seed!(123)
-    XSamplesITS₁ = rand(X₂, NumSamples, ITS())
-    XSamplesLHS₁ = rand(X₂, NumSamples, LHS())
+    XSamplesITS₁ = rand(X₂, NumSamples, :ITS)
+    XSamplesLHS₁ = rand(X₂, NumSamples, :LHS)
 
     Random.seed!(123)
-    XSamplesITS₂ = rand(X₂, NumSamples, ITS())
-    XSamplesLHS₂ = rand(X₂, NumSamples, LHS())
+    XSamplesITS₂ = rand(X₂, NumSamples, :ITS)
+    XSamplesLHS₂ = rand(X₂, NumSamples, :LHS)
 
     # Test the results:
     @test XSamplesITS₁ == XSamplesITS₂
@@ -102,12 +102,12 @@ end
 
     # Generate samples from a random vector:
     Random.seed!(123)
-    XSamplesITS₁ = rand(X, NumSamples, ITS())
-    XSamplesLHS₁ = rand(X, NumSamples, LHS())
+    XSamplesITS₁ = rand(X, NumSamples, :ITS)
+    XSamplesLHS₁ = rand(X, NumSamples, :LHS)
 
     Random.seed!(123)
-    XSamplesITS₂ = rand(X, NumSamples, ITS())
-    XSamplesLHS₂ = rand(X, NumSamples, LHS())
+    XSamplesITS₂ = rand(X, NumSamples, :ITS)
+    XSamplesLHS₂ = rand(X, NumSamples, :LHS)
 
     # Test the results:
     @test XSamplesITS₁ == XSamplesITS₂
@@ -115,12 +115,12 @@ end
 
     # Generate samples from a transformation object:
     Random.seed!(123)
-    XSamplesITS₁, ZSamplesITS₁, USamplesITS₁ = rand(NatafObject, NumSamples, ITS())
-    XSamplesLHS₁, ZSamplesLHS₁, USamplesLHS₁ = rand(NatafObject, NumSamples, LHS())
+    XSamplesITS₁, ZSamplesITS₁, USamplesITS₁ = rand(NatafObject, NumSamples, :ITS)
+    XSamplesLHS₁, ZSamplesLHS₁, USamplesLHS₁ = rand(NatafObject, NumSamples, :LHS)
 
     Random.seed!(123)
-    XSamplesITS₂, ZSamplesITS₂, USamplesITS₂ = rand(NatafObject, NumSamples, ITS())
-    XSamplesLHS₂, ZSamplesLHS₂, USamplesLHS₂ = rand(NatafObject, NumSamples, LHS())
+    XSamplesITS₂, ZSamplesITS₂, USamplesITS₂ = rand(NatafObject, NumSamples, :ITS)
+    XSamplesLHS₂, ZSamplesLHS₂, USamplesLHS₂ = rand(NatafObject, NumSamples, :LHS)
 
     # Test the results:
     @test XSamplesITS₁ == XSamplesITS₂

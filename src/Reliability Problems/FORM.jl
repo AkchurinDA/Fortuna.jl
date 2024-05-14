@@ -169,11 +169,14 @@ struct iHLRFCache
 end
 
 """
-    solve(Problem::ReliabilityProblem, AnalysisMethod::FORM)
+    solve(Problem::ReliabilityProblem, AnalysisMethod::FORM; Differentiation::Symbol = :Automatic)
 
-Function used to solve reliability problems using First-Order Reliability Method (FORM).
+Function used to solve reliability problems using First-Order Reliability Method (FORM). \\
+If `Differentiation` is:
+- `:Automatic`, then the function will use automatic differentiation to compute gradients, jacobians, etc.
+- `:Numeric`, then the function will use numeric differentiation to compute gradients, jacobians, etc.
 """
-function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM)
+function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM; Differentiation::Symbol = :Automatic)
     # Extract the analysis method:
     Submethod = AnalysisMethod.Submethod
 
@@ -194,7 +197,15 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM)
         Σˣ = Dˣ * ρˣ * Dˣ
 
         # Compute gradient of the limit state function and evaluate it at the means of the marginal distributions:
-        ∇g = ForwardDiff.gradient(g, Mˣ)
+        ∇g = if Differentiation == :Automatic
+            try
+                ForwardDiff.gradient(g, Mˣ)
+            catch
+                FiniteDiff.finite_difference_gradient(g, Mˣ)
+            end
+        elseif Differentiation == :Numeric
+            FiniteDiff.finite_difference_gradient(g, Mˣ)
+        end
 
         # Compute the reliability index:
         β = g(Mˣ) / sqrt(LinearAlgebra.transpose(∇g) * Σˣ * ∇g)
@@ -249,7 +260,15 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM)
             u[:, i] = (x[:, i] - μ[:, i]) ./ σ[:, i]
 
             # Evaluate gradient of the limit state function at the design point in U-space:
-            ∇G[:, i] = -σ[:, i] .* ForwardDiff.gradient(g, x[:, i])
+            ∇G[:, i] = if Differentiation == :Automatic
+                try
+                    -σ[:, i] .* ForwardDiff.gradient(g, x[:, i])
+                catch
+                    -σ[:, i] .* FiniteDiff.finite_difference_gradient(g, x[:, i])
+                end
+            elseif Differentiation == :Numeric
+                -σ[:, i] .* FiniteDiff.finite_difference_gradient(g, x[:, i])
+            end
 
             # Compute the reliability index:
             β[i] = LinearAlgebra.dot(∇G[:, i], u[:, i]) / LinearAlgebra.norm(∇G[:, i])
@@ -327,7 +346,7 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM)
         λ = 1
 
         # Start iterating:
-        for i in 1:MaxNumIterations-1
+        for i in 1:(MaxNumIterations - 1)
             # Compute the design point in X-space:
             if i != 1
                 x[:, i] = transformsamples(NatafObject, u[:, i], :U2X)
@@ -340,7 +359,15 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM)
             G[i] = g(x[:, i])
 
             # Evaluate gradient of the limit state function at the design point in X-space:
-            ∇g = LinearAlgebra.transpose(ForwardDiff.gradient(g, x[:, i]))
+            ∇g = if Differentiation == :Automatic
+                try
+                    LinearAlgebra.transpose(ForwardDiff.gradient(g, x[:, i]))
+                catch
+                    LinearAlgebra.transpose(FiniteDiff.finite_difference_gradient(g, x[:, i]))
+                end
+            elseif Differentiation == :Numeric
+                LinearAlgebra.transpose(FiniteDiff.finite_difference_gradient(g, x[:, i]))
+            end
 
             # Convert the evaluated gradient of the limit state function from X- to U-space:
             ∇G[:, i] = vec(∇g * Jₓᵤ)
@@ -420,7 +447,7 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM)
         G₀ = g(x[:, 1])
 
         # Start iterating:
-        for i in 1:MaxNumIterations-1
+        for i in 1:(MaxNumIterations - 1)
             # Compute the design point in X-space:
             if i != 1
                 x[:, i] = transformsamples(NatafObject, u[:, i], :U2X)
@@ -433,7 +460,15 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM)
             G[i] = g(x[:, i])
 
             # Evaluate gradient of the limit state function at the design point in X-space:
-            ∇g = LinearAlgebra.transpose(ForwardDiff.gradient(g, x[:, i]))
+            ∇g = if Differentiation == :Automatic
+                try
+                    LinearAlgebra.transpose(ForwardDiff.gradient(g, x[:, i]))
+                catch
+                    LinearAlgebra.transpose(FiniteDiff.finite_difference_gradient(g, x[:, i]))
+                end
+            elseif Differentiation == :Numeric
+                LinearAlgebra.transpose(FiniteDiff.finite_difference_gradient(g, x[:, i]))
+            end
 
             # Convert the evaluated gradient of the limit state function from X- to U-space:
             ∇G[:, i] = vec(∇g * Jₓᵤ)
@@ -448,14 +483,14 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM)
             c[i] = ceil(LinearAlgebra.norm(u[:, i]) / LinearAlgebra.norm(∇G[:, i]))
 
             # Compute the merit function at the current design point:
-            m[i] = 0.5 * LinearAlgebra.norm(u[:, i])^2 + c[i] * abs(G[i])
+            m[i] = 0.5 * LinearAlgebra.norm(u[:, i]) ^ 2 + c[i] * abs(G[i])
 
             # Find a step size that satisfies m(uᵢ + λᵢdᵢ) < m(uᵢ):
             λₜ = 1
             uₜ = u[:, i] + λₜ * d[:, i]
             xₜ = transformsamples(NatafObject, uₜ, :U2X)
             Gₜ = g(xₜ)
-            mₜ = 0.5 * LinearAlgebra.norm(uₜ)^2 + c[i] * abs(Gₜ)
+            mₜ = 0.5 * LinearAlgebra.norm(uₜ) ^ 2 + c[i] * abs(Gₜ)
             while mₜ ≥ m[i]
                 # Update the step size:
                 λₜ = λₜ / 2
@@ -467,7 +502,7 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM)
                 uₜ = u[:, i] + λₜ * d[:, i]
                 xₜ = transformsamples(NatafObject, uₜ, :U2X)
                 Gₜ = g(xₜ)
-                mₜ = 0.5 * LinearAlgebra.norm(uₜ)^2 + c[i] * abs(Gₜ)
+                mₜ = 0.5 * LinearAlgebra.norm(uₜ) ^ 2 + c[i] * abs(Gₜ)
             end
 
             # Update the step size:
@@ -511,7 +546,7 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM)
                 continue
             else
                 # Check for convergance:
-                i == MaxNumIterations - 1 && error("iHL-RF method did not converge. Try increasing the maximum number of iterations (MaxNumIterations) or relaxing the convergance criterions (ϵ₁ and ϵ₂).")
+                i == (MaxNumIterations - 1) && error("iHL-RF method did not converge. Try increasing the maximum number of iterations (MaxNumIterations) or relaxing the convergance criterions (ϵ₁ and ϵ₂).")
             end
         end
     end

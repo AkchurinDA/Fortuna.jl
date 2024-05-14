@@ -77,14 +77,17 @@ end
 """
     solve(Problem::ReliabilityProblem, AnalysisMethod::SORM)
 
-Function used to solve reliability problems using Second-Order Reliability Method (SORM).
+Function used to solve reliability problems using Second-Order Reliability Method (SORM). \\
+If `Differentiation` is:
+- `:Automatic`, then the function will use automatic differentiation to compute gradients, jacobians, etc.
+- `:Numeric`, then the function will use numeric differentiation to compute gradients, jacobians, etc.
 """
-function solve(Problem::ReliabilityProblem, AnalysisMethod::SORM)
+function solve(Problem::ReliabilityProblem, AnalysisMethod::SORM; Differentiation::Symbol = :Automatic)
     # Extract the analysis method:
     Submethod = AnalysisMethod.Submethod
 
     # Determine the design point using FORM:
-    FORMSolution = solve(Problem, FORM())
+    FORMSolution = solve(Problem, FORM(), Differentiation = Differentiation)
     u            = FORMSolution.u[:, end]
     ∇G           = FORMSolution.∇G[:, end]
     α            = FORMSolution.α[:, end]

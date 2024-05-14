@@ -1,12 +1,13 @@
 name = "Fortuna"
 uuid = "c1a2adf5-a52e-430c-84bf-168fab86e0c1"
 authors = ["Damir Akchurin"]
-version = "0.7.1"
+version = "0.8.0"
 
 [deps]
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
 DocStringExtensions = "ffbed154-4ef7-542d-bbb7-c09d3a79fcae"
 FastGaussQuadrature = "442a2c76-b920-505d-bb47-c5924d526838"
+FiniteDiff = "6a86dc24-6348-571c-b903-95158fe2bd41"
 ForwardDiff = "f6369f11-7733-5829-9624-2563aa707210"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 NonlinearSolve = "8913a72c-1f9b-4ce2-8d82-65094dcecaec"
