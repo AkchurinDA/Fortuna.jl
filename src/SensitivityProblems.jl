@@ -52,11 +52,14 @@ struct SensitivityProblemCache
 end
 
 """
-    solve(Problem::SensitivityProblemTypeI)
+    solve(Problem::SensitivityProblemTypeI; Differentiation::Symbol = :Automatic)
 
-Function used to solve sensitivity problems of type I (sensitivities w.r.t. the parameters of the limit state function).
+Function used to solve sensitivity problems of type I (sensitivities w.r.t. the parameters of the limit state function). \\
+If `Differentiation` is:
+- `:Automatic`, then the function will use automatic differentiation to compute gradients, jacobians, etc.
+- `:Numeric`, then the function will use numeric differentiation to compute gradients, jacobians, etc.
 """
-function solve(Problem::SensitivityProblemTypeI)
+function solve(Problem::SensitivityProblemTypeI; Differentiation::Symbol = :Automatic)
     # Extract the problem data:
     X  = Problem.X
     ρˣ = Problem.ρˣ
@@ -68,7 +71,7 @@ function solve(Problem::SensitivityProblemTypeI)
     FORMProblem = ReliabilityProblem(X, ρˣ, g₁)
 
     # Solve the reliability problem using the FORM:
-    FORMSolution = solve(FORMProblem, FORM())
+    FORMSolution = solve(FORMProblem, FORM(), Differentiation = Differentiation)
     x            = FORMSolution.x[:, end]
     u            = FORMSolution.u[:, end]
     β            = FORMSolution.β
@@ -76,12 +79,22 @@ function solve(Problem::SensitivityProblemTypeI)
     # Perform Nataf transformation:
     NatafObject = NatafTransformation(X, ρˣ)
 
-    # Define gradient functions of the limit state function in X- and U-spaces:
-    ∇g(x, θ) = ForwardDiff.gradient(Unknown -> g(x, Unknown), θ)
-    ∇G(u, θ) = ForwardDiff.gradient(Unknown -> G(g, θ, NatafObject, Unknown), u)
-    
-    # Compute the sensitivities vector for the reliability index:
-    ∇β = ∇g(x, Θ) / LinearAlgebra.norm(∇G(u, Θ))
+    # Define gradient functions of the limit state function in X- and U-spaces, and compute the sensitivities vector for the reliability index:
+    ∇β = if Differentiation == :Automatic
+        try
+            local ∇g(x, θ) = ForwardDiff.gradient(Unknown -> g(x, Unknown), θ)
+            local ∇G(u, θ) = ForwardDiff.gradient(Unknown -> G(g, θ, NatafObject, Unknown), u)
+            ∇g(x, Θ) / LinearAlgebra.norm(∇G(u, Θ))
+        catch
+            local ∇g(x, θ) = FiniteDiff.finite_difference_gradient(Unknown -> g(x, Unknown), θ)
+            local ∇G(u, θ) = FiniteDiff.finite_difference_gradient(Unknown -> G(g, θ, NatafObject, Unknown), u)
+            ∇g(x, Θ) / LinearAlgebra.norm(∇G(u, Θ))
+        end
+    elseif Differentiation == :Numeric
+        local ∇g(x, θ) = FiniteDiff.finite_difference_gradient(Unknown -> g(x, Unknown), θ)
+        local ∇G(u, θ) = FiniteDiff.finite_difference_gradient(Unknown -> G(g, θ, NatafObject, Unknown), u)
+        ∇g(x, Θ) / LinearAlgebra.norm(∇G(u, Θ))
+    end
 
     # Compute the sensitivities vector for the probability of failure:
     ∇PoF = -Distributions.pdf(Distributions.Normal(), β) * ∇β
@@ -90,11 +103,14 @@ function solve(Problem::SensitivityProblemTypeI)
 end
 
 """
-    solve(Problem::SensitivityProblemTypeII)
+    solve(Problem::SensitivityProblemTypeII; Differentiation::Symbol = :Automatic)
 
-Function used to solve sensitivity problems of type II (sensitivities w.r.t. the parameters of the random vector).
+Function used to solve sensitivity problems of type II (sensitivities w.r.t. the parameters of the random vector). \\
+If `Differentiation` is:
+- `:Automatic`, then the function will use automatic differentiation to compute gradients, jacobians, etc.
+- `:Numeric`, then the function will use numeric differentiation to compute gradients, jacobians, etc.
 """
-function solve(Problem::SensitivityProblemTypeII)
+function solve(Problem::SensitivityProblemTypeII; Differentiation::Symbol = :Automatic)
     # Extract the problem data:
     X  = Problem.X
     ρˣ = Problem.ρˣ
@@ -105,18 +121,26 @@ function solve(Problem::SensitivityProblemTypeII)
     FORMProblem = ReliabilityProblem(X(Θ), ρˣ, g)
 
     # Solve the reliability problem using the FORM:
-    FORMSolution = solve(FORMProblem, FORM())
+    FORMSolution = solve(FORMProblem, FORM(), Differentiation = Differentiation)
     x            = FORMSolution.x[:, end]
     α            = FORMSolution.α[:, end]
     β            = FORMSolution.β
 
-    # Define the Jacobian of the transformation function w.r.t. the parameters of the random vector:
-    ∇T(θ) = ForwardDiff.jacobian(Unknown -> T(X, ρˣ, Unknown, x), θ)
-    
-    # Compute the sensitivities vector for the reliability index:
-    ∇β = vec(LinearAlgebra.transpose(α) * ∇T(Θ))
+    # Define the Jacobian of the transformation function w.r.t. the parameters of the random vector and compute the sensitivity vector for the reliability index:
+    ∇β = if Differentiation == :Automatic
+        try
+            local ∇T(θ) = ForwardDiff.jacobian(Unknown -> transformsamples(NatafTransformation(X(Unknown), ρˣ), x, :X2U), θ)
+            vec(LinearAlgebra.transpose(α) * ∇T(Θ))
+        catch
+            local ∇T(θ) = FiniteDiff.finite_difference_jacobian(Unknown -> transformsamples(NatafTransformation(X(Unknown), ρˣ), x, :X2U), θ)
+            vec(LinearAlgebra.transpose(α) * ∇T(Θ))
+        end
+    elseif Differentiation == :Numeric
+        local ∇T(θ) = FiniteDiff.finite_difference_jacobian(Unknown -> transformsamples(NatafTransformation(X(Unknown), ρˣ), x, :X2U), θ)
+        vec(LinearAlgebra.transpose(α) * ∇T(Θ))
+    end
 
-    # Compute the sensitivities vector for the probability of failure:
+    # Compute the sensitivity vector for the probability of failure:
     ∇PoF = -Distributions.pdf(Distributions.Normal(), β) * ∇β
 
     return SensitivityProblemCache(FORMSolution, ∇β, ∇PoF)
@@ -131,15 +155,4 @@ function G(g::Function, Θ::AbstractVector{<:Real}, NatafObject::NatafTransforma
 
     # Return the result:
     return GSample
-end
-
-function T(X::Function, ρˣ::AbstractMatrix{<:Real}, Θ::AbstractVector{<:Real}, x::AbstractVector{<:Real})
-    # Perform the Nataf transformation:
-    NatafObject = NatafTransformation(X(Θ), ρˣ)
-
-    # Compute the design point in the U-space:
-    u = transformsamples(NatafObject, x, :X2U)
-
-    # Return the result:
-    return u
 end

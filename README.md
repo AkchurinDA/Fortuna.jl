@@ -51,16 +51,18 @@ The following functionality is planned to be added:
   - [x] Monte Carlo Methods
     - [x] Direct Monte Carlo Simulations
     - [x] Importance Sampling Method
-  - [x] First-Order Reliability Method
+  - [x] First-Order Reliability Methods
     - [x] Mean-Centered First-Order Second-Moment Method
     - [x] Rackwitz-Fiessler Method
     - [x] Hasofer-Lind Rackwitz-Fiessler Method
     - [x] Improved Hasofer-Lind Rackwitz-Fiessler Method
-  - [x] Second-Order Reliability Method
+  - [x] Second-Order Reliability Methods
     - [x] Curve-Fitting Method
     - [x] Point-Fitting Method
   - [x] Subset Simulation Method
-- [ ] Inverse Reliability Analysis Methods
-- [x] Sensitivity Analysis
-  - [x] w.r.t. the parameters of the limit state function.
-  - [x] w.r.t. the parameters and moments of the random vector.
+- [ ] Inverse Reliability Analysis Method
+- [x] Sensitivity Analysis:
+  - [x] w.r.t. parameters of limit state functions
+  - [x] w.r.t. parameters and moments of random vectors
+- [x] External Solvers
+  - [x] OpenSeesPy

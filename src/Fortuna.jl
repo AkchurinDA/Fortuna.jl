@@ -3,22 +3,23 @@ module Fortuna
 # IMPORT PACKAGES
 # --------------------------------------------------
 import Base
-import Random
 import Distributions
 import FastGaussQuadrature
+import FiniteDiff
+import ForwardDiff
 import LinearAlgebra
 import NonlinearSolve
+import Random
 import SpecialFunctions
-import ForwardDiff
 using  DocStringExtensions
 
 # --------------------------------------------------
 # REEXPORT PACKAGES
 # --------------------------------------------------
-import Reexport: @reexport
-@reexport import Distributions: rand, pdf # Extended functions
-@reexport import Distributions: mean, std, cor, params # Useful functions
-@reexport import LinearAlgebra: I
+import Reexport
+Reexport.@reexport import Distributions: rand, pdf              # Extended functions
+Reexport.@reexport import Distributions: mean, std, cor, params # Useful functions
+Reexport.@reexport import LinearAlgebra: I
 
 # --------------------------------------------------
 # DEFINE ABSTRACT TYPES
@@ -30,12 +31,12 @@ Abstract type for isoprobabilistic transformations.
 """
 abstract type AbstractIsoprobabilisticTransformation end
 
-"""
-    abstract type AbstractSamplingTechnique end
+# """
+#     abstract type AbstractSamplingTechnique end
 
-Abstract type for sampling techniques.
-"""
-abstract type AbstractSamplingTechnique end
+# Abstract type for sampling techniques.
+# """
+# abstract type AbstractSamplingTechnique end
 
 """
     abstract type AbstractReliabilityProblem end
@@ -75,8 +76,7 @@ include("Random Variables/SampleRandomVariables.jl")
 include("Reliability Problems/ReliabilityProblems.jl")
 include("InverseReliabilityProblems.jl")
 include("SensitivityProblems.jl")
-# include("Utilities/MakieRecipes.jl") 
-# Temporarily removed to avoid dependency on Makie, need to create an extension
+# include("Utilities/MakieRecipes.jl") # Temporarily removed to avoid dependency on Makie - need to create an extension.
 export AbstractSamplingTechnique
 export ITS, LHS
 export AbstractTransformation

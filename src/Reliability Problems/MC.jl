@@ -9,7 +9,7 @@ Base.@kwdef struct MC <: AbstractReliabililyAnalysisMethod
     "Number of samples ``N``"
     NumSamples::Integer = 1E6
     "Sampling technique"
-    SamplingTechnique::AbstractSamplingTechnique = ITS()
+    SamplingTechnique::Symbol = :LHS
 end
 
 """
@@ -45,7 +45,7 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::MC)
     NatafObject = NatafTransformation(X, ρˣ)
 
     # Generate samples:
-    if !isa(SamplingTechnique, ITS) && !isa(SamplingTechnique, LHS)
+    if (SamplingTechnique != :ITS) && (SamplingTechnique != :LHS)
         throw(ArgumentError("Provided sampling technique is not supported!"))
     else
         XSamples, _, _ = rand(NatafObject, NumSamples, SamplingTechnique)

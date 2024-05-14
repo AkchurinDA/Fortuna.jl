@@ -23,7 +23,7 @@ nothing # hide
 - Sample the generated random variable using a sampling technique of your choice.
 
 ```@example 1
-XSamples = rand(X, 10000, LHS())
+XSamples = rand(X, 10000, :LHS)
 
 nothing # hide
 ```
@@ -56,7 +56,7 @@ nothing # hide
 - Sample the defined random vector using a sampling technique of your choice.
 
 ```@example 1
-XSamples = rand(X, 10000, LHS())
+XSamples = rand(X, 10000, :LHS)
 
 nothing # hide
 ```
@@ -108,7 +108,7 @@ nothing # hide
 - Sample the defined random vector using a sampling technique of your choice.
 
 ```@example 1
-XSamples, ZSamples, USamples = rand(TransformationObject, 10000, LHS())
+XSamples, ZSamples, USamples = rand(TransformationObject, 10000, :LHS)
 
 nothing # hide
 ```
@@ -120,9 +120,7 @@ nothing # hide
 ## API
 
 ```@docs
-ITS
-LHS
-rand(RNG::Distributions.AbstractRNG, RandomVariable::Distributions.ContinuousUnivariateDistribution, NumSamples::Int, SamplingTechnique::AbstractSamplingTechnique)
-rand(RNG::Distributions.AbstractRNG, RandomVector::Vector{<:Distributions.ContinuousUnivariateDistribution}, NumSamples::Int, SamplingTechnique::AbstractSamplingTechnique)
-rand(RNG::Distributions.AbstractRNG, TransformationObject::NatafTransformation, NumSamples::Int, SamplingTechnique::AbstractSamplingTechnique)
+rand(RNG::Distributions.AbstractRNG, RandomVariable::Distributions.ContinuousUnivariateDistribution, NumSamples::Int, SamplingTechnique::Symbol)
+rand(RNG::Distributions.AbstractRNG, RandomVector::Vector{<:Distributions.ContinuousUnivariateDistribution}, NumSamples::Int, SamplingTechnique::Symbol)
+rand(RNG::Distributions.AbstractRNG, TransformationObject::NatafTransformation, NumSamples::Int, SamplingTechnique::Symbol)
 ```
