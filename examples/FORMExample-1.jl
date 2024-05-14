@@ -22,4 +22,5 @@ Problem = ReliabilityProblem(X, ρˣ, g)
 
 # Perform the reliability analysis using FORM:
 Solution = solve(Problem, FORM())
-Solution.PoF
+println("β   = $(Solution.β)  ")
+println("PoF = $(Solution.PoF)")
