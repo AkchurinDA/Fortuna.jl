@@ -1,5 +1,9 @@
 # News
 
+## Release V0.8.1
+
+- Added fallback onto numerical differentiation for non-linear problem solver. Fixes a problem with Rackwitz-Fiessler and Point-Fitting methods stalling if a non-differentiable limit state function is encountered.
+
 ## Release V0.8.0
 
 - Limit state functions can now be given by OpenSeesPy models directly in Julia! This is made possible by using the `PyCall.jl` and `Conda.jl` packages that allow to bring Python functionality into Julia.
