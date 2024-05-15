@@ -507,7 +507,7 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM; Differentiatio
             xₜ = transformsamples(NatafObject, uₜ, :U2X)
             Gₜ = g(xₜ)
             mₜ = 0.5 * LinearAlgebra.norm(uₜ) ^ 2 + c[i] * abs(Gₜ)
-            while mₜ ≥ m[i]
+            while mₜ > m[i]
                 # Update the step size:
                 λₜ = λₜ / 2
 

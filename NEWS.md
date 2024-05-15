@@ -1,5 +1,11 @@
 # News
 
+## Release V0.8.2
+
+- Fixed a bug with the iHLRF method stalling in very specific cases.
+- Added more examples with FEM solvers.
+- Added precompilation of the source code for performance purposes.
+
 ## Release V0.8.1
 
 - Added fallback onto numerical differentiation for non-linear problem solver. Fixes a problem with Rackwitz-Fiessler and Point-Fitting methods stalling if a non-differentiable limit state function is encountered.

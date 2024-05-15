@@ -37,3 +37,7 @@ end
 @testset "Sensitivity Problems" begin
     include("TestSensitivityProblems.jl")
 end
+
+@testset "FEM Solvers" begin
+    include("TestFEMSolvers.jl")
+end

@@ -162,11 +162,7 @@ function ModifiedMetropolisHastings(StartingPoint::Vector{Float64}, CurrentThres
         # Compute the indicator function:
         XProposedState = transformsamples(NatafObject, ProposedState, :U2X)
         GProposedState = g(XProposedState)
-        if GProposedState ≤ CurrentThreshold
-            IF = 1
-        else
-            IF = 0
-        end
+        IF             = GProposedState ≤ CurrentThreshold ? 1 : 0
 
         # Accept or reject the proposed state:
         α = (pdf(ϕ, ProposedState) * IF) / pdf(ϕ, ChainSamples[:, i]) # Acceptance ratio

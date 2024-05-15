@@ -1,6 +1,6 @@
-using Fortuna
-
 # https://www.researchgate.net/publication/370230768_Structural_reliability_analysis_by_line_sampling_A_Bayesian_active_learning_treatment
+
+using Fortuna
 
 # Define random vector:
 m   = randomvariable("LogNormal", "M", [1.0, 1.0 * 0.05])

@@ -64,5 +64,6 @@ The following functionality is planned to be added:
 - [x] Sensitivity Analysis:
   - [x] w.r.t. parameters of limit state functions
   - [x] w.r.t. parameters and moments of random vectors
-- [x] External Solvers
-  - [x] OpenSeesPy
+- [x] FEM Solvers
+  - [x] `OpenSeesPy`
+  - [x] `InstantFrame.jl`
