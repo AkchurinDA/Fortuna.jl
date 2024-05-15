@@ -17,12 +17,6 @@ P_6     = randomvariable("Frechet",   "M", [   30,    30 * 0.1])
 P_7     = randomvariable("Frechet",   "M", [  100,   100 * 0.1])
 P_8     = randomvariable("Frechet",   "M", [  200,   200 * 0.1])
 P_9     = randomvariable("Frechet",   "M", [  100,   100 * 0.1])
-E_C_R_1 = randomvariable("LogNormal", "M", [28000, 28000 * 0.1]) # Outer columns (right side)
-E_C_R_2 = randomvariable("LogNormal", "M", [28000, 28000 * 0.1])
-E_C_R_3 = randomvariable("LogNormal", "M", [28000, 28000 * 0.1])
-E_C_R_4 = randomvariable("LogNormal", "M", [28000, 28000 * 0.1])
-E_C_R_5 = randomvariable("LogNormal", "M", [28000, 28000 * 0.1])
-E_C_R_6 = randomvariable("LogNormal", "M", [28000, 28000 * 0.1])
 E_C_L_1 = randomvariable("LogNormal", "M", [28000, 28000 * 0.1]) # Outer columns (left side)
 E_C_L_2 = randomvariable("LogNormal", "M", [28000, 28000 * 0.1])
 E_C_L_3 = randomvariable("LogNormal", "M", [28000, 28000 * 0.1])
@@ -35,6 +29,12 @@ E_C_C_3 = randomvariable("LogNormal", "M", [30000, 30000 * 0.1])
 E_C_C_4 = randomvariable("LogNormal", "M", [30000, 30000 * 0.1])
 E_C_C_5 = randomvariable("LogNormal", "M", [30000, 30000 * 0.1])
 E_C_C_6 = randomvariable("LogNormal", "M", [30000, 30000 * 0.1])
+E_C_R_1 = randomvariable("LogNormal", "M", [28000, 28000 * 0.1]) # Outer columns (right side)
+E_C_R_2 = randomvariable("LogNormal", "M", [28000, 28000 * 0.1])
+E_C_R_3 = randomvariable("LogNormal", "M", [28000, 28000 * 0.1])
+E_C_R_4 = randomvariable("LogNormal", "M", [28000, 28000 * 0.1])
+E_C_R_5 = randomvariable("LogNormal", "M", [28000, 28000 * 0.1])
+E_C_R_6 = randomvariable("LogNormal", "M", [28000, 28000 * 0.1])
 E_B_1   = randomvariable("LogNormal", "M", [26000, 26000 * 0.1]) # Beams
 E_B_2   = randomvariable("LogNormal", "M", [26000, 26000 * 0.1])
 E_B_3   = randomvariable("LogNormal", "M", [26000, 26000 * 0.1])
@@ -47,12 +47,6 @@ E_B_9   = randomvariable("LogNormal", "M", [26000, 26000 * 0.1])
 E_B_10  = randomvariable("LogNormal", "M", [26000, 26000 * 0.1])
 E_B_11  = randomvariable("LogNormal", "M", [26000, 26000 * 0.1])
 E_B_12  = randomvariable("LogNormal", "M", [26000, 26000 * 0.1])
-A_C_R_1 = randomvariable("LogNormal", "M", [ 21.0,  21.0 * 0.1]) # Outer columns (right side)
-A_C_R_2 = randomvariable("LogNormal", "M", [ 21.0,  21.0 * 0.1])
-A_C_R_3 = randomvariable("LogNormal", "M", [ 21.0,  21.0 * 0.1])
-A_C_R_4 = randomvariable("LogNormal", "M", [ 21.0,  21.0 * 0.1])
-A_C_R_5 = randomvariable("LogNormal", "M", [ 21.0,  21.0 * 0.1])
-A_C_R_6 = randomvariable("LogNormal", "M", [ 21.0,  21.0 * 0.1])
 A_C_L_1 = randomvariable("LogNormal", "M", [ 21.0,  21.0 * 0.1]) # Outer columns (left side)
 A_C_L_2 = randomvariable("LogNormal", "M", [ 21.0,  21.0 * 0.1])
 A_C_L_3 = randomvariable("LogNormal", "M", [ 21.0,  21.0 * 0.1])
@@ -65,6 +59,12 @@ A_C_C_3 = randomvariable("LogNormal", "M", [ 26.9,  26.9 * 0.1])
 A_C_C_4 = randomvariable("LogNormal", "M", [ 26.9,  26.9 * 0.1])
 A_C_C_5 = randomvariable("LogNormal", "M", [ 26.9,  26.9 * 0.1])
 A_C_C_6 = randomvariable("LogNormal", "M", [ 26.9,  26.9 * 0.1])
+A_C_R_1 = randomvariable("LogNormal", "M", [ 21.0,  21.0 * 0.1]) # Outer columns (right side)
+A_C_R_2 = randomvariable("LogNormal", "M", [ 21.0,  21.0 * 0.1])
+A_C_R_3 = randomvariable("LogNormal", "M", [ 21.0,  21.0 * 0.1])
+A_C_R_4 = randomvariable("LogNormal", "M", [ 21.0,  21.0 * 0.1])
+A_C_R_5 = randomvariable("LogNormal", "M", [ 21.0,  21.0 * 0.1])
+A_C_R_6 = randomvariable("LogNormal", "M", [ 21.0,  21.0 * 0.1])
 A_B_1   = randomvariable("LogNormal", "M", [ 16.0,  16.0 * 0.1]) # Beams
 A_B_2   = randomvariable("LogNormal", "M", [ 16.0,  16.0 * 0.1])
 A_B_3   = randomvariable("LogNormal", "M", [ 16.0,  16.0 * 0.1])
@@ -77,12 +77,6 @@ A_B_9   = randomvariable("LogNormal", "M", [ 16.0,  16.0 * 0.1])
 A_B_10  = randomvariable("LogNormal", "M", [ 16.0,  16.0 * 0.1])
 A_B_11  = randomvariable("LogNormal", "M", [ 16.0,  16.0 * 0.1])
 A_B_12  = randomvariable("LogNormal", "M", [ 16.0,  16.0 * 0.1])
-I_C_R_1 = randomvariable("LogNormal", "M", [ 2100,  2100 * 0.1]) # Outer columns (right side)
-I_C_R_2 = randomvariable("LogNormal", "M", [ 2100,  2100 * 0.1])
-I_C_R_3 = randomvariable("LogNormal", "M", [ 2100,  2100 * 0.1])
-I_C_R_4 = randomvariable("LogNormal", "M", [ 2100,  2100 * 0.1])
-I_C_R_5 = randomvariable("LogNormal", "M", [ 2100,  2100 * 0.1])
-I_C_R_6 = randomvariable("LogNormal", "M", [ 2100,  2100 * 0.1])
 I_C_L_1 = randomvariable("LogNormal", "M", [ 2100,  2100 * 0.1]) # Outer columns (left side)
 I_C_L_2 = randomvariable("LogNormal", "M", [ 2100,  2100 * 0.1])
 I_C_L_3 = randomvariable("LogNormal", "M", [ 2100,  2100 * 0.1])
@@ -95,6 +89,12 @@ I_C_C_3 = randomvariable("LogNormal", "M", [ 2690,  2690 * 0.1])
 I_C_C_4 = randomvariable("LogNormal", "M", [ 2690,  2690 * 0.1])
 I_C_C_5 = randomvariable("LogNormal", "M", [ 2690,  2690 * 0.1])
 I_C_C_6 = randomvariable("LogNormal", "M", [ 2690,  2690 * 0.1])
+I_C_R_1 = randomvariable("LogNormal", "M", [ 2100,  2100 * 0.1]) # Outer columns (right side)
+I_C_R_2 = randomvariable("LogNormal", "M", [ 2100,  2100 * 0.1])
+I_C_R_3 = randomvariable("LogNormal", "M", [ 2100,  2100 * 0.1])
+I_C_R_4 = randomvariable("LogNormal", "M", [ 2100,  2100 * 0.1])
+I_C_R_5 = randomvariable("LogNormal", "M", [ 2100,  2100 * 0.1])
+I_C_R_6 = randomvariable("LogNormal", "M", [ 2100,  2100 * 0.1])
 I_B_1   = randomvariable("LogNormal", "M", [ 1600,  1600 * 0.1]) # Beams
 I_B_2   = randomvariable("LogNormal", "M", [ 1600,  1600 * 0.1])
 I_B_3   = randomvariable("LogNormal", "M", [ 1600,  1600 * 0.1])
@@ -109,17 +109,17 @@ I_B_11  = randomvariable("LogNormal", "M", [ 1600,  1600 * 0.1])
 I_B_12  = randomvariable("LogNormal", "M", [ 1600,  1600 * 0.1])
 X = [
     P_1, P_2, P_3, P_4, P_5, P_6, P_7, P_8, P_9,
-    E_C_R_1, E_C_R_2, E_C_R_3, E_C_R_4, E_C_R_5, E_C_R_6,
     E_C_L_1, E_C_L_2, E_C_L_3, E_C_L_4, E_C_L_5, E_C_L_6,
     E_C_C_1, E_C_C_2, E_C_C_3, E_C_C_4, E_C_C_5, E_C_C_6,
+    E_C_R_1, E_C_R_2, E_C_R_3, E_C_R_4, E_C_R_5, E_C_R_6,
     E_B_1, E_B_2, E_B_3, E_B_4, E_B_5, E_B_6, E_B_7, E_B_8, E_B_9, E_B_10, E_B_11, E_B_12,
-    A_C_R_1, A_C_R_2, A_C_R_3, A_C_R_4, A_C_R_5, A_C_R_6,
     A_C_L_1, A_C_L_2, A_C_L_3, A_C_L_4, A_C_L_5, A_C_L_6,
     A_C_C_1, A_C_C_2, A_C_C_3, A_C_C_4, A_C_C_5, A_C_C_6,
+    A_C_R_1, A_C_R_2, A_C_R_3, A_C_R_4, A_C_R_5, A_C_R_6,
     A_B_1, A_B_2, A_B_3, A_B_4, A_B_5, A_B_6, A_B_7, A_B_8, A_B_9, A_B_10, A_B_11, A_B_12,
-    I_C_R_1, I_C_R_2, I_C_R_3, I_C_R_4, I_C_R_5, I_C_R_6,
     I_C_L_1, I_C_L_2, I_C_L_3, I_C_L_4, I_C_L_5, I_C_L_6,
     I_C_C_1, I_C_C_2, I_C_C_3, I_C_C_4, I_C_C_5, I_C_C_6,
+    I_C_R_1, I_C_R_2, I_C_R_3, I_C_R_4, I_C_R_5, I_C_R_6,
     I_B_1, I_B_2, I_B_3, I_B_4, I_B_5, I_B_6, I_B_7, I_B_8, I_B_9, I_B_10, I_B_11, I_B_12]
 
 # Define the correlation matrix:
@@ -227,12 +227,7 @@ function g(x::Vector)
 
     ops.timeSeries("Linear", 1)
     ops.pattern("Plain", 1, 1)
-    ops.load(2, x[1], 0, 0)
-    ops.load(3, x[2], 0, 0)
-    ops.load(4, x[3], 0, 0)
-    ops.load(5, x[4], 0, 0)
-    ops.load(6, x[5], 0, 0)
-    ops.load(7, x[6], 0, 0)
+    ops.load(11, x[1], 0, 0)
 
     ops.system("BandSPD")
     ops.numberer("RCM")
@@ -259,5 +254,5 @@ Problem = ReliabilityProblem(X, ρˣ, g)
 
 # Solve the reliability problem:
 Solution = solve(Problem, FORM(), Differentiation = :Numeric)
-Solution.β
-Solution.PoF
+println("β   = $(Solution.β)  ")
+println("PoF = $(Solution.PoF)")

@@ -36,8 +36,8 @@ makedocs(
         ],
         "Inverse Reliability Problems"                  => "InverseReliabilityProblems.md",
         "Sensitivity Problems"                          => "SensitivityProblems.md",
+        "Finite Element Models"                         => "FiniteElementModels.md",
         "Examples"                                      => "Examples.md",
-        "Advanced Usage"                                => "AdvancedUsage.md",
         "Showcases"                                     => "Showcases.md",
         "References"                                    => "References.md"
     ],

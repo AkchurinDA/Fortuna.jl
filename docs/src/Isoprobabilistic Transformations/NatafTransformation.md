@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Nataf Transformation is a widely utilized isoprobabilistic transformation in structural reliability analysis. Its purpose is to transform random vectors with correlated non-normal marginals ``\vec{X}`` into random vectors with uncorrelated standard normal marginals ``\vec{U}``. This transformation was first introduced by André Nataf in 1962 [Nataf:1962](@cite).
+The Nataf Transformation is a widely utilized isoprobabilistic transformation in structural reliability analysis. Its purpose is to transform random vectors with correlated non-normal marginals ``\vec{X}`` into random vectors with uncorrelated standard normal marginals ``\vec{U}``. This transformation was first introduced by André Nataf in 1962 [Nataf:1962](@citet).
 
 The Nataf Transformation ``\vec{U} = T^{N}(\vec{X})`` is composed of two transformations: 
 
