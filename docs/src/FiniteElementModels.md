@@ -51,10 +51,14 @@ g(\vec{X}) = \Delta_{0} - \Delta(\vec{X})
 where ``\Delta(\vec{X})`` is the downward deflection at the free end of the beam, which must not exceed the deflection limit ``\Delta_{0}`` of ``1 \text{ in.}``. The goal of this example is to find the reliability indices ``\beta`` and probabilities of failure ``P_{f}`` using first- and second-order reliability method.
 
 ```@setup 1
-using PyCall, Conda
+# Install OpenSeesPy:
+using Conda
 Conda.pip_interop(true)
 Conda.pip("install", "openseespy")
-# ENV["PYTHON"] = ""
+
+# Force Julia to use its own Python distribution via Conda.jl:
+using Pkg, PyCall
+ENV["PYTHON"] = ""
 Pkg.build("PyCall")
 ```
 
