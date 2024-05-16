@@ -44,8 +44,8 @@ After defining the reliability problem, `Fortuna.jl` allows to easily solve it u
 ```@example 1
 # Perform reliability analysis using improved Hasofer-Lind-Rackwitz-Fiessler (iHLRF) method:
 Solution = solve(Problem, FORM(iHLRF()))
-println("PoF    = $(Solution.PoF)")
-println("β      = $(Solution.β)")
+println("β   = $(Solution.β)  ")
+println("PoF = $(Solution.PoF)")
 ```
 
 Descriptions of all First- and Second-Order Reliability Methods implemented in `Fortuna.jl` can be found on [First-Order Reliability Methods](@ref FORMPage) and [Second-Order Reliability Methods](@ref SORMPage) pages.

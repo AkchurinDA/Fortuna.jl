@@ -25,31 +25,30 @@ Now you need to install `OpenSeesPy` package through `Conda.jl` package. To do t
 
 ```julia
 using Conda
-Conda.pip_interop(true)
-Conda.pip("install", "openseespy")
+Conda.pip_interop(true)            # Activate "pip"
+Conda.pip("install", "openseespy") # Install OpenSeesPy using "pip"
 ```
 
 Now you can work with `OpenSeesPy` package directly from Julia!
 
 !!! note
-    If you are experiencing any problem please refer to Conda.jl package's [documentation](https://github.com/JuliaPy/Conda.jl).
+    If you are experiencing any problems installing OpenSeesPy package please refer to Conda.jl package's [documentation](https://github.com/JuliaPy/Conda.jl).
 
 ### Example
 
-Consider the following example of a cantilever beam under axial and transverse loads based on the example provided in [Denavit:2013](@citet) with the only difference that Young's modulus ``E = X_{1}`` and moment of inertia about major axis ``I = X_{2}`` are normally-distributed random variables with the following mean and coefficient of variation values:
+Consider a cantilever beam subjected to axial and transverse loads based on the example provided in [Denavit:2013](@citet) with the only difference that Young's modulus ``E = X_{1}`` and moment of inertia about major axis ``I = X_{2}`` are uncorrelated normally-distributed random variables. The cross-sectional area of the beam ``A`` is ``9.12 \text{ in.}^{2}``.
 
-| Random Variable | Mean, ``\mu`` | Coefficient of variation, ``V`` |
-| :--- | :--- | :--- |
-| ``E = X_{1}`` | ``29000 \text{ ksi}`` | ``0.05`` |
-| ``I = X_{2}`` | ``110 \text{ in.}^{4}`` | ``0.05`` |
+```@raw html
+<img src="../assets/Plots (Examples)/OpenSees-1.svg" class="center" style="max-height:350px; border-radius:2.5px;"/>
+```
 
-Also, let's define the limit state function as 
+Let's define the limit state function as 
 
 ```math
 g(\vec{X}) = \Delta_{0} - \Delta(\vec{X})
 ```
 
-where ``\Delta(\vec{X})`` is the downward deflection at the free end, which must not exceed the limit of ``\Delta_{0} = 1 \text{ in.}``. The goal is to find the reliability indices ``\beta`` and probabilities of failure ``P_{f}`` for this problem using first- and second-order reliability method.
+where ``\Delta(\vec{X})`` is the downward deflection at the free end of the beam, which must not exceed the deflection limit ``\Delta_{0}`` of ``1 \text{ in.}``. The goal of this example is to find the reliability indices ``\beta`` and probabilities of failure ``P_{f}`` using first- and second-order reliability method.
 
 ```@setup 1
 using Conda
@@ -67,7 +66,7 @@ ops = pyimport("openseespy.opensees")
 
 # Define the random variables:
 X₁ = randomvariable("Normal", "M", [29000, 0.05 * 29000]) # Young's modulus
-X₂ = randomvariable("Normal", "M", [  110, 0.05 *   110]) # Moment of inertia about major-axis
+X₂ = randomvariable("Normal", "M", [  110, 0.05 *   110]) # Moment of inertia about major axis
 X  = [X₁, X₂]
 
 # Define the correlation matrix:
@@ -132,152 +131,12 @@ function g(x::Vector)
     ops.algorithm("Linear")
 
     # Solve:
-    ops.integrator("LoadControl", 0.001)
+    ops.integrator("LoadControl", 0.01)
     ops.analysis("Static")
-    ops.analyze(1000)
+    ops.analyze(100)
 
     # Get the vertical displacement at the free end:
     Δ = -ops.nodeDisp(11, 2)
-
-    return 1 - Δ
-end
-
-# Define the reliability problem:
-Problem = ReliabilityProblem(X, ρˣ, g)
-
-# Perform the reliability analysis using the FORM:
-Solution = solve(Problem, FORM(), Differentiation = :Numeric)
-println("FORM:")
-println("β:   $(Solution.β)  ")
-println("PoF: $(Solution.PoF)")
-
-# Perform the reliability analysis using the SORM:
-Solution = solve(Problem, SORM(), Differentiation = :Numeric)
-println("SORM:")
-println("β:   $(Solution.β₂)  ")
-println("PoF: $(Solution.PoF₂)")
-```
-
-## `InstantFrame.jl`
-
-### Installation
-
-To install `InstantFrame.jl` package, type `]` in Julia REPL to enter the built-in Julia package manager and execute the following command:
-
-```
-pkg> add https://github.com/runtosolve/InstantFrame.jl.git
-```
-
-### Example
-
-Let's solve previously defined problem using `InstantFrame.jl` package.
-
-```@example 1
-# Preamble:
-using Fortuna
-using InstantFrame
-
-# Define the random variables:
-X₁ = randomvariable("Normal", "M", [29000, 0.05 * 29000]) # Young's modulus
-X₂ = randomvariable("Normal", "M", [  110, 0.05 *   110]) # Moment of inertia about major-axis
-X  = [X₁, X₂]
-
-# Define the correlation matrix:
-ρˣ = [1 0; 0 1]
-
-# Define the limit state function:
-function g(x::Vector)
-    # Define the material properties:
-    Material = InstantFrame.Material(
-        names = ["Steel"], 
-        E     = [x[1]], 
-        ν     = [0.3], 
-        ρ     = [0])
-    
-    # Define the cross-sectional properties:
-    CrossSection = InstantFrame.CrossSection(
-        names = ["Beam"], 
-        A     = [9.12], 
-        Iy    = [0], 
-        Iz    = [x[2]], 
-        J     = [0])
-
-    # Define the element-to-element connections:
-    Connection = InstantFrame.Connection(
-        names     = ["Rigid"], 
-        stiffness = (ux = [Inf], uy = [Inf], uz = [Inf], rx = [Inf], ry = [Inf], rz = [Inf]))
-
-    # Define the nodes:
-    Node = InstantFrame.Node(
-        numbers     = 1:11, 
-        coordinates = [
-            ( 0 * 18, 0, 0), 
-            ( 1 * 18, 0, 0), 
-            ( 2 * 18, 0, 0), 
-            ( 3 * 18, 0, 0), 
-            ( 4 * 18, 0, 0), 
-            ( 5 * 18, 0, 0), 
-            ( 6 * 18, 0, 0), 
-            ( 7 * 18, 0, 0), 
-            ( 8 * 18, 0, 0), 
-            ( 9 * 18, 0, 0), 
-            (10 * 18, 0, 0)])
-
-    # Define the elements:
-    Element = InstantFrame.Element(
-        types         = ["", "", "", "", "", "", "", "", "", ""],
-        numbers       = 1:10, 
-        nodes         = [
-            ( 1,  2), 
-            ( 2,  3), 
-            ( 3,  4), 
-            ( 4,  5), 
-            ( 5,  6), 
-            ( 6,  7), 
-            ( 7,  8), 
-            ( 8,  9), 
-            ( 9, 10), 
-            (10, 11)], 
-        orientation   = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
-        connections   = [
-            ("Rigid", "Rigid"), 
-            ("Rigid", "Rigid"), 
-            ("Rigid", "Rigid"), 
-            ("Rigid", "Rigid"), 
-            ("Rigid", "Rigid"), 
-            ("Rigid", "Rigid"), 
-            ("Rigid", "Rigid"), 
-            ("Rigid", "Rigid"), 
-            ("Rigid", "Rigid"), 
-            ("Rigid", "Rigid")], 
-        cross_section = [ "Beam",  "Beam",  "Beam",  "Beam",  "Beam",  "Beam",  "Beam",  "Beam",  "Beam",  "Beam"], 
-        material      = ["Steel", "Steel", "Steel", "Steel", "Steel", "Steel", "Steel", "Steel", "Steel", "Steel"])
-
-    # Define the boundary conditions:
-    Support = InstantFrame.Support(
-        nodes     = 1:11, 
-        stiffness = (
-            uX = [Inf,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0], 
-            uY = [Inf,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0], 
-            uZ = [Inf, Inf, Inf, Inf, Inf, Inf, Inf, Inf, Inf, Inf, Inf],
-            rX = [Inf, Inf, Inf, Inf, Inf, Inf, Inf, Inf, Inf, Inf, Inf], 
-            rY = [Inf, Inf, Inf, Inf, Inf, Inf, Inf, Inf, Inf, Inf, Inf], 
-            rZ = [Inf,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0]))
-
-    # Define the distributed loads:
-    UniformLoad = InstantFrame.UniformLoad(nothing)
-
-    # Define the concentrated loads:
-    PointLoad = InstantFrame.PointLoad(
-        labels     = [""], 
-        nodes      = [11], 
-        magnitudes = (FX = [-50], FY = [-1], FZ = [0], MX = [0], MY = [0], MZ = [0]))
-
-    # Solve:
-    Model = InstantFrame.solve(Node, CrossSection, Material, Connection, Element, Support, UniformLoad, PointLoad, analysis_type = "second order", solution_tolerance = 1E-6)
-
-    # Get the vertical displacement at the free end:
-    Δ = -Model.solution.displacements[11][2]
 
     return 1 - Δ
 end
