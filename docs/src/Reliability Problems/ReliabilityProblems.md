@@ -39,16 +39,16 @@ nothing # hide
 
 ## Solving Reliability Problems
 
-After defining the reliability problem, `Fortuna.jl` allows to easily solve it using a whole suite of First- and Second-Order Reliability Methods through a single `solve()` function as shown in the example below.
+After defining the reliability problem, `Fortuna.jl` allows to easily solve it using a whole suite of first- and second-order reliability methods through a single `solve()` function as shown in the example below.
 
 ```@example 1
 # Perform reliability analysis using improved Hasofer-Lind-Rackwitz-Fiessler (iHLRF) method:
 Solution = solve(Problem, FORM(iHLRF()))
-println("β   = $(Solution.β)  ")
-println("PoF = $(Solution.PoF)")
+println("β: $(Solution.β)")
+println("PoF: $(Solution.PoF)")
 ```
 
-Descriptions of all First- and Second-Order Reliability Methods implemented in `Fortuna.jl` can be found on [First-Order Reliability Methods](@ref FORMPage) and [Second-Order Reliability Methods](@ref SORMPage) pages.
+Descriptions of all first- and second-order reliability methods implemented in `Fortuna.jl` can be found on [First-Order Reliability Methods](@ref FORMPage) and [Second-Order Reliability Methods](@ref SORMPage) pages.
 
 ## API
 

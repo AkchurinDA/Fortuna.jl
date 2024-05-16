@@ -37,7 +37,6 @@ where ``N`` is the number of generated sampled. The estimator ``\hat{P}_{f}`` is
     <img src="../../assets/Plots (Theory)/MonteCarlo-1.svg" class="center" style="max-height:350px; border-radius:2.5px;"/>
     ```
 
-
 ## API
 
 ```@docs

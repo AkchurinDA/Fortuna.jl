@@ -3,8 +3,8 @@
 ## Release V0.8.2
 
 - Fixed a bug with the iHLRF method stalling in very specific cases.
-- Added more examples with FEM solvers.
 - Added precompilation of the source code for performance purposes.
+- Added more examples with FEM solvers and generally clean up the documentation.
 
 ## Release V0.8.1
 

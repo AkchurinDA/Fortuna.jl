@@ -3,8 +3,11 @@
 ## Types of Sensitivity Problems in `Fortuna.jl`
 
 `Fortuna.jl` districts two types of sensitivity problems:
-- Type I problems (`SensitivityProblemsTypeI()`) - used to find sensitivities w.r.t. to the parameters ``\vec{\Theta}_{g}`` of the limit state function ``g(\vec{X}, \vec{\Theta}_{g})``.
-- Type II problems (`SensitivityProblemsTypeII()`) - used to find sensitivities w.r.t. to the parameters and/or moments ``\vec{\Theta}_{f}`` of the random vector ``\vec{X}(\vec{\Theta}_{f})``.
+
+| Item | Description |
+| :--- | :--- |
+| Type I | Used to find sensitivities w.r.t. to the parameters ``\vec{\Theta}_{g}`` of the limit state function ``g(\vec{X}, \vec{\Theta}_{g})`` |
+| Type II | Used to find sensitivities w.r.t. to the parameters and/or moments ``\vec{\Theta}_{f}`` of the random vector ``\vec{X}(\vec{\Theta}_{f})`` |
 
 ## Defining and Solving Sensitivity Problems of Type I
 
@@ -12,7 +15,7 @@ In general, 4 main "items" are always needed to fully define a sensitivity probl
 
 | Item | Description |
 | :--- | :--- |
-| ``\vec{X}`` | Random vector with correlated non-normal marginals |
+| ``\vec{X}`` | Random vector |
 | ``\rho^{X}`` | Correlation matrix |
 | ``g(\vec{X}, \vec{\Theta}_{g})`` | Limit state function parametrized in terms of its parameters |
 | ``\vec{\Theta}_{g}`` | Parameters of the limit state function |
@@ -32,7 +35,11 @@ Y  = randomvariable("Weibull", "M", [40000, 40000 * 0.1])
 X  = [M₁, M₂, P, Y]
 
 # Define the correlation matrix:
-ρˣ = [1 0.5 0.3 0; 0.5 1 0.3 0; 0.3 0.3 1 0; 0 0 0 1]
+ρˣ = [
+    1.0 0.5 0.3 0.0
+    0.5 1.0 0.3 0.0
+    0.3 0.3 1.0 0.0
+    0.0 0.0 0.0 1.0]
 
 # Define the limit state function:
 g(x::Vector, θ::Vector) = 1 - x[1] / (θ[1] * x[4]) - x[2] / (θ[2] * x[4]) - (x[3] / (θ[3] * x[4])) ^ 2
@@ -54,8 +61,8 @@ After defining a sensitivity problem of type I, `Fortuna.jl` allows to easily pe
 ```@example 1
 # Perform the sensitivity analysis:
 Solution = solve(Problem)
+println("∇β   = $(Solution.∇β)  ")
 println("∇PoF = $(Solution.∇PoF)")
-println("∇β   = $(Solution.∇β)")
 ```
 
 ## Defining and Solving Sensitivity Problems of Type II
@@ -80,8 +87,8 @@ using Fortuna
 function XFunction(Θ::Vector)
     M₁ = randomvariable("Normal",  "M", [Θ[1], Θ[2]])
     M₂ = randomvariable("Normal",  "M", [Θ[3], Θ[4]])
-    P  = randomvariable("Gumbel",  "P", [Θ[5], Θ[6]])
-    Y  = randomvariable("Weibull", "P", [Θ[7], Θ[8]])
+    P  = randomvariable("Gumbel",  "M", [Θ[5], Θ[6]])
+    Y  = randomvariable("Weibull", "M", [Θ[7], Θ[8]])
 
     return [M₁, M₂, P, Y]
 end
@@ -95,10 +102,10 @@ end
 
 # Define the parameters and moments of the random vector:
 Θ = [
-    250,  250   * 0.30,
-    125,  125   * 0.30,
-    2257, 1 / 0.00257,
-    12.2, 41700]
+      250,   250 * 0.30,
+      125,   125 * 0.30,
+     2500,  2500 * 0.20,
+    40000, 40000 * 0.10]
 
 # Define the limit state function:
 a            = 0.190
@@ -112,13 +119,13 @@ Problem  = SensitivityProblemTypeII(XFunction, ρˣ, g, Θ)
 nothing # hide
 ```
 
-Similar to sensitivity problem of type I, sensitivity problem of type II are solved using the same `solve()` function as shown in the example below.
+Similar to sensitivity problems of type I, sensitivity problems of type II are solved using the same `solve()` function as shown in the example below.
 
 ```@example 1
 # Perform the sensitivity analysis:
 Solution = solve(Problem)
+println("∇β   = $(Solution.∇β)  ")
 println("∇PoF = $(Solution.∇PoF)")
-println("∇β   = $(Solution.∇β)")
 ```
 
 ## API

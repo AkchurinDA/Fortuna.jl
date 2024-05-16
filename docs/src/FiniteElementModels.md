@@ -147,12 +147,14 @@ Problem = ReliabilityProblem(X, ρˣ, g)
 # Perform the reliability analysis using the FORM:
 Solution = solve(Problem, FORM(), Differentiation = :Numeric)
 println("FORM:")
-println("β:   $(Solution.β)  ")
+println("β: $(Solution.β)")
 println("PoF: $(Solution.PoF)")
 
 # Perform the reliability analysis using the SORM:
 Solution = solve(Problem, SORM(), Differentiation = :Numeric)
 println("SORM:")
-println("β:   $(Solution.β₂)  ")
-println("PoF: $(Solution.PoF₂)")
+println("β: $(Solution.β₂[1]) (Hohenbichler and Rackwitz)")
+println("β: $(Solution.β₂[2]) (Breitung)")
+println("PoF: $(Solution.PoF₂[1]) (Hohenbichler and Rackwitz)")
+println("PoF: $(Solution.PoF₂[2]) (Breitung)")
 ```

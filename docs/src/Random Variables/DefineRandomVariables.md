@@ -14,8 +14,8 @@ To define a random variable using its moments pass `"M"` as the second argument 
 # Define a lognormally distributed random variable R with 
 # mean (μ) of 15 and standard deviation (σ) of 10:
 R = randomvariable("LogNormal", "M", [15, 10])
-println("μ = $(mean(R))")
-println("σ = $(std(R))")
+println("μ: $(mean(R))")
+println("σ: $(std(R))")
 ```
 
 ## Defining Random Variables Using Parameters
@@ -26,8 +26,8 @@ To define a random variable using its parameters pass `"P"` as the second argume
 # Define a gamma-distributed random variable Q with 
 # shape parameter (α) of 16 and scale parameter (θ) of 0.625:
 Q = randomvariable("Gamma", "P", [16, 0.625])
-println("α = $(params(Q)[1])")
-println("θ = $(params(Q)[2])")
+println("α: $(params(Q)[1])")
+println("θ: $(params(Q)[2])")
 ```
 
 ## Supported Random Variables
