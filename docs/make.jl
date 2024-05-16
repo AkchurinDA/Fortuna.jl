@@ -1,6 +1,5 @@
 using Fortuna
 using Distributions
-using PyCall, Conda
 using Documenter, DocumenterCitations
 
 Bibliography = CitationBibliography(
