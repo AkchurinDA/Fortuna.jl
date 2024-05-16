@@ -1,6 +1,7 @@
 using Fortuna
+using Distributions
+using PyCall, Conda
 using Documenter, DocumenterCitations
-import Distributions
 
 Bibliography = CitationBibliography(
     joinpath(@__DIR__, "src/References.bib"),

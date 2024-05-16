@@ -1,6 +1,6 @@
 using Fortuna
 using CairoMakie, MathTeXEngine
-CairoMakie.activate!(type = :svg)
+CairoMakie.activate!(type = :png, px_per_unit = 10)
 
 X₁  = randomvariable("Normal", "M", [0, 1])
 X₂  = randomvariable("Normal", "M", [0, 1])
@@ -63,4 +63,4 @@ begin
     display(F)
 end
 
-save("docs/src/assets/Plots (Examples)/MonteCarlo-1.svg", F)
+save("docs/src/assets/Plots (Examples)/MonteCarlo-1.png", F)

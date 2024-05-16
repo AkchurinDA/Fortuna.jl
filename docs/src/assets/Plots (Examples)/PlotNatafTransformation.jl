@@ -1,6 +1,6 @@
 using Fortuna
 using CairoMakie, MathTeXEngine
-CairoMakie.activate!(type = :svg)
+CairoMakie.activate!(type = :png, px_per_unit = 10)
 
 X₁  = randomvariable("Gamma", "M", [10, 1.5])
 X₂  = randomvariable("Gamma", "M", [15, 2.5])
@@ -63,7 +63,7 @@ begin
     display(F)
 end
 
-save("docs/src/assets/Plots (Examples)/NatafTransformation-1.svg", F)
+save("docs/src/assets/Plots (Examples)/NatafTransformation-1.png", F)
 
 xRange₁ = range(0, 20, 500)
 xRange₂ = range(5, 25, 500)
@@ -80,12 +80,17 @@ begin
         xminorgridvisible = true, yminorgridvisible = true,
         limits = (0, 20, 5, 25),
         aspect = 1)
+
+    contourf!(xRange₁, xRange₂, fSamples,
+        levels = minimum(fSamples) : (maximum(fSamples) - minimum(fSamples)) / 15 : maximum(fSamples),
+        colormap = cgrad([:transparent, :deepskyblue]))
     
     contour!(xRange₁, xRange₂, fSamples,
-        levels = 25,
-        colormap = (:turbo, 0.75))
+        levels = minimum(fSamples) : (maximum(fSamples) - minimum(fSamples)) / 15 : maximum(fSamples),
+        colormap = cgrad([:transparent, :black]),
+        linewidth = 0.5)
 
     display(F)
 end
 
-save("docs/src/assets/Plots (Examples)/NatafTransformation-2.svg", F)
+save("docs/src/assets/Plots (Examples)/NatafTransformation-2.png", F)

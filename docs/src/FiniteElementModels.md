@@ -39,7 +39,7 @@ Now you can work with `OpenSeesPy` package directly from Julia!
 Consider a cantilever beam subjected to axial and transverse loads based on the example provided in [Denavit:2013](@citet) with the only difference that Young's modulus ``E = X_{1}`` and moment of inertia about major axis ``I = X_{2}`` are uncorrelated normally-distributed random variables. The cross-sectional area of the beam ``A`` is ``9.12 \text{ in.}^{2}``.
 
 ```@raw html
-<img src="../assets/Plots (Examples)/OpenSees-1.svg" class="center" style="max-height:350px; border-radius:2.5px;"/>
+<img src="../assets/Plots (Examples)/OpenSees-1.png" class="center" style="max-height:350px; border-radius:2.5px;"/>
 ```
 
 Let's define the limit state function as 
@@ -52,20 +52,19 @@ where ``\Delta(\vec{X})`` is the downward deflection at the free end of the beam
 
 ```@setup 1
 # Install OpenSeesPy:
-import Conda
+using Conda
 Conda.pip_interop(true)
 Conda.pip("install", "openseespy")
-
-# Force Julia to use its own Python distribution via Conda.jl:
-import Pkg
-ENV["PYTHON"] = ""
-Pkg.build("PyCall")
 ```
 
 ```@example 1
 # Preamble:
 using Fortuna
-using PyCall
+using Pkg, PyCall
+
+# Force Julia to use its own Python distribution via Conda.jl:
+ENV["PYTHON"] = ""
+Pkg.build("PyCall")
 
 # Load OpenSeesPy package:
 ops = pyimport("openseespy.opensees")

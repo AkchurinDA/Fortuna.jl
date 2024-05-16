@@ -1,6 +1,6 @@
 using Fortuna, Distributions
 using CairoMakie, MathTeXEngine
-CairoMakie.activate!(type = :svg)
+CairoMakie.activate!(type = :png, px_per_unit = 10)
 
 X₁  = randomvariable("Normal", "M", [0, 1])
 X₂  = randomvariable("Normal", "M", [0, 1])
@@ -84,7 +84,7 @@ begin
     display(F)
 end
 
-save("docs/src/assets/Plots (Examples)/ImportanceSampling-1.svg", F)
+save("docs/src/assets/Plots (Examples)/ImportanceSampling-1.png", F)
 
 PoF = cdf(Normal(), -β)
 begin
@@ -122,4 +122,4 @@ begin
     display(F)
 end
 
-save("docs/src/assets/Plots (Examples)/ImportanceSampling-2.svg", F)
+save("docs/src/assets/Plots (Examples)/ImportanceSampling-2.png", F)
