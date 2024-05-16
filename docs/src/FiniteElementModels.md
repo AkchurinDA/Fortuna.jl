@@ -55,16 +55,17 @@ where ``\Delta(\vec{X})`` is the downward deflection at the free end of the beam
 using Conda
 Conda.pip_interop(true)
 Conda.pip("install", "openseespy")
+
+# Force Julia to use its own Python distribution via Conda.jl:
+using Pkg
+ENV["PYTHON"] = ""
+Pkg.build("PyCall")
 ```
 
 ```@example 1
 # Preamble:
 using Fortuna
-using Pkg, PyCall
-
-# Force Julia to use its own Python distribution via Conda.jl:
-ENV["PYTHON"] = ""
-Pkg.build("PyCall")
+using PyCall
 
 # Load OpenSeesPy package:
 ops = pyimport("openseespy.opensees")
