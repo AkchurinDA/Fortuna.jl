@@ -59,6 +59,7 @@ Conda.pip("install", "openseespy")
 # Force Julia to use its own Python distribution via Conda.jl:
 using Pkg
 ENV["PYTHON"] = ""
+Pkg.activate(".")
 Pkg.build("PyCall")
 ```
 
