@@ -1,6 +1,6 @@
 using Fortuna
 using CairoMakie, MathTeXEngine
-CairoMakie.activate!(type = :svg)
+CairoMakie.activate!(type = :png, px_per_unit = 10)
 
 N(PoF, V) = (1 - PoF) / (PoF * V ^ 2)
 
@@ -34,4 +34,4 @@ begin
     display(F)
 end
 
-save("docs/src/assets/Plots (Theory)/MonteCarlo-1.svg", F)
+save("docs/src/assets/Plots (Theory)/MonteCarlo-1.png", F)

@@ -1,6 +1,6 @@
 using Fortuna, Random
 using CairoMakie, MathTeXEngine
-CairoMakie.activate!(type = :svg)
+CairoMakie.activate!(type = :png, px_per_unit = 10)
 
 Random.seed!(123)
 
@@ -8,7 +8,7 @@ Random.seed!(123)
 # HISTOGRAM
 # --------------------------------------------------
 X           = randomvariable("Gamma", "M", [10, 1.5])
-XSamples    = rand(X, 10000, LHS())
+XSamples    = rand(X, 10000, :LHS)
 
 begin
     F = Figure(size = 72 .* (8, 6), fonts = (; regular = texfont()), fontsize = 14)
@@ -22,14 +22,14 @@ begin
             aspect = 4 / 3)
 
     hist!(XSamples,
-        color = :steelblue,
+        color = :deepskyblue,
         strokecolor = :black, strokewidth = 0.25,
         bins = 50, normalization = :pdf)
     
     display(F)
 end
 
-save("docs/src/assets/Plots (Theory)/Sampling-1.svg", F)
+save("docs/src/assets/Plots (Theory)/Sampling-1.png", F)
 
 # --------------------------------------------------
 # SCATTER (UNCORRELATED)
@@ -37,7 +37,7 @@ save("docs/src/assets/Plots (Theory)/Sampling-1.svg", F)
 X₁          = randomvariable("Gamma", "M", [10, 1.5])
 X₂          = randomvariable("Gamma", "M", [15, 2.5])
 X           = [X₁, X₂]
-XSamples    = rand(X, 10000, LHS())
+XSamples    = rand(X, 10000, :LHS)
 
 begin
     F = Figure(size = 72 .* (6, 6), fonts = (; regular = texfont()), fontsize = 14)
@@ -52,14 +52,14 @@ begin
             aspect = 1)
 
     scatter!(XSamples[1, :], XSamples[2, :],
-        color = (:steelblue, 0.75),
+        color = (:deepskyblue, 0.75),
         strokecolor = (:black, 0.75), strokewidth = 0.25,
         markersize = 6)
     
     display(F)
 end
 
-save("docs/src/assets/Plots (Theory)/Sampling-2.svg", F)
+save("docs/src/assets/Plots (Theory)/Sampling-2.png", F)
 
 # --------------------------------------------------
 # SCATTER (CORRELATED)
@@ -69,7 +69,7 @@ X₂                              = randomvariable("Gamma", "M", [15, 2.5])
 X                               = [X₁, X₂]
 ρˣ                              = [1 -0.75; -0.75 1]
 TransformationObject            = NatafTransformation(X, ρˣ)
-XSamples, ZSamples, USamples    = rand(TransformationObject, 10000, LHS())
+XSamples, ZSamples, USamples    = rand(TransformationObject, 10000, :LHS)
 
 begin
     F = Figure(size = 72 .* (6, 6), fonts = (; regular = texfont()), fontsize = 14)
@@ -84,11 +84,11 @@ begin
             aspect = 1)
 
     scatter!(XSamples[1, :], XSamples[2, :],
-        color = (:steelblue, 0.75),
+        color = (:deepskyblue, 0.75),
         strokecolor = (:black, 0.75), strokewidth = 0.25,
         markersize = 6)
     
     display(F)
 end
 
-save("docs/src/assets/Plots (Theory)/Sampling-3.svg", F)
+save("docs/src/assets/Plots (Theory)/Sampling-3.png", F)

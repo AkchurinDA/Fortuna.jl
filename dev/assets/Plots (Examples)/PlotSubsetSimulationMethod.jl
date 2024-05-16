@@ -1,6 +1,6 @@
 using Fortuna
 using CairoMakie, MathTeXEngine
-CairoMakie.activate!(type = :svg)
+CairoMakie.activate!(type = :png, px_per_unit = 10)
 
 X₁  = randomvariable("Normal", "M", [0, 1])
 X₂  = randomvariable("Normal", "M", [0, 1])
@@ -58,30 +58,27 @@ begin
         color = :black, 
         align = (:center, :center), fontsize = 12)
 
-    text!(4.5, -2.0, text = L"$g(\vec{\mathbf{x}}) > 0$",
+    text!(-1.5, -2.0, text = L"$g(\vec{\mathbf{x}}) > 0$",
         color = :black, 
         align = (:center, :center), fontsize = 12)
 
-    text!(4.5, -2.5, text = "(Safe domain)",
+    text!(-1.5, -2.5, text = "(Safe domain)",
         color = :black, 
         align = (:center, :center), fontsize = 12)
 
-    tooltip!(1.0, 1.0, L"\Omega_{f_{1}}",
-        color = :black, 
+    tooltip!(1.0, 1.0, L"$\Omega_{f_{1}}$",
         offset = 0, outline_linewidth = 1,
         fontsize = 12)
 
-    tooltip!(1.7, 1.7, L"\Omega_{f_{2}}",
-        color = :black, 
+    tooltip!(1.7, 1.7, L"$\Omega_{f_{2}}$",
         offset = 0, outline_linewidth = 1,
         fontsize = 12)
 
-    tooltip!(2.4, 2.4, L"\Omega_{f_{3}}",
-        color = :black, 
+    tooltip!(2.4, 2.4, L"$\Omega_{f_{3}}$",
         offset = 0, outline_linewidth = 1,
         fontsize = 12)
 
     display(F)
 end
 
-save("docs/src/assets/Plots (Examples)/SubsetSimulationMethod-1.svg", F)
+save("docs/src/assets/Plots (Examples)/SubsetSimulationMethod-1.png", F)
