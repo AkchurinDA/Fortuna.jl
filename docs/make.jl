@@ -36,7 +36,7 @@ makedocs(
         ],
         "Inverse Reliability Problems"                  => "InverseReliabilityProblems.md",
         "Sensitivity Problems"                          => "SensitivityProblems.md",
-        "Finite Element Models"                         => "FiniteElementModels.md",
+        "Advanced Usage"                                => "AdvancedUsage.md",
         "Examples"                                      => "Examples.md",
         "Showcases"                                     => "Showcases.md",
         "References"                                    => "References.md"
