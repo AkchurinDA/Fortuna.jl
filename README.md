@@ -41,29 +41,29 @@ The author thanks the academic and industrial partners of the [“Reliability 20
 
 The following functionality is planned to be added:
 
-- [x] Sampling Techniques
-    - [x] Inverse Transform Sampling
-    - [x] Latin Hypercube Sampling
-- [x] Isoprobabilistic Transformations
-    - [x] Nataf Transformation
-    - [ ] Rosennblatt Transformation
-- [x] Reliability Analysis Methods
-  - [x] Monte Carlo Methods
-    - [x] Direct Monte Carlo Simulations
-    - [x] Importance Sampling Method
-  - [x] First-Order Reliability Methods
-    - [x] Mean-Centered First-Order Second-Moment Method
-    - [x] Rackwitz-Fiessler Method
-    - [x] Hasofer-Lind Rackwitz-Fiessler Method
-    - [x] Improved Hasofer-Lind Rackwitz-Fiessler Method
-  - [x] Second-Order Reliability Methods
-    - [x] Curve-Fitting Method
-    - [x] Point-Fitting Method
-  - [x] Subset Simulation Method
-- [ ] Inverse Reliability Analysis Method
-- [x] Sensitivity Analysis:
+- [x] Sampling techniques
+    - [x] Inverse transform sampling
+    - [x] Latin hypercube sampling
+- [x] Isoprobabilistic transformations
+    - [x] Nataf transformation
+    - [ ] Rosennblatt transformation
+- [x] Reliability analysis
+  - [x] Monte Carlo methods
+    - [x] Direct Monte Carlo simulations
+    - [x] Importance sampling method
+  - [x] First-order reliability methods
+    - [x] Mean-centered first-order second-moment method
+    - [x] Rackwitz-Fiessler method
+    - [x] Hasofer-Lind Rackwitz-Fiessler method
+    - [x] Improved Hasofer-Lind Rackwitz-Fiessler method
+  - [x] Second-order reliability methods
+    - [x] Curve-fitting method
+    - [x] Point-fitting method
+  - [x] Subset simulation method
+- [ ] Inverse reliability analysis method
+- [x] Sensitivity analysis
   - [x] w.r.t. parameters of limit state functions
   - [x] w.r.t. parameters and moments of random vectors
-- [x] FEM Solvers
-  - [x] `OpenSeesPy`
-  - [x] `InstantFrame.jl`
+- [x] Limit state functions defined using
+  - [x] `OpenSeesPy` models
+  - [x] Surrogate models
