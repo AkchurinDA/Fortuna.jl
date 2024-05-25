@@ -1,3 +1,21 @@
+````@raw html
+---
+# https://vitepress.dev/reference/default-theme-home-page
+layout: home
+
+hero:
+  name: Fortuna.jl
+  text: 
+  tagline: Structural and System Reliability Analysis in Julia
+  image:
+    src: logo.svg
+    alt: Fortuna.jl
+  actions:
+    - theme: brand
+      text: Quick Start
+---
+````
+
 > **Audentes Fortuna Iuvat**
 
 ## Description

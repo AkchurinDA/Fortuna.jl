@@ -30,7 +30,7 @@ nothing # hide
 ```
 
 ```@raw html
-<img src="../assets/Plots (Examples)/NatafTransformation-1.png" class="center" style="max-height:350px; border-radius:2.5px;"/>
+<img src="../assets/Examples-NatafTransformation-1.png" class="center" style="max-height:350px; border-radius:2.5px;"/>
 ```
 
 ```@example 1
@@ -43,7 +43,7 @@ nothing # hide
 ```
 
 ```@raw html
-<img src="../assets/Plots (Examples)/NatafTransformation-2.png" class="center" style="max-height:350px; border-radius:2.5px;"/>
+<img src="../assets/Examples-NatafTransformation-2.png" class="center" style="max-height:350px; border-radius:2.5px;"/>
 ```
 
 ## Monte Carlo Methods
@@ -73,7 +73,7 @@ println("PoF: $(Solution.PoF)")
 ```
 
 ```@raw html
-<img src="../assets/Plots (Examples)/MonteCarlo-1.png" class="center" style="max-height:350px; border-radius:2.5px;"/>
+<img src="../assets/Examples-MonteCarlo-1.png" class="center" style="max-height:350px; border-radius:2.5px;"/>
 ```
 
 ### Importance Sampling Method
@@ -89,11 +89,11 @@ println("PoF: $(Solution.PoF)")
 ```
 
 ```@raw html
-<img src="../assets/Plots (Examples)/ImportanceSampling-1.png" class="center" style="max-height:350px; border-radius:2.5px;"/>
+<img src="../assets/Examples-ImportanceSampling-1.png" class="center" style="max-height:350px; border-radius:2.5px;"/>
 ```
 
 ```@raw html
-<img src="../assets/Plots (Examples)/ImportanceSampling-2.png" class="center" style="max-height:350px; border-radius:2.5px;"/>
+<img src="../assets/Examples-ImportanceSampling-2.png" class="center" style="max-height:350px; border-radius:2.5px;"/>
 ```
 
 ## First-Order Reliability Methods
@@ -221,5 +221,5 @@ println("PoF: $(Solution.PoF)")
 ```
 
 ```@raw html
-<img src="../assets/Plots (Examples)/SubsetSimulationMethod-1.png" class="center" style="max-height:350px; border-radius:2.5px;"/>
+<img src="../assets/Examples-SubsetSimulationMethod-1.png" class="center" style="max-height:350px; border-radius:2.5px;"/>
 ```

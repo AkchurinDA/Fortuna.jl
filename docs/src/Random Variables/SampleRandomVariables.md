@@ -29,7 +29,7 @@ nothing # hide
 ```
 
 ```@raw html
-<img src="../../assets/Plots (Theory)/Sampling-1.svg" class="center" style="max-height:350px; border-radius:2.5px;"/>
+<img src="../../assets/Theory-Sampling-1.png" class="center" style="max-height:350px; border-radius:2.5px;"/>
 ```
 
 ## Sampling Random Vectors with Uncorrelated Marginals
@@ -62,7 +62,7 @@ nothing # hide
 ```
 
 ```@raw html
-<img src="../../assets/Plots (Theory)/Sampling-2.svg" class="center" style="max-height:350px; border-radius:2.5px;"/>
+<img src="../../assets/Theory-Sampling-2.png" class="center" style="max-height:350px; border-radius:2.5px;"/>
 ```
 
 ## Sampling Random Vectors with Correlated Marginals
@@ -114,7 +114,7 @@ nothing # hide
 ```
 
 ```@raw html
-<img src="../../assets/Plots (Theory)/Sampling-3.svg" class="center" style="max-height:350px; border-radius:2.5px;"/>
+<img src="../../assets/Theory-Sampling-3.png" class="center" style="max-height:350px; border-radius:2.5px;"/>
 ```
 
 ## API

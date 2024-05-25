@@ -1,6 +1,8 @@
 using Fortuna
 using Distributions
-using Documenter, DocumenterCitations
+using Documenter
+# using DocumenterVitepress
+using DocumenterCitations
 
 Bibliography = CitationBibliography(
     joinpath(@__DIR__, "src/References.bib"),
@@ -8,8 +10,14 @@ Bibliography = CitationBibliography(
 
 makedocs(
     sitename = "Fortuna.jl",
-    authors = "Damir Akchurin, AkchurinDA@gmail.com",
-    format = Documenter.HTML(
+    authors  = "Damir Akchurin, AkchurinDA@gmail.com",
+    # format   = MarkdownVitepress(
+    #     repo   = "github.com/AkchurinDA/Fortuna.jl",
+    #     assets = [
+    #         "assets/favicon.ico",
+    #         "assets/custom.css"]
+    # ),
+    format   = Documenter.HTML(
         sidebar_sitename = false,
         assets = [
             "assets/Favicon.ico",
@@ -44,4 +52,8 @@ makedocs(
     plugins  = [Bibliography])
 
 deploydocs(
-    repo = "github.com/AkchurinDA/Fortuna.jl.git")
+    repo         = "github.com/AkchurinDA/Fortuna.jl",
+    target       = "build", # This is where Vitepress stores its output
+    devbranch    = "main",
+    branch       = "gh-pages",
+    push_preview = true)

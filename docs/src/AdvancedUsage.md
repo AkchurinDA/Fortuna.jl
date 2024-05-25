@@ -41,7 +41,7 @@ Now you can work with `OpenSeesPy` package directly from Julia!
 Consider a cantilever beam subjected to simultaneous axial and transverse loading based on the example provided in [Denavit:2013](@citet) with the only difference that Young's modulus ``E = X_{1}`` and moment of inertia about major axis ``I = X_{2}`` are uncorrelated normally-distributed random variables. The cross-sectional area of the beam ``A`` is ``9.12 \text{ in.}^{2}``.
 
 ```@raw html
-<img src="../assets/Plots (Examples)/OpenSees-1.png" class="center" style="max-height:350px; border-radius:2.5px;"/>
+<img src="../assets/Examples-OpenSees-1.png" class="center" style="max-height:350px; border-radius:2.5px;"/>
 ```
 
 Let's define the limit state function as 
@@ -173,6 +173,151 @@ println("PoF: $(Solution.PoF₂[2]) (Breitung)")
 
 Observe that `Differentiation = :Numeric` keyword argument was used in `solve()` function. This forces `Fortuna.jl` package to use numerical differentiation to evaluate the gradients and Hessians of the limit state function since the finite element (FE) model of the cantilever beam, defined using `OpenSeesPy` package, is not automatically differentiable. Note that you would still obtain a solution if you didn't use `Differentiation = :Numeric` keyword argument, but each time `Fortuna.jl` package needs to differentiate the limit state function, it would (1) attempt to differentiate it automatically, and after it fails, (2) it would differentiate it numerically, significantly slowing down the reliability analysis.
 
+### `InstantFrame.jl`
+
+#### Installation
+
+To install `InstantFrame.jl` package, type `]` in Julia REPL to enter the built-in Julia package manager and execute the following command:
+
+```
+pkg> add InstantFrame
+```
+
+#### Example
+
+Let's solve previously defined problem using `InstantFrame.jl` package.
+
+```@example 1
+# Preamble:
+using Fortuna
+using InstantFrame
+
+# Define the random variables:
+X₁ = randomvariable("Normal", "M", [29000, 0.05 * 29000]) # Young's modulus
+X₂ = randomvariable("Normal", "M", [  110, 0.05 *   110]) # Moment of inertia about major-axis
+X  = [X₁, X₂]
+
+# Define the correlation matrix:
+ρˣ = [1 0; 0 1]
+
+# Define the FE model of the cantilever beam:
+function CantileverBeam(x::Vector)
+    # Define the material properties:
+    Material = InstantFrame.Material(
+        names = ["Steel"], 
+        E     = [x[1]], 
+        ν     = [0.3], 
+        ρ     = [0])
+    
+    # Define the cross-sectional properties:
+    CrossSection = InstantFrame.CrossSection(
+        names = ["Beam"], 
+        A     = [9.12], 
+        Iy    = [0], 
+        Iz    = [x[2]], 
+        J     = [0])
+
+    # Define the element-to-element connections:
+    Connection = InstantFrame.Connection(
+        names     = ["Rigid"], 
+        stiffness = (ux = [Inf], uy = [Inf], uz = [Inf], rx = [Inf], ry = [Inf], rz = [Inf]))
+
+    # Define the nodes:
+    Node = InstantFrame.Node(
+        numbers     = 1:11, 
+        coordinates = [
+            ( 0 * 18, 0, 0), 
+            ( 1 * 18, 0, 0), 
+            ( 2 * 18, 0, 0), 
+            ( 3 * 18, 0, 0), 
+            ( 4 * 18, 0, 0), 
+            ( 5 * 18, 0, 0), 
+            ( 6 * 18, 0, 0), 
+            ( 7 * 18, 0, 0), 
+            ( 8 * 18, 0, 0), 
+            ( 9 * 18, 0, 0), 
+            (10 * 18, 0, 0)])
+
+    # Define the elements:
+    Element = InstantFrame.Element(
+        types         = ["", "", "", "", "", "", "", "", "", ""],
+        numbers       = 1:10, 
+        nodes         = [
+            ( 1,  2), 
+            ( 2,  3), 
+            ( 3,  4), 
+            ( 4,  5), 
+            ( 5,  6), 
+            ( 6,  7), 
+            ( 7,  8), 
+            ( 8,  9), 
+            ( 9, 10), 
+            (10, 11)], 
+        orientation   = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
+        connections   = [
+            ("Rigid", "Rigid"), 
+            ("Rigid", "Rigid"), 
+            ("Rigid", "Rigid"), 
+            ("Rigid", "Rigid"), 
+            ("Rigid", "Rigid"), 
+            ("Rigid", "Rigid"), 
+            ("Rigid", "Rigid"), 
+            ("Rigid", "Rigid"), 
+            ("Rigid", "Rigid"), 
+            ("Rigid", "Rigid")], 
+        cross_section = [ "Beam",  "Beam",  "Beam",  "Beam",  "Beam",  "Beam",  "Beam",  "Beam",  "Beam",  "Beam"], 
+        material      = ["Steel", "Steel", "Steel", "Steel", "Steel", "Steel", "Steel", "Steel", "Steel", "Steel"])
+
+    # Define the boundary conditions:
+    Support = InstantFrame.Support(
+        nodes     = 1:11, 
+        stiffness = (
+            uX = [Inf,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0], 
+            uY = [Inf,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0], 
+            uZ = [Inf, Inf, Inf, Inf, Inf, Inf, Inf, Inf, Inf, Inf, Inf],
+            rX = [Inf, Inf, Inf, Inf, Inf, Inf, Inf, Inf, Inf, Inf, Inf], 
+            rY = [Inf, Inf, Inf, Inf, Inf, Inf, Inf, Inf, Inf, Inf, Inf], 
+            rZ = [Inf,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0]))
+
+    # Define the distributed loads:
+    UniformLoad = InstantFrame.UniformLoad(nothing)
+
+    # Define the concentrated loads:
+    PointLoad = InstantFrame.PointLoad(
+        labels     = [""], 
+        nodes      = [11], 
+        magnitudes = (FX = [-50], FY = [-1], FZ = [0], MX = [0], MY = [0], MZ = [0]))
+
+    # Solve:
+    Model = InstantFrame.solve(Node, CrossSection, Material, Connection, Element, Support, UniformLoad, PointLoad, analysis_type = "second order", solution_tolerance = 1E-6)
+
+    # Get the vertical displacement at the free end:
+    Δ = -Model.solution.displacements[11][2]
+
+    return Δ
+end
+
+# Define the limit state function:
+g(x::Vector) = 1 - CantileverBeam(x)
+
+# Define the reliability problem:
+Problem = ReliabilityProblem(X, ρˣ, g)
+
+# Perform the reliability analysis using the FORM:
+Solution = solve(Problem, FORM(), Differentiation = :Numeric)
+println("FORM:")
+println("β: $(Solution.β)")
+println("PoF: $(Solution.PoF)")
+
+# Perform the reliability analysis using the SORM:
+Solution = solve(Problem, SORM(), Differentiation = :Numeric)
+println("SORM:")
+println("β: $(Solution.β₂[1]) (Hohenbichler and Rackwitz)")
+println("β: $(Solution.β₂[2]) (Breitung)")
+println("PoF: $(Solution.PoF₂[1]) (Hohenbichler and Rackwitz)")
+println("PoF: $(Solution.PoF₂[2]) (Breitung)")
+```
+
 ## Surrogate Models
 
 Most of the time, FE models are very expensive to evaluate, especially when it comes to differentiation of such FE models for the purposes of reliability analysis. Instead, it is possible to build a surrogate of a FE model. For example, [`Surrogates.jl`](https://github.com/SciML/Surrogates.jl) package allows you to build surrogate models. The most important feature of `Surrogates.jl` package is that it permits automatic differentiation of a surrogates model even if the underlying FE model cannot be differentiated automatically, which significantly speeds up the reliability analysis!
@@ -192,7 +337,7 @@ LowerBound = [
 UpperBound = [
     29000 + 6 * 0.05 * 29000,
       110 + 6 * 0.05 *   110]
-XTrain = sample(10, LowerBound, UpperBound, GridSample())
+XTrain = sample(50, LowerBound, UpperBound, SobolSample())
 YTrain = [CantileverBeam([x...]) for x in XTrain]
 
 # Fit a Kriging surrogate model to the training points:

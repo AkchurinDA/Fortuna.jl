@@ -1,19 +1,20 @@
 # http://www1.coe.neu.edu/~jfhajjar/home/Denavit%20and%20Hajjar%20-%20Geometric%20Nonlinearity%20in%20OpenSees%20-%20Report%20No.%20NEU-CEE-2013-02%202013.pdf
 # Figure 5 (Major-axis bending)
 
+# Preamble:
 using Fortuna
 using InstantFrame
 
 # Define the random variables:
 X₁ = randomvariable("Normal", "M", [29000, 0.05 * 29000]) # Young's modulus
-X₂ = randomvariable("Normal", "M", [  110, 0.05 *   110]) # Moment of inertia about major axis
+X₂ = randomvariable("Normal", "M", [  110, 0.05 *   110]) # Moment of inertia about major-axis
 X  = [X₁, X₂]
 
 # Define the correlation matrix:
 ρˣ = [1 0; 0 1]
 
-# Define the limit state function:
-function g(x::Vector)
+# Define the FE model of the cantilever beam:
+function CantileverBeam(x::Vector)
     # Define the material properties:
     Material = InstantFrame.Material(
         names = ["Steel"], 
@@ -106,8 +107,11 @@ function g(x::Vector)
     # Get the vertical displacement at the free end:
     Δ = -Model.solution.displacements[11][2]
 
-    return 1 - Δ
+    return Δ
 end
+
+# Define the limit state function:
+g(x::Vector) = 1 - CantileverBeam(x)
 
 # Define the reliability problem:
 Problem = ReliabilityProblem(X, ρˣ, g)
@@ -115,11 +119,49 @@ Problem = ReliabilityProblem(X, ρˣ, g)
 # Perform the reliability analysis using the FORM:
 Solution = solve(Problem, FORM(), Differentiation = :Numeric)
 println("FORM:")
-println("β:   $(Solution.β)  ")
+println("β: $(Solution.β)")
 println("PoF: $(Solution.PoF)")
 
 # Perform the reliability analysis using the SORM:
 Solution = solve(Problem, SORM(), Differentiation = :Numeric)
 println("SORM:")
-println("β:   $(Solution.β₂)  ")
-println("PoF: $(Solution.PoF₂)")
+println("β: $(Solution.β₂[1]) (Hohenbichler and Rackwitz)")
+println("β: $(Solution.β₂[2]) (Breitung)")
+println("PoF: $(Solution.PoF₂[1]) (Hohenbichler and Rackwitz)")
+println("PoF: $(Solution.PoF₂[2]) (Breitung)")
+
+# Preamble:
+using Surrogates
+
+# Define the training points:
+LowerBound = [
+    29000 - 6 * 0.05 * 29000,
+      110 - 6 * 0.05 *   110]
+UpperBound = [
+    29000 + 6 * 0.05 * 29000,
+      110 + 6 * 0.05 *   110]
+XTrain = sample(50, LowerBound, UpperBound, SobolSample())
+YTrain = [CantileverBeam([x...]) for x in XTrain]
+
+# Fit a Kriging surrogate model to the training points:
+CantileverBeamSurrogate = Kriging(XTrain, YTrain, LowerBound, UpperBound)
+
+# Define the limit state function using the surrogate model:
+ĝ(x::Vector) = 1 - CantileverBeamSurrogate(x)
+
+# Define the reliability problem:
+Problem = ReliabilityProblem(X, ρˣ, ĝ)
+
+# Perform the reliability analysis using the FORM:
+Solution = solve(Problem, FORM())
+println("FORM:")
+println("β: $(Solution.β)")
+println("PoF: $(Solution.PoF)")
+
+# Perform the reliability analysis using the SORM:
+Solution = solve(Problem, SORM())
+println("SORM:")
+println("β: $(Solution.β₂[1]) (Hohenbichler and Rackwitz)")
+println("β: $(Solution.β₂[2]) (Breitung)")
+println("PoF: $(Solution.PoF₂[1]) (Hohenbichler and Rackwitz)")
+println("PoF: $(Solution.PoF₂[2]) (Breitung)")
