@@ -37,8 +37,8 @@ makedocs(
         ],
         "Inverse Reliability Problems"                  => "InverseReliabilityProblems.md",
         "Sensitivity Problems"                          => "SensitivityProblems.md",
-        "Advanced Usage"                                => "AdvancedUsage.md",
         "Basic Examples"                                => "BasicExamples.md",
+        "Advanced Usage"                                => "AdvancedUsage.md",
         "Research"                                      => "Research.md",
         "References"                                    => "References.md"
     ],
