@@ -1,5 +1,9 @@
 # News
 
+## Release V0.8.3
+
+- Added an option to choose desired FORM submethod for SORM.
+
 ## Release V0.8.2
 
 - Fixed a bug with the iHLRF method stalling in very specific cases.

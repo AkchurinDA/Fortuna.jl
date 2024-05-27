@@ -41,7 +41,7 @@ $(TYPEDFIELDS)
 """
 struct CFCache # Curve-Fitting method
     "Results of reliability analysis performed using First-Order Reliability Method (FORM)"
-    FORMSolution::iHLRFCache
+    FORMSolution::Union{RFCache, HLRFCache, iHLRFCache}
     "Generalized reliability indices ``\\beta``"
     β₂::Vector{Float64}
     "Probabilities of failure ``P_{f}``"
@@ -75,19 +75,22 @@ struct PFCache # Point-Fitting method
 end
 
 """
-    solve(Problem::ReliabilityProblem, AnalysisMethod::SORM)
+solve(Problem::ReliabilityProblem, AnalysisMethod::SORM; FORMConfig::FORM = FORM(), Differentiation::Symbol = :Automatic)
 
 Function used to solve reliability problems using Second-Order Reliability Method (SORM). \\
 If `Differentiation` is:
 - `:Automatic`, then the function will use automatic differentiation to compute gradients, jacobians, etc.
 - `:Numeric`, then the function will use numeric differentiation to compute gradients, jacobians, etc.
 """
-function solve(Problem::ReliabilityProblem, AnalysisMethod::SORM; Differentiation::Symbol = :Automatic)
+function solve(Problem::ReliabilityProblem, AnalysisMethod::SORM; FORMConfig::FORM = FORM(), Differentiation::Symbol = :Automatic)
     # Extract the analysis method:
-    Submethod = AnalysisMethod.Submethod
+    Submethod  = AnalysisMethod.Submethod
+
+    # Error-catching:
+    isa(FORMConfig.Submethod, MCFOSM) && throw(ArgumentError("MCFOSM cannot be used with SORM as it does not provide any information about the design point!"))
 
     # Determine the design point using FORM:
-    FORMSolution = solve(Problem, FORM(), Differentiation = Differentiation)
+    FORMSolution = solve(Problem, FORMConfig, Differentiation = Differentiation)
     u            = FORMSolution.u[:, end]
     ∇G           = FORMSolution.∇G[:, end]
     α            = FORMSolution.α[:, end]

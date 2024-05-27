@@ -39,8 +39,8 @@ makedocs(
         "Sensitivity Problems"                          => "SensitivityProblems.md",
         "Advanced Usage"                                => "AdvancedUsage.md",
         "Basic Examples"                                => "BasicExamples.md",
-        "Showcases"                                     => "Showcases.md",
-        "Research"                                      => "Research.md"
+        "Research"                                      => "Research.md",
+        "References"                                    => "References.md"
     ],
     plugins  = [Bibliography])
 
