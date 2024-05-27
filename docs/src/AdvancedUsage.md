@@ -4,7 +4,7 @@
 
 The real power of `Fortuna.jl` package comes from the ability to define limit state functions using finite element (FE) models of complex systems. For example, if the roof drift of a frame subjected to wind loads ``\Delta`` must not exceed a certain limit ``\Delta_{0}``, then the limit state function is given by ``g(\vec{X}) = \Delta_{0} - \Delta(\vec{X})``, where ``\Delta`` must be computed from the FE model of this frame with a proper consideration of all random variables involved in the problem formulation ``\vec{X}``. 
 
-`Fortuna.jl` package allows you to solve reliability problems for FE models built using any Julia package with such capabilities, e.g., [`InstantFrame.jl`](https://github.com/runtosolve/InstantFrame.jl) and [`ONSAS.jl`](https://github.com/ONSAS/ONSAS.jl) packages for structural system problems, [`PowerSystems.jl`](https://github.com/NREL-Sienna/PowerSystems.jl) package for power system problems, [`Gridap.jl`](https://github.com/gridap/Gridap.jl) package for more general FE problems, and many more. Moreover, thanks to the great infrastructure Julia-to-Python developed by the [`JuliaPy`](https://github.com/JuliaPy) organization, you can also build FE models using Python packages with such capabilities. The most prominent example of such Python package is, of course, [`OpenSeesPy`](https://github.com/zhuminjie/OpenSeesPy) which serves as the gold standard to simulate the performance of structural and geotechnical systems subjected to earthquakes.
+`Fortuna.jl` package allows you to solve reliability problems for FE models built using any Julia package with such capabilities, e.g., [`InstantFrame.jl`](https://github.com/runtosolve/InstantFrame.jl) and [`ONSAS.jl`](https://github.com/ONSAS/ONSAS.jl) packages for structural system problems, [`PowerSystems.jl`](https://github.com/NREL-Sienna/PowerSystems.jl) package for power system problems, [`Gridap.jl`](https://github.com/gridap/Gridap.jl) package for more general FE problems, and many more. Moreover, thanks to the great Julia-to-Python infrastructure developed by the [`JuliaPy`](https://github.com/JuliaPy) organization, you can also build FE models using Python packages with such capabilities. The most prominent example of such Python package is, of course, [`OpenSeesPy`](https://github.com/zhuminjie/OpenSeesPy) which serves as the standard to simulate the performance of structural and geotechnical systems subjected to earthquakes.
 
 ### `OpenSeesPy`
 
@@ -12,7 +12,7 @@ The real power of `Fortuna.jl` package comes from the ability to define limit st
 
 To be able to work with [`OpenSeesPy`](https://openseespydoc.readthedocs.io/en/latest/) package directly from Julia you need to install two packages that allow Julia to talk to Python: 
 
-| Item | Description |
+| Package | Description |
 | :--- | :--- |
 | [`PyCall.jl`](https://github.com/JuliaPy/PyCall.jl) | Let's you call Python functions directly from Julia |
 | [`Conda.jl`](https://github.com/JuliaPy/Conda.jl) | Let's you install Python packages from `conda` and `pip` package managers that can be then called directly from Julia using `PyCall.jl` package |

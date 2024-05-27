@@ -4,10 +4,10 @@
 
 `Fortuna.jl` districts two types of sensitivity problems:
 
-| Item | Description |
+| Type | Description |
 | :--- | :--- |
-| Type I | Used to find sensitivities w.r.t. to the parameters ``\vec{\Theta}_{g}`` of the limit state function ``g(\vec{X}, \vec{\Theta}_{g})`` |
-| Type II | Used to find sensitivities w.r.t. to the parameters and/or moments ``\vec{\Theta}_{f}`` of the random vector ``\vec{X}(\vec{\Theta}_{f})`` |
+| I | Used to find sensitivities w.r.t. to the parameters ``\vec{\Theta}_{g}`` of the limit state function ``g(\vec{X}, \vec{\Theta}_{g})`` |
+| II | Used to find sensitivities w.r.t. to the parameters and/or moments ``\vec{\Theta}_{f}`` of the random vector ``\vec{X}(\vec{\Theta}_{f})`` |
 
 ## Defining and Solving Sensitivity Problems of Type I
 
