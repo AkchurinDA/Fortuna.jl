@@ -39,7 +39,7 @@ nothing # hide
 
 ## Solving Reliability Problems
 
-After defining the reliability problem, `Fortuna.jl` allows to easily solve it using a whole suite of first- and second-order reliability methods through a single `solve()` function as shown in the example below.
+After defining a reliability problem, `Fortuna.jl` allows to easily solve it using a whole suite of first- and second-order reliability methods using a single `solve()` function as shown in the example below.
 
 ```@example 1
 # Perform reliability analysis using improved Hasofer-Lind-Rackwitz-Fiessler (iHLRF) method:

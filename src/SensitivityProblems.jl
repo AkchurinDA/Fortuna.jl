@@ -1,5 +1,5 @@
 """
-SensitivityProblemTypeI <: AbstractReliabilityProblem
+    SensitivityProblemTypeI <: AbstractReliabilityProblem
 
 Type used to define sensitivity problems of type I (sensitivities w.r.t. the parameters of the limit state function).
 
@@ -17,7 +17,7 @@ mutable struct SensitivityProblemTypeI <: AbstractReliabilityProblem
 end
 
 """
-SensitivityProblemTypeII <: AbstractReliabilityProblem
+    SensitivityProblemTypeII <: AbstractReliabilityProblem
 
 Type used to define sensitivity problems of type II (sensitivities w.r.t. the parameters of the random vector).
 

@@ -46,7 +46,6 @@ The following functionality is planned to be added:
     - [x] Latin hypercube sampling
 - [x] Isoprobabilistic transformations
     - [x] Nataf transformation
-    - [ ] Rosennblatt transformation
 - [x] Reliability analysis
   - [x] Monte Carlo methods
     - [x] Direct Monte Carlo simulations
@@ -60,10 +59,10 @@ The following functionality is planned to be added:
     - [x] Curve-fitting method
     - [x] Point-fitting method
   - [x] Subset simulation method
-- [ ] Inverse reliability analysis method
+- [x] Inverse reliability analysis
 - [x] Sensitivity analysis
   - [x] w.r.t. parameters of limit state functions
   - [x] w.r.t. parameters and moments of random vectors
 - [x] Limit state functions defined using
-  - [x] `OpenSeesPy` models
+  - [x] Arbitrary FE models
   - [x] Surrogate models

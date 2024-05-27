@@ -1,7 +1,8 @@
 # News
 
-## Release V0.8.3
+## Release V0.9.0
 
+- Added functionality to solve inverse reliability problems.
 - Added an option to choose desired FORM submethod for SORM.
 
 ## Release V0.8.2
