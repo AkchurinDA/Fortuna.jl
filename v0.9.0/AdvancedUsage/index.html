@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Advanced Usage · Fortuna.jl</title><meta name="title" content="Advanced Usage · Fortuna.jl"/><meta property="og:title" content="Advanced Usage · Fortuna.jl"/><meta property="twitter:title" content="Advanced Usage · Fortuna.jl"/><meta name="description" content="Documentation for Fortuna.jl."/><meta property="og:description" content="Documentation for Fortuna.jl."/><meta property="twitter:description" content="Documentation for Fortuna.jl."/><script data-outdated-warner src="../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../assets/documenter.js"></script><script src="../search_index.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../assets/themeswap.js"></script><link href="../assets/Favicon.ico" rel="icon" type="image/x-icon"/><link href="../assets/Custom.css" rel="stylesheet" type="text/css"/></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../"><img src="../assets/logo.svg" alt="Fortuna.jl logo"/></a><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../">Home</a></li><li><span class="tocitem">Random Variables</span><ul><li><a class="tocitem" href="../Random Variables/DefineRandomVariables/">Defining Random Variables</a></li><li><a class="tocitem" href="../Random Variables/SampleRandomVariables/">Sampling Random Variables</a></li></ul></li><li><span class="tocitem">Isoprobabilistic Transformations</span><ul><li><a class="tocitem" href="../Isoprobabilistic Transformations/NatafTransformation/">Nataf Transformation</a></li><li><a class="tocitem" href="../Isoprobabilistic Transformations/RosenblattTransformation/">Rosenblatt Transformation</a></li></ul></li><li><span class="tocitem">Reliability Problems</span><ul><li><a class="tocitem" href="../Reliability Problems/ReliabilityProblems/">Reliability Problems</a></li><li><input class="collapse-toggle" id="menuitem-4-2" type="checkbox"/><label class="tocitem" for="menuitem-4-2"><span class="docs-label">Monte Carlo Methods</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../Reliability Problems/MC/">Direct Monte Carlo Simulations</a></li><li><a class="tocitem" href="../Reliability Problems/IS/">Importance Sampling</a></li></ul></li><li><a class="tocitem" href="../Reliability Problems/FORM/">First-Order Reliability Methods</a></li><li><a class="tocitem" href="../Reliability Problems/SORM/">Second-Order Reliability Methods</a></li><li><a class="tocitem" href="../Reliability Problems/SSM/">Subset Simulation Method</a></li></ul></li><li><a class="tocitem" href="../InverseReliabilityProblems/">Inverse Reliability Problems</a></li><li><a class="tocitem" href="../SensitivityProblems/">Sensitivity Problems</a></li><li><a class="tocitem" href="../BasicExamples/">Basic Examples</a></li><li class="is-active"><a class="tocitem" href>Advanced Usage</a><ul class="internal"><li><a class="tocitem" href="#Finite-Element-Models"><span>Finite Element Models</span></a></li><li><a class="tocitem" href="#Surrogate-Models"><span>Surrogate Models</span></a></li></ul></li><li><a class="tocitem" href="../Research/">Research</a></li><li><a class="tocitem" href="../References/">References</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>Advanced Usage</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Advanced Usage</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/AkchurinDA/Fortuna.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/AkchurinDA/Fortuna.jl/blob/main/docs/src/AdvancedUsage.md" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="Advanced-Usage"><a class="docs-heading-anchor" href="#Advanced-Usage">Advanced Usage</a><a id="Advanced-Usage-1"></a><a class="docs-heading-anchor-permalink" href="#Advanced-Usage" title="Permalink"></a></h1><h2 id="Finite-Element-Models"><a class="docs-heading-anchor" href="#Finite-Element-Models">Finite Element Models</a><a id="Finite-Element-Models-1"></a><a class="docs-heading-anchor-permalink" href="#Finite-Element-Models" title="Permalink"></a></h2><p>The real power of <code>Fortuna.jl</code> package comes from the ability to define limit state functions using finite element (FE) models of complex systems. For example, if the roof drift of a frame subjected to wind loads <span>$\Delta$</span> must not exceed a certain limit <span>$\Delta_{0}$</span>, then the limit state function is given by <span>$g(\vec{X}) = \Delta_{0} - \Delta(\vec{X})$</span>, where <span>$\Delta$</span> must be computed from the FE model of this frame with a proper consideration of all random variables involved in the problem formulation <span>$\vec{X}$</span>. </p><p><code>Fortuna.jl</code> package allows you to solve reliability problems for FE models built using any Julia package with such capabilities, e.g., <a href="https://github.com/runtosolve/InstantFrame.jl"><code>InstantFrame.jl</code></a> and <a href="https://github.com/ONSAS/ONSAS.jl"><code>ONSAS.jl</code></a> packages for structural system problems, <a href="https://github.com/NREL-Sienna/PowerSystems.jl"><code>PowerSystems.jl</code></a> package for power system problems, <a href="https://github.com/gridap/Gridap.jl"><code>Gridap.jl</code></a> package for more general FE problems, and many more. Moreover, thanks to the great Julia-to-Python infrastructure developed by the <a href="https://github.com/JuliaPy"><code>JuliaPy</code></a> organization, you can also build FE models using Python packages with such capabilities. The most prominent example of such Python package is, of course, <a href="https://github.com/zhuminjie/OpenSeesPy"><code>OpenSeesPy</code></a> which serves as the standard to simulate the performance of structural and geotechnical systems subjected to earthquakes.</p><h3 id="OpenSeesPy"><a class="docs-heading-anchor" href="#OpenSeesPy"><code>OpenSeesPy</code></a><a id="OpenSeesPy-1"></a><a class="docs-heading-anchor-permalink" href="#OpenSeesPy" title="Permalink"></a></h3><h4 id="Installation"><a class="docs-heading-anchor" href="#Installation">Installation</a><a id="Installation-1"></a><a class="docs-heading-anchor-permalink" href="#Installation" title="Permalink"></a></h4><p>To be able to work with <a href="https://openseespydoc.readthedocs.io/en/latest/"><code>OpenSeesPy</code></a> package directly from Julia you need to install two packages that allow Julia to talk to Python: </p><table><tr><th style="text-align: left">Package</th><th style="text-align: left">Description</th></tr><tr><td style="text-align: left"><a href="https://github.com/JuliaPy/PyCall.jl"><code>PyCall.jl</code></a></td><td style="text-align: left">Let&#39;s you call Python functions directly from Julia</td></tr><tr><td style="text-align: left"><a href="https://github.com/JuliaPy/Conda.jl"><code>Conda.jl</code></a></td><td style="text-align: left">Let&#39;s you install Python packages from <code>conda</code> and <code>pip</code> package managers that can be then called directly from Julia using <code>PyCall.jl</code> package</td></tr></table><p>To install <code>PyCall.jl</code> and <code>Conda.jl</code> packages, type <code>]</code> in Julia REPL to enter the built-in Julia package manager and execute the following command:</p><pre><code class="nohighlight hljs">pkg&gt; add PyCall Conda</code></pre><p>Now you need to install <code>OpenSeesPy</code> package through <code>Conda.jl</code> package. To do that, run the following commands in Julia REPL:</p><pre><code class="language-julia hljs">using Conda
+Conda.pip_interop(true)            # Activate &quot;pip&quot;
+Conda.pip(&quot;install&quot;, &quot;openseespy&quot;) # Install OpenSeesPy using &quot;pip&quot;</code></pre><p>Now you can work with <code>OpenSeesPy</code> package directly from Julia!</p><div class="admonition is-info"><header class="admonition-header">Note</header><div class="admonition-body"><p>If you are experiencing any problems installing OpenSeesPy package please refer to Conda.jl package&#39;s <a href="https://github.com/JuliaPy/Conda.jl">documentation</a>.</p></div></div><h4 id="Example"><a class="docs-heading-anchor" href="#Example">Example</a><a id="Example-1"></a><a class="docs-heading-anchor-permalink" href="#Example" title="Permalink"></a></h4><p>Consider a cantilever beam subjected to simultaneous axial and transverse loading based on the example provided in <a href="../References/#Denavit:2013">Denavit and Hajjar (2013)</a> with the only difference that Young&#39;s modulus <span>$E = X_{1}$</span> and moment of inertia about major axis <span>$I = X_{2}$</span> are uncorrelated normally-distributed random variables. The cross-sectional area of the beam <span>$A$</span> is <span>$9.12 \text{ in.}^{2}$</span>.</p><img src="../assets/Examples-OpenSees-1.png" class="center" style="max-height:350px; border-radius:2.5px;"/><p>Let&#39;s define the limit state function as </p><p class="math-container">\[g(\vec{X}) = \Delta_{0} - \Delta(\vec{X})\]</p><p>where <span>$\Delta(\vec{X})$</span> is the downward deflection at the free end of the beam, which must not exceed the deflection limit <span>$\Delta_{0}$</span> of <span>$1 \text{ in.}$</span>. The goal of this example is to find the reliability indices <span>$\beta$</span> and probabilities of failure <span>$P_{f}$</span> using First- and Second-Order Reliability Methods.</p><pre><code class="language-julia hljs"># Preamble:
+using Fortuna
+using PyCall
+
+# Load OpenSeesPy package:
+ops = pyimport(&quot;openseespy.opensees&quot;)
+
+# Define the random variables:
+X₁ = randomvariable(&quot;Normal&quot;, &quot;M&quot;, [29000, 0.05 * 29000]) # Young&#39;s modulus
+X₂ = randomvariable(&quot;Normal&quot;, &quot;M&quot;, [  110, 0.05 *   110]) # Moment of inertia about major axis
+X  = [X₁, X₂]
+
+# Define the correlation matrix:
+ρˣ = [1 0; 0 1]
+
+# Define the FE model of the cantilever beam:
+function CantileverBeam(x::Vector)
+    # Remove any previous models:
+    ops.wipe()
+
+    # Define the model parameters:
+    ops.model(&quot;basic&quot;, &quot;-ndm&quot;, 2, &quot;-ndf&quot;, 3)
+
+    # Define the nodes:
+    ops.node( 1,  0 * 18, 0)
+    ops.node( 2,  1 * 18, 0)
+    ops.node( 3,  2 * 18, 0)
+    ops.node( 4,  3 * 18, 0)
+    ops.node( 5,  4 * 18, 0)
+    ops.node( 6,  5 * 18, 0)
+    ops.node( 7,  6 * 18, 0)
+    ops.node( 8,  7 * 18, 0)
+    ops.node( 9,  8 * 18, 0)
+    ops.node(10,  9 * 18, 0)
+    ops.node(11, 10 * 18, 0)
+
+    # Define the boundary conditions:
+    ops.fix(1, 1, 1, 1)
+
+    # Define the material properties:
+    ops.uniaxialMaterial(&quot;Elastic&quot;, 1, 29000)
+
+    # Define the cross-sectional properties:
+    A = 9.12
+    ops.section(&quot;Elastic&quot;,  1, x[1], A, x[2])
+
+    # Define the transformation:
+    ops.geomTransf(&quot;PDelta&quot;, 1)
+
+    # Define the elements:
+    ops.element(&quot;elasticBeamColumn&quot;,  1,  1,  2,  1, 1)
+    ops.element(&quot;elasticBeamColumn&quot;,  2,  2,  3,  1, 1)
+    ops.element(&quot;elasticBeamColumn&quot;,  3,  3,  4,  1, 1)
+    ops.element(&quot;elasticBeamColumn&quot;,  4,  4,  5,  1, 1)
+    ops.element(&quot;elasticBeamColumn&quot;,  5,  5,  6,  1, 1)
+    ops.element(&quot;elasticBeamColumn&quot;,  6,  6,  7,  1, 1)
+    ops.element(&quot;elasticBeamColumn&quot;,  7,  7,  8,  1, 1)
+    ops.element(&quot;elasticBeamColumn&quot;,  8,  8,  9,  1, 1)
+    ops.element(&quot;elasticBeamColumn&quot;,  9,  9, 10,  1, 1)
+    ops.element(&quot;elasticBeamColumn&quot;, 10, 10, 11,  1, 1)
+
+    # Define the loads:
+    ops.timeSeries(&quot;Linear&quot;, 1)
+    ops.pattern(&quot;Plain&quot;, 1, 1)
+    ops.load(11,   0, -1, 0)
+    ops.load(11, -50,  0, 0)
+
+    # Define the solver parameters:
+    ops.system(&quot;BandSPD&quot;)
+    ops.numberer(&quot;RCM&quot;)
+    ops.constraints(&quot;Plain&quot;)
+    ops.algorithm(&quot;Linear&quot;)
+
+    # Solve:
+    ops.integrator(&quot;LoadControl&quot;, 0.01)
+    ops.analysis(&quot;Static&quot;)
+    ops.analyze(100)
+
+    # Get the vertical displacement at the free end:
+    Δ = -ops.nodeDisp(11, 2)
+
+    # Return the result:
+    return Δ
+end
+
+# Define the limit state function:
+g(x::Vector) = 1 - CantileverBeam(x)
+
+# Define the reliability problem:
+Problem = ReliabilityProblem(X, ρˣ, g)
+
+# Perform the reliability analysis using the FORM:
+Solution = solve(Problem, FORM(), Differentiation = :Numeric)
+println(&quot;FORM:&quot;)
+println(&quot;β: $(Solution.β)&quot;)
+println(&quot;PoF: $(Solution.PoF)&quot;)
+
+# Perform the reliability analysis using the SORM:
+Solution = solve(Problem, SORM(), Differentiation = :Numeric)
+println(&quot;SORM:&quot;)
+println(&quot;β: $(Solution.β₂[1]) (Hohenbichler and Rackwitz)&quot;)
+println(&quot;β: $(Solution.β₂[2]) (Breitung)&quot;)
+println(&quot;PoF: $(Solution.PoF₂[1]) (Hohenbichler and Rackwitz)&quot;)
+println(&quot;PoF: $(Solution.PoF₂[2]) (Breitung)&quot;)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">FORM:
+β: 2.817429534259646
+PoF: 0.0024204868016781986
+SORM:
+β: 2.7964226279740614 (Hohenbichler and Rackwitz)
+β: 2.7985512340910605 (Breitung)
+PoF: 0.002583589077535522 (Hohenbichler and Rackwitz)
+PoF: 0.002566621253783347 (Breitung)</code></pre><p>Observe that <code>Differentiation = :Numeric</code> keyword argument was used in <code>solve()</code> function. This forces <code>Fortuna.jl</code> package to use numerical differentiation to evaluate the gradients and Hessians of the limit state function since the finite element (FE) model of the cantilever beam, defined using <code>OpenSeesPy</code> package, is not automatically differentiable. Note that you would still obtain a solution if you didn&#39;t use <code>Differentiation = :Numeric</code> keyword argument, but each time <code>Fortuna.jl</code> package needs to differentiate the limit state function, it would (1) attempt to differentiate it automatically, and after it fails, (2) it would differentiate it numerically, significantly slowing down the reliability analysis.</p><h3 id="InstantFrame.jl"><a class="docs-heading-anchor" href="#InstantFrame.jl"><code>InstantFrame.jl</code></a><a id="InstantFrame.jl-1"></a><a class="docs-heading-anchor-permalink" href="#InstantFrame.jl" title="Permalink"></a></h3><h4 id="Installation-2"><a class="docs-heading-anchor" href="#Installation-2">Installation</a><a class="docs-heading-anchor-permalink" href="#Installation-2" title="Permalink"></a></h4><p>To install <code>InstantFrame.jl</code> package, type <code>]</code> in Julia REPL to enter the built-in Julia package manager and execute the following command:</p><pre><code class="nohighlight hljs">pkg&gt; add InstantFrame</code></pre><h4 id="Example-2"><a class="docs-heading-anchor" href="#Example-2">Example</a><a class="docs-heading-anchor-permalink" href="#Example-2" title="Permalink"></a></h4><p>Let&#39;s solve previously defined problem using <code>InstantFrame.jl</code> package.</p><pre><code class="language-julia hljs"># Preamble:
+using Fortuna
+using InstantFrame
+
+# Define the random variables:
+X₁ = randomvariable(&quot;Normal&quot;, &quot;M&quot;, [29000, 0.05 * 29000]) # Young&#39;s modulus
+X₂ = randomvariable(&quot;Normal&quot;, &quot;M&quot;, [  110, 0.05 *   110]) # Moment of inertia about major-axis
+X  = [X₁, X₂]
+
+# Define the correlation matrix:
+ρˣ = [1 0; 0 1]
+
+# Define the FE model of the cantilever beam:
+function CantileverBeam(x::Vector)
+    # Define the material properties:
+    Material = InstantFrame.Material(
+        names = [&quot;Steel&quot;],
+        E     = [x[1]],
+        ν     = [0.3],
+        ρ     = [0])
+
+    # Define the cross-sectional properties:
+    CrossSection = InstantFrame.CrossSection(
+        names = [&quot;Beam&quot;],
+        A     = [9.12],
+        Iy    = [0],
+        Iz    = [x[2]],
+        J     = [0])
+
+    # Define the element-to-element connections:
+    Connection = InstantFrame.Connection(
+        names     = [&quot;Rigid&quot;],
+        stiffness = (ux = [Inf], uy = [Inf], uz = [Inf], rx = [Inf], ry = [Inf], rz = [Inf]))
+
+    # Define the nodes:
+    Node = InstantFrame.Node(
+        numbers     = 1:11,
+        coordinates = [
+            ( 0 * 18, 0, 0),
+            ( 1 * 18, 0, 0),
+            ( 2 * 18, 0, 0),
+            ( 3 * 18, 0, 0),
+            ( 4 * 18, 0, 0),
+            ( 5 * 18, 0, 0),
+            ( 6 * 18, 0, 0),
+            ( 7 * 18, 0, 0),
+            ( 8 * 18, 0, 0),
+            ( 9 * 18, 0, 0),
+            (10 * 18, 0, 0)])
+
+    # Define the elements:
+    Element = InstantFrame.Element(
+        types         = [&quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;],
+        numbers       = 1:10,
+        nodes         = [
+            ( 1,  2),
+            ( 2,  3),
+            ( 3,  4),
+            ( 4,  5),
+            ( 5,  6),
+            ( 6,  7),
+            ( 7,  8),
+            ( 8,  9),
+            ( 9, 10),
+            (10, 11)],
+        orientation   = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        connections   = [
+            (&quot;Rigid&quot;, &quot;Rigid&quot;),
+            (&quot;Rigid&quot;, &quot;Rigid&quot;),
+            (&quot;Rigid&quot;, &quot;Rigid&quot;),
+            (&quot;Rigid&quot;, &quot;Rigid&quot;),
+            (&quot;Rigid&quot;, &quot;Rigid&quot;),
+            (&quot;Rigid&quot;, &quot;Rigid&quot;),
+            (&quot;Rigid&quot;, &quot;Rigid&quot;),
+            (&quot;Rigid&quot;, &quot;Rigid&quot;),
+            (&quot;Rigid&quot;, &quot;Rigid&quot;),
+            (&quot;Rigid&quot;, &quot;Rigid&quot;)],
+        cross_section = [ &quot;Beam&quot;,  &quot;Beam&quot;,  &quot;Beam&quot;,  &quot;Beam&quot;,  &quot;Beam&quot;,  &quot;Beam&quot;,  &quot;Beam&quot;,  &quot;Beam&quot;,  &quot;Beam&quot;,  &quot;Beam&quot;],
+        material      = [&quot;Steel&quot;, &quot;Steel&quot;, &quot;Steel&quot;, &quot;Steel&quot;, &quot;Steel&quot;, &quot;Steel&quot;, &quot;Steel&quot;, &quot;Steel&quot;, &quot;Steel&quot;, &quot;Steel&quot;])
+
+    # Define the boundary conditions:
+    Support = InstantFrame.Support(
+        nodes     = 1:11,
+        stiffness = (
+            uX = [Inf,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0],
+            uY = [Inf,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0],
+            uZ = [Inf, Inf, Inf, Inf, Inf, Inf, Inf, Inf, Inf, Inf, Inf],
+            rX = [Inf, Inf, Inf, Inf, Inf, Inf, Inf, Inf, Inf, Inf, Inf],
+            rY = [Inf, Inf, Inf, Inf, Inf, Inf, Inf, Inf, Inf, Inf, Inf],
+            rZ = [Inf,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0]))
+
+    # Define the distributed loads:
+    UniformLoad = InstantFrame.UniformLoad(nothing)
+
+    # Define the concentrated loads:
+    PointLoad = InstantFrame.PointLoad(
+        labels     = [&quot;&quot;],
+        nodes      = [11],
+        magnitudes = (FX = [-50], FY = [-1], FZ = [0], MX = [0], MY = [0], MZ = [0]))
+
+    # Solve:
+    Model = InstantFrame.solve(Node, CrossSection, Material, Connection, Element, Support, UniformLoad, PointLoad, analysis_type = &quot;second order&quot;, solution_tolerance = 1E-6)
+
+    # Get the vertical displacement at the free end:
+    Δ = -Model.solution.displacements[11][2]
+
+    return Δ
+end
+
+# Define the limit state function:
+g(x::Vector) = 1 - CantileverBeam(x)
+
+# Define the reliability problem:
+Problem = ReliabilityProblem(X, ρˣ, g)
+
+# Perform the reliability analysis using the FORM:
+Solution = solve(Problem, FORM(), Differentiation = :Numeric)
+println(&quot;FORM:&quot;)
+println(&quot;β: $(Solution.β)&quot;)
+println(&quot;PoF: $(Solution.PoF)&quot;)
+
+# Perform the reliability analysis using the SORM:
+Solution = solve(Problem, SORM(), Differentiation = :Numeric)
+println(&quot;SORM:&quot;)
+println(&quot;β: $(Solution.β₂[1]) (Hohenbichler and Rackwitz)&quot;)
+println(&quot;β: $(Solution.β₂[2]) (Breitung)&quot;)
+println(&quot;PoF: $(Solution.PoF₂[1]) (Hohenbichler and Rackwitz)&quot;)
+println(&quot;PoF: $(Solution.PoF₂[2]) (Breitung)&quot;)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">┌ Warning: Solving Linear System A::Matrix{Float64} x::StaticArraysCore.SVector{30, Float64} = b::StaticArraysCore.SVector{30, Float64} is not properly supported. Converting `x` to a mutable array. Check the return type of the nonlinear function provided for optimal performance.
+└ @ NonlinearSolve ~/.julia/packages/NonlinearSolve/h7KfM/src/internal/linear_solve.jl:59
+FORM:
+β: 2.7788124773178637
+PoF: 0.002727900540340187
+┌ Warning: Solving Linear System A::Matrix{Float64} x::StaticArraysCore.SVector{30, Float64} = b::StaticArraysCore.SVector{30, Float64} is not properly supported. Converting `x` to a mutable array. Check the return type of the nonlinear function provided for optimal performance.
+└ @ NonlinearSolve ~/.julia/packages/NonlinearSolve/h7KfM/src/internal/linear_solve.jl:59
+SORM:
+β: 2.757854219230893 (Hohenbichler and Rackwitz)
+β: 2.760022057714877 (Breitung)
+PoF: 0.0029091069351521236 (Hohenbichler and Rackwitz)
+PoF: 0.002889872949597067 (Breitung)</code></pre><h2 id="Surrogate-Models"><a class="docs-heading-anchor" href="#Surrogate-Models">Surrogate Models</a><a id="Surrogate-Models-1"></a><a class="docs-heading-anchor-permalink" href="#Surrogate-Models" title="Permalink"></a></h2><p>Most of the time, FE models are very expensive to evaluate, especially when it comes to differentiation of such FE models for the purposes of reliability analysis. Instead, it is possible to build a surrogate of a FE model. For example, <a href="https://github.com/SciML/Surrogates.jl"><code>Surrogates.jl</code></a> package allows you to build surrogate models. The most important feature of <code>Surrogates.jl</code> package is that it permits automatic differentiation of a surrogates model even if the underlying FE model cannot be differentiated automatically, which significantly speeds up the reliability analysis!</p><h4 id="Example-3"><a class="docs-heading-anchor" href="#Example-3">Example</a><a class="docs-heading-anchor-permalink" href="#Example-3" title="Permalink"></a></h4><p>Let&#39;s build a Kriging surrogate model of the FE model of the cantilever beam studied earlier and solve for the reliability indices <span>$\beta$</span> and probabilities of failure <span>$P_{f}$</span> using First- and Second-Order Reliability Methods again.</p><pre><code class="language-julia hljs"># Preamble:
+using Surrogates
+
+# Define the training points:
+LowerBound = [
+    29000 - 6 * 0.05 * 29000,
+      110 - 6 * 0.05 *   110]
+UpperBound = [
+    29000 + 6 * 0.05 * 29000,
+      110 + 6 * 0.05 *   110]
+XTrain = sample(50, LowerBound, UpperBound, SobolSample())
+YTrain = [CantileverBeam([x...]) for x in XTrain]
+
+# Fit a Kriging surrogate model to the training points:
+CantileverBeamSurrogate = Kriging(XTrain, YTrain, LowerBound, UpperBound)
+
+# Define the limit state function using the surrogate model:
+ĝ(x::Vector) = 1 - CantileverBeamSurrogate(x)
+
+# Define the reliability problem:
+Problem = ReliabilityProblem(X, ρˣ, ĝ)
+
+# Perform the reliability analysis using the FORM:
+Solution = solve(Problem, FORM())
+println(&quot;FORM:&quot;)
+println(&quot;β: $(Solution.β)&quot;)
+println(&quot;PoF: $(Solution.PoF)&quot;)
+
+# Perform the reliability analysis using the SORM:
+Solution = solve(Problem, SORM())
+println(&quot;SORM:&quot;)
+println(&quot;β: $(Solution.β₂[1]) (Hohenbichler and Rackwitz)&quot;)
+println(&quot;β: $(Solution.β₂[2]) (Breitung)&quot;)
+println(&quot;PoF: $(Solution.PoF₂[1]) (Hohenbichler and Rackwitz)&quot;)
+println(&quot;PoF: $(Solution.PoF₂[2]) (Breitung)&quot;)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">┌ Warning: Solving Linear System A::Matrix{Float64} x::StaticArraysCore.SVector{30, Float64} = b::StaticArraysCore.SVector{30, Float64} is not properly supported. Converting `x` to a mutable array. Check the return type of the nonlinear function provided for optimal performance.
+└ @ NonlinearSolve ~/.julia/packages/NonlinearSolve/h7KfM/src/internal/linear_solve.jl:59
+FORM:
+β: 2.7787085254672457
+PoF: 0.0027287735875253854
+SORM:
+β: 2.759712935127001 (Hohenbichler and Rackwitz)
+β: 2.7616666301158554 (Breitung)
+PoF: 0.0028926085887895775 (Hohenbichler and Rackwitz)
+PoF: 0.0028753581736963817 (Breitung)</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../BasicExamples/">« Basic Examples</a><a class="docs-footer-nextpage" href="../Research/">Research »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.4.1 on <span class="colophon-date" title="Tuesday 28 May 2024 14:15">Tuesday 28 May 2024</span>. Using Julia version 1.10.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
