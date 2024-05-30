@@ -1,9 +1,28 @@
 # News
 
+## Release V0.9.1
+
+- Implementation of FORM's gradient-based descent optimization submethods is now more standardized and follows a better code-implementation practice.
+- Before, if FORM failed converge, it would throw an **error** stating that the solution did not converge and give no other output. Now, if FORM fails to converge to a satisfactory solution, it will throw a **warning** stating that the solution did not converge and provide the solution cache history to help diagnose the problem. Additionally, a new `Convergance` field was added to cache histories of HLRF, iHLRF, and RF methods, which can be used to check whether the convergence was achieved.
+
+```julia
+Solution = solve(Problem, FORM())
+
+if Solution.Convergance == true
+  # Solution converged...
+  # Proceed with the post-processing...
+else
+  # Solution did not converge...
+  # Diagnose the problem and try to solve again...
+end
+```
+
+- Relaxed default tolerances in FORM's submethods from $10^{-9}$ to $10^{-6}$.
+
 ## Release V0.9.0
 
 - Added functionality to solve inverse reliability problems.
-- Added an option to choose desired FORM submethod for SORM.
+- Added an option to choose a desired FORM's submethod for SORM.
 
 ## Release V0.8.2
 

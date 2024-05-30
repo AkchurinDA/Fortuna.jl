@@ -26,7 +26,7 @@ bibliography: paper.bib
 
 ## Nataf Transformation
 
-![Nataf Transformation \label{NatafTransformation}](/JOSS/Figures/PlotNatafTransformation.svg)
+![Nataf Transformation \label{NatafTransformation}](Figures/PlotNatafTransformation.svg)
 
 # Acknowledgements
 
