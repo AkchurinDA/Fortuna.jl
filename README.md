@@ -8,7 +8,7 @@
   | Build Status | [![Build Status](https://github.com/AkchurinDA/Fortuna.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/AkchurinDA/Fortuna.jl/actions/workflows/CI.yml) |
   | Documentation | [![Documentation](https://img.shields.io/badge/Documentation-blue.svg)](https://AkchurinDA.github.io/Fortuna.jl/dev) |
   | Latest Release | [![Latest Release](https://juliahub.com/docs/Fortuna/version.svg)](https://github.com/AkchurinDA/Fortuna.jl/releases) |
-  | Downloads | [![Downloads](https://shields.io/endpoint?url=https://pkgs.genieframework.com/api/v1/badge/Fortuna&label=Downloads)](https://pkgs.genieframework.com?packages=Fortuna) |
+  | Downloads | [![Downloads](https://img.shields.io/badge/dynamic/json?url=http%3A%2F%2Fjuliapkgstats.com%2Fapi%2Fv1%2Fmonthly_downloads%2FFortuna&query=total_requests&suffix=%2Fmonth&label=Downloads)](http://juliapkgstats.com/pkg/Fortuna) |
   | License | [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/AkchurinDA/Fortuna.jl/blob/main/LICENSE.md) |
 
 </div>
@@ -64,5 +64,5 @@ The following functionality is planned to be added:
   - [x] w.r.t. parameters of limit state functions
   - [x] w.r.t. parameters and moments of random vectors
 - [x] Limit state functions defined using
-  - [x] Arbitrary FE models
+  - [x] Arbitrary finite element models
   - [x] Surrogate models
