@@ -68,8 +68,9 @@ If `Differentiation` is:
 - `:Numeric`, then the function will use numeric differentiation to compute gradients, jacobians, etc.
 """
 function solve(Problem::InverseReliabilityProblem, θ₀::Real; 
+    MaxNumIterations = 250, ϵ₁ = 1E-6, ϵ₂ = 1E-6, ϵ₃ = 1E-6,
     x₀::Union{Nothing, Vector{<:Real}} = nothing, 
-    MaxNumIterations = 250, ϵ₁ = 10E-6, ϵ₂ = 10E-6, ϵ₃ = 10E-3,
+    c₀::Union{Nothing, Real} = nothing,
     Differentiation::Symbol = :Automatic)
     # Extract the problem data:
     X  = Problem.X
@@ -160,22 +161,17 @@ function solve(Problem::InverseReliabilityProblem, θ₀::Real;
         α[:, i] = -∇Gu[:, i] / LinearAlgebra.norm(∇Gu[:, i])
 
         # Compute the c-coefficients:
-        c₁[i] = ceil(LinearAlgebra.norm(u[:, i]) / LinearAlgebra.norm(∇Gu[:, i]))
+        c₁[i] = isnothing(c₀) ? 2 * LinearAlgebra.norm(u[:, i]) / LinearAlgebra.norm(∇Gu[:, i]) + 10 : c₀
         c₂[i] = 1
 
         # Compute the merit functions at the current design point:
         m₁[i] = 0.5 * LinearAlgebra.norm(u[:, i]) ^ 2 + c₁[i] * abs(G[i])
         m₂[i] = 0.5 * c₂[i] * (LinearAlgebra.norm(u[:, i]) - β) ^ 2
         m[i]  = m₁[i] + m₂[i]
-        a₁    = m₂[i] / m[i]
-        a₂    = m₁[i] / m[i]
-
-        # a₁    = m₁[i] / m[i]
-        # a₂    = m₂[i] / m[i]
 
         # Compute the search directions:
-        du[:, i] = a₁ * ((G[i] / LinearAlgebra.norm(∇Gu[:, i]) + LinearAlgebra.dot(α[:, i], u[:, i])) * α[:, i] - u[:, i]) + a₂ * (β * α[:, i] - u[:, i])
-        dθ[i]    = a₂ * (LinearAlgebra.norm(∇Gu[:, i]) / ∇Gθ[i]) * (β - LinearAlgebra.dot(α[:, i], u[:, i]) - G[i] / LinearAlgebra.norm(∇Gu[:, i]))
+        du[:, i] = β * α[:, i] - u[:, i]
+        dθ[i]    = (LinearAlgebra.norm(∇Gu[:, i]) / ∇Gθ[i]) * (β - LinearAlgebra.dot(α[:, i], u[:, i]) - G[i] / LinearAlgebra.norm(∇Gu[:, i]))
 
         # Find a step size that satisfies m(uᵢ + λᵢdᵢ) < m(uᵢ):
         λₜ = 1
@@ -188,12 +184,7 @@ function solve(Problem::InverseReliabilityProblem, θ₀::Real;
         mₜ  = m₁ₜ + m₂ₜ
         while mₜ > m[i]
             # Update the step size:
-            λₜ = λₜ / 2 
-
-            # Update the merit function:
-            m₁[i] = m₁ₜ
-            m₂[i] = m₂ₜ
-            m[i]  = mₜ
+            λₜ = λₜ / 2
 
             # Recalculate the merit function:
             uₜ = u[:, i] + λₜ * du[:, i]
@@ -218,8 +209,10 @@ function solve(Problem::InverseReliabilityProblem, θ₀::Real;
         # Check for convergance:
         Criterion₁ = abs(g(x[:, i], θ[i]) / G₀) # Check if the limit state function is close to zero.
         Criterion₂ = LinearAlgebra.norm(u[:, i] - LinearAlgebra.dot(α[:, i], u[:, i]) * α[:, i]) # Check if the design point is on the failure boundary.
-        Criterion₃ = LinearAlgebra.norm(u[:, i + 1] - u[:, i]) / LinearAlgebra.norm(u[:, i]) + abs(θ[i + 1] - θ[i]) / abs(θ[i]) + abs(LinearAlgebra.dot(α[:, i], u[:, i]) - β) / β # Check if the solution has converged.
-        if Criterion₁ < ϵ₁ && Criterion₂ < ϵ₂ && Criterion₃ < ϵ₃
+        Criterion₃ = LinearAlgebra.norm(u[:, i + 1] - u[:, i]) / LinearAlgebra.norm(u[:, i]) 
+                   + abs(θ[i + 1] - θ[i]) / abs(θ[i]) 
+                   + abs(LinearAlgebra.dot(α[:, i], u[:, i]) - β) / β # Check if the solution has converged.
+        if Criterion₁ < ϵ₁ && Criterion₂ < ϵ₂ && Criterion₃ < ϵ₃ && i != MaxNumIterations
             # Clean up the results:
             x   = x[:, 1:i]
             u   = u[:, 1:i]
@@ -244,7 +237,7 @@ function solve(Problem::InverseReliabilityProblem, θ₀::Real;
             continue
         else
             # Check for convergance:
-            i == (MaxNumIterations - 1) && error("The solution did not converge. Try increasing the maximum number of iterations (MaxNumIterations) or relaxing the convergance criterions (ϵ₁, ϵ₂, and ϵ₃).")
+            i == MaxNumIterations && error("The solution did not converge. Try increasing the maximum number of iterations (MaxNumIterations) or relaxing the convergance criterions (ϵ₁, ϵ₂, and ϵ₃).")
         end
     end
 end

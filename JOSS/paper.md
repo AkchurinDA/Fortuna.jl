@@ -22,6 +22,11 @@ bibliography: paper.bib
 # Statement of Need
 
 
+# Functionality
+
+## Nataf Transformation
+
+![Nataf Transformation \label{NatafTransformation}](/JOSS/Figures/PlotNatafTransformation.svg)
 
 # Acknowledgements
 
