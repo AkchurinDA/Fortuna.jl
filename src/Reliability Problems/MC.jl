@@ -6,8 +6,8 @@ Type used to perform reliability analysis using Monte Carlo (MC) simulations.
 $(TYPEDFIELDS)
 """
 Base.@kwdef struct MC <: AbstractReliabililyAnalysisMethod
-    "Number of samples ``N``"
-    NumSamples::Integer = 1E6
+    "Number of simulations ``N``"
+    NumSimulations::Integer = 1E6
     "Sampling technique"
     SamplingTechnique::Symbol = :LHS
 end
@@ -35,7 +35,7 @@ Function used to solve reliability problems using Monte Carlo (MC) simulations.
 """
 function solve(Problem::ReliabilityProblem, AnalysisMethod::MC; showprogressbar = false)
     # Extract the analysis details:
-    NumSamples        = AnalysisMethod.NumSamples
+    NumSimulations    = AnalysisMethod.NumSimulations
     SamplingTechnique = AnalysisMethod.SamplingTechnique
 
     # Extract data:
@@ -50,17 +50,17 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::MC; showprogressbar 
     if (SamplingTechnique != :ITS) && (SamplingTechnique != :LHS)
         throw(ArgumentError("Provided sampling technique is not supported!"))
     else
-        Samples, _, _ = rand(NatafObject, NumSamples, SamplingTechnique)
+        Samples, _, _ = rand(NatafObject, NumSimulations, SamplingTechnique)
     end
 
     # Evaluate the limit state function at the generate samples:
-    gValues = Vector{Float64}(undef, NumSamples)
+    gValues = Vector{Float64}(undef, NumSimulations)
     ProgressMeter.@showprogress desc = "Running Monte Carlo simulations..." enabled = showprogressbar for i in axes(Samples, 2)
         gValues[i] = g(Samples[:, i])
     end
 
     # Compute the probability of failure:
-    PoF = count(x -> x ≤ 0, gValues) / NumSamples
+    PoF = count(x -> x ≤ 0, gValues) / NumSimulations
 
     # Return results:
     return MCCache(Samples, gValues, PoF)
