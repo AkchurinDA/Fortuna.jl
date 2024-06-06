@@ -53,7 +53,7 @@ end
   - Important to note that if your limit state function is given by an OpenSeesPy model, solving the reliability problem with `Differentiation` = `:Automatic` will not fail because of the fallback onto `FiniteDiff.jl` package; however, it is highly recommended to use `Differentiation` = `:Numeric` from the start to avoid even attempting to use automatic differentiation before falling back onto numeric differentiation.
 - Sampling technique for `rand()` function now must be given by symbols, i.e. `:ITS` or `:LHS`.
 
-## Release V0.7.
+## Release V0.7.1
 
 - `Dual()` number can now be propagated as moments of random variables.
 - Fixed a bug with `randomvariables()` function.

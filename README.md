@@ -63,5 +63,6 @@ The following functionality is planned to be added:
   - [x] w.r.t. parameters of limit state functions
   - [x] w.r.t. parameters and moments of random vectors
 - [x] Limit state functions defined using
-  - [x] Arbitrary finite element models
+  - [x] "Internal" FE models
+  - [x] "External" FE models
   - [x] Surrogate models
