@@ -26,8 +26,6 @@ bibliography: paper.bib
 
 ## Nataf Transformation
 
-![Nataf Transformation \label{NatafTransformation}](Figures/PlotNatafTransformation.svg)
-
 # Acknowledgements
 
 The author thanks the academic and industrial partners of the “Reliability 2030” initiative for their financial support.

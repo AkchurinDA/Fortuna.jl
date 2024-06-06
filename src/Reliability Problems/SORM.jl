@@ -43,9 +43,9 @@ struct CFCache # Curve-Fitting method
     "Results of reliability analysis performed using First-Order Reliability Method (FORM)"
     FORMSolution::Union{RFCache, HLRFCache, iHLRFCache}
     "Generalized reliability indices ``\\beta``"
-    β₂::Vector{Float64}
+    β₂::Vector{Union{Missing, Float64}}
     "Probabilities of failure ``P_{f}``"
-    PoF₂::Vector{Float64}
+    PoF₂::Vector{Union{Missing, Float64}}
     "Principal curvatures ``\\kappa``"
     κ::Vector{Float64}
 end
@@ -61,9 +61,9 @@ struct PFCache # Point-Fitting method
     "Results of reliability analysis performed using First-Order Reliability Method (FORM)"
     FORMSolution::iHLRFCache
     "Generalized reliability index ``\\beta``"
-    β₂::Vector{Float64}
+    β₂::Vector{Union{Missing, Float64}}
     "Probabilities of failure ``P_{f}``"
-    PoF₂::Vector{Float64}
+    PoF₂::Vector{Union{Missing, Float64}}
     "Fitting points on the negative side of the hyper-cylinder"
     FittingPoints⁻::Matrix{Float64}
     "Fitting points on the positive side of the hyper-cylinder"
@@ -131,7 +131,7 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::SORM;
         κ = LinearAlgebra.eigen(A[1:(end - 1), 1:(end - 1)]).values
 
         # Compute the probabilities of failure:
-        PoF₂ = Vector{Float64}(undef, 2)
+        PoF₂ = Vector{Union{Missing, Float64}}(undef, 2)
 
         begin # Hohenbichler-Rackwitz (1988)
             ψ = Distributions.pdf(Distributions.Normal(), β₁) / Distributions.cdf(Distributions.Normal(), -β₁)
@@ -139,8 +139,8 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::SORM;
             if all(κᵢ -> ψ * κᵢ > -1, κ)
                 PoF₂[1] = Distributions.cdf(Distributions.Normal(), -β₁) * prod(κᵢ -> 1 / sqrt(1 + ψ * κᵢ), κ)
             else
-                PoF₂[1] = nothing
-                error("Condition of Hohenbichler-Rackwitz's approximation of the probability of failure was not satisfied.")
+                PoF₂[1] = missing
+                @warn "Condition of Hohenbichler-Rackwitz's approximation of the probability of failure was not satisfied!"
             end
         end
 
@@ -148,13 +148,13 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::SORM;
             if all(κᵢ -> β₁ * κᵢ > -1, κ)
                 PoF₂[2] = Distributions.cdf(Distributions.Normal(), -β₁) * prod(κᵢ -> 1 / sqrt(1 + β₁ * κᵢ), κ)
             else
-                PoF₂[2] = nothing
-                error("Condition of Breitung's approximation of the probability of failure was not satisfied.")
+                PoF₂[2] = missing
+                @warn "Condition of Breitung's approximation of the probability of failure was not satisfied!"
             end
         end
 
         # Compute the generalized reliability index:
-        β₂ = -Distributions.quantile.(Distributions.Normal(), PoF₂)
+        β₂ = [ismissing(PoF₂[i]) ? missing : -Distributions.quantile(Distributions.Normal(), PoF₂[i]) for i in eachindex(PoF₂)]
 
         # Return results:
         return CFCache(FORMSolution, β₂, PoF₂, κ)
@@ -244,7 +244,7 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::SORM;
         end
 
         # Compute the probabilities of failure for each semiparabola:
-        PoF₂ = Matrix{Float64}(undef, NumHyperquadrants, 2)
+        PoF₂ = Matrix{Union{Missing, Float64}}(undef, NumHyperquadrants, 2)
         for i in 1:NumHyperquadrants
             κ = κ₂[i, :]
 
@@ -254,7 +254,8 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::SORM;
                 if all(κᵢ -> ψ * κᵢ > -1, κ)
                     PoF₂[i, 1] = Distributions.cdf(Distributions.Normal(), -β₁) * prod(κᵢ -> 1 / sqrt(1 + ψ * κᵢ), κ)
                 else
-                    error("Condition of Hohenbichler-Rackwitz's approximation of the probability of failure was not satisfied.")
+                    PoF₂[i, 1] = missing
+                    @warn "Condition of Hohenbichler-Rackwitz's approximation of the probability of failure was not satisfied!"
                 end
             end
 
@@ -262,7 +263,8 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::SORM;
                 if all(κᵢ -> β₁ * κᵢ > -1, κ)
                     PoF₂[i, 2] = Distributions.cdf(Distributions.Normal(), -β₁) * prod(κᵢ -> 1 / sqrt(1 + β₁ * κᵢ), κ)
                 else
-                    error("Condition of Breitung's approximation of the probability of failure was not satisfied.")
+                    PoF₂[i, 2] = missing
+                    @warn "Condition of Breitung's approximation of the probability of failure was not satisfied!"
                 end
             end
         end
@@ -272,7 +274,7 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::SORM;
         PoF₂ = vec(PoF₂)
 
         # Compute the generalized reliability index:
-        β₂ = -Distributions.quantile.(Distributions.Normal(), PoF₂)
+        β₂ = [ismissing(PoF₂[i]) ? missing : -Distributions.quantile(Distributions.Normal(), PoF₂[i]) for i in eachindex(PoF₂)]
 
         # Return results:
         return PFCache(FORMSolution, β₂, PoF₂, FittingPoints⁻, FittingPoints⁺, κ₁, κ₂)
