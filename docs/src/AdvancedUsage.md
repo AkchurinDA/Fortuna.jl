@@ -89,23 +89,20 @@ function CantileverBeam(x::Vector)
     ops.model("basic", "-ndm", 2, "-ndf", 3)
 
     # Define the nodes:
-    ops.node( 1,  0 * 18, 0)
-    ops.node( 2,  1 * 18, 0)
-    ops.node( 3,  2 * 18, 0)
-    ops.node( 4,  3 * 18, 0)
-    ops.node( 5,  4 * 18, 0)
-    ops.node( 6,  5 * 18, 0)
-    ops.node( 7,  6 * 18, 0)
-    ops.node( 8,  7 * 18, 0)
-    ops.node( 9,  8 * 18, 0)
-    ops.node(10,  9 * 18, 0)
-    ops.node(11, 10 * 18, 0)
+    ops.node( 1,   0, 0)
+    ops.node( 2,  18, 0)
+    ops.node( 3,  36, 0)
+    ops.node( 4,  54, 0)
+    ops.node( 5,  72, 0)
+    ops.node( 6,  90, 0)
+    ops.node( 7, 108, 0)
+    ops.node( 8, 126, 0)
+    ops.node( 9, 144, 0)
+    ops.node(10, 162, 0)
+    ops.node(11, 180, 0)
 
     # Define the boundary conditions:
     ops.fix(1, 1, 1, 1)
-
-    # Define the material properties:
-    ops.uniaxialMaterial("Elastic", 1, 29000)
 
     # Define the cross-sectional properties:
     A = 9.12
@@ -157,13 +154,13 @@ g(x::Vector) = 1 - CantileverBeam(x)
 Problem = ReliabilityProblem(X, ρˣ, g)
 
 # Perform the reliability analysis using the FORM:
-Solution = solve(Problem, FORM(), Differentiation = :Numeric)
+Solution = solve(Problem, FORM(), diff = :numeric)
 println("FORM:")
 println("β: $(Solution.β)")
 println("PoF: $(Solution.PoF)")
 
 # Perform the reliability analysis using the SORM:
-Solution = solve(Problem, SORM(), Differentiation = :Numeric)
+Solution = solve(Problem, SORM(), diff = :numeric)
 println("SORM:")
 println("β: $(Solution.β₂[1]) (Hohenbichler and Rackwitz)")
 println("β: $(Solution.β₂[2]) (Breitung)")
@@ -226,17 +223,17 @@ function CantileverBeam(x::Vector)
     Node = InstantFrame.Node(
         numbers     = 1:11, 
         coordinates = [
-            ( 0 * 18, 0, 0), 
-            ( 1 * 18, 0, 0), 
-            ( 2 * 18, 0, 0), 
-            ( 3 * 18, 0, 0), 
-            ( 4 * 18, 0, 0), 
-            ( 5 * 18, 0, 0), 
-            ( 6 * 18, 0, 0), 
-            ( 7 * 18, 0, 0), 
-            ( 8 * 18, 0, 0), 
-            ( 9 * 18, 0, 0), 
-            (10 * 18, 0, 0)])
+            (  0, 0, 0), 
+            ( 18, 0, 0), 
+            ( 36, 0, 0), 
+            ( 54, 0, 0), 
+            ( 72, 0, 0), 
+            ( 90, 0, 0), 
+            (108, 0, 0), 
+            (126, 0, 0), 
+            (144, 0, 0), 
+            (162, 0, 0), 
+            (180, 0, 0)])
 
     # Define the elements:
     Element = InstantFrame.Element(
@@ -304,13 +301,13 @@ g(x::Vector) = 1 - CantileverBeam(x)
 Problem = ReliabilityProblem(X, ρˣ, g)
 
 # Perform the reliability analysis using the FORM:
-Solution = solve(Problem, FORM(), Differentiation = :Numeric)
+Solution = solve(Problem, FORM(), diff = :numeric)
 println("FORM:")
 println("β: $(Solution.β)")
 println("PoF: $(Solution.PoF)")
 
 # Perform the reliability analysis using the SORM:
-Solution = solve(Problem, SORM(), Differentiation = :Numeric)
+Solution = solve(Problem, SORM(), diff = :numeric)
 println("SORM:")
 println("β: $(Solution.β₂[1]) (Hohenbichler and Rackwitz)")
 println("β: $(Solution.β₂[2]) (Breitung)")

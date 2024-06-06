@@ -20,18 +20,20 @@ Type used to store results of reliability analysis performed using Monte Carlo (
 $(TYPEDFIELDS)
 """
 struct MCCache
-    "Generated samples"
+    "Generated samples ``\\vec{x}_{i}``"
     Samples::Matrix{Float64}
+    "Limit state function evalued at each sample ``g(\\vec{x}_{i})``"
+    gValues::Vector{Float64}
     "Probability of failure ``P_{f}``"
     PoF::Float64
 end
 
 """
-    solve(Problem::ReliabilityProblem, AnalysisMethod::MC)
+    solve(Problem::ReliabilityProblem, AnalysisMethod::MC; showprogressbar = false)
 
 Function used to solve reliability problems using Monte Carlo (MC) simulations.
 """
-function solve(Problem::ReliabilityProblem, AnalysisMethod::MC)
+function solve(Problem::ReliabilityProblem, AnalysisMethod::MC; showprogressbar = false)
     # Extract the analysis details:
     NumSamples        = AnalysisMethod.NumSamples
     SamplingTechnique = AnalysisMethod.SamplingTechnique
@@ -48,19 +50,18 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::MC)
     if (SamplingTechnique != :ITS) && (SamplingTechnique != :LHS)
         throw(ArgumentError("Provided sampling technique is not supported!"))
     else
-        XSamples, _, _ = rand(NatafObject, NumSamples, SamplingTechnique)
+        Samples, _, _ = rand(NatafObject, NumSamples, SamplingTechnique)
     end
 
-    # Clean up the generated samples:
-    XSamplesClean = eachcol(XSamples)
-    XSamplesClean = Vector.(XSamplesClean)
-
     # Evaluate the limit state function at the generate samples:
-    gSamples = g.(XSamplesClean)
+    gValues = Vector{Float64}(undef, NumSamples)
+    ProgressMeter.@showprogress desc = "Running Monte Carlo simulations..." enabled = showprogressbar for i in axes(Samples, 2)
+        gValues[i] = g(Samples[:, i])
+    end
 
     # Compute the probability of failure:
-    PoF = count(x -> x ≤ 0, gSamples) / NumSamples
+    PoF = count(x -> x ≤ 0, gValues) / NumSamples
 
     # Return results:
-    return MCCache(XSamples, PoF)
+    return MCCache(Samples, gValues, PoF)
 end

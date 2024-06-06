@@ -75,22 +75,29 @@ struct PFCache # Point-Fitting method
 end
 
 """
-solve(Problem::ReliabilityProblem, AnalysisMethod::SORM; FORMConfig::FORM = FORM(), Differentiation::Symbol = :Automatic)
+solve(Problem::ReliabilityProblem, AnalysisMethod::SORM; 
+    FORMSolution::Union{Nothing, HLRFCache, iHLRFCache} = nothing,
+    FORMConfig::FORM = FORM(), 
+    diff::Symbol = :automatic)
 
 Function used to solve reliability problems using Second-Order Reliability Method (SORM). \\
-If `Differentiation` is:
-- `:Automatic`, then the function will use automatic differentiation to compute gradients, jacobians, etc.
-- `:Numeric`, then the function will use numeric differentiation to compute gradients, jacobians, etc.
+If `diff` is:
+- `:automatic`, then the function will use automatic differentiation to compute gradients, jacobians, etc.
+- `:numeric`, then the function will use numeric differentiation to compute gradients, jacobians, etc.
 """
-function solve(Problem::ReliabilityProblem, AnalysisMethod::SORM; FORMConfig::FORM = FORM(), Differentiation::Symbol = :Automatic)
+function solve(Problem::ReliabilityProblem, AnalysisMethod::SORM; 
+        FORMSolution::Union{Nothing, RFCache, HLRFCache, iHLRFCache} = nothing,
+        FORMConfiguration::FORM = FORM(), 
+        diff::Symbol = :automatic)
     # Extract the analysis method:
     Submethod  = AnalysisMethod.Submethod
 
     # Error-catching:
-    isa(FORMConfig.Submethod, MCFOSM) && throw(ArgumentError("MCFOSM cannot be used with SORM as it does not provide any information about the design point!"))
+    isa(FORMConfiguration.Submethod, MCFOSM) && throw(ArgumentError("MCFOSM cannot be used with SORM as it does not provide any information about the design point!"))
 
     # Determine the design point using FORM:
-    FORMSolution = solve(Problem, FORMConfig, Differentiation = Differentiation)
+    
+    FORMSolution = isnothing(FORMSolution) ? solve(Problem, FORMConfiguration, diff = diff) : FORMSolution
     u            = FORMSolution.u[:, end]
     ∇G           = FORMSolution.∇G[:, end]
     α            = FORMSolution.α[:, end]
@@ -189,13 +196,13 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::SORM; FORMConfig::FO
 
             # Negative side:
             Problem⁻             = NonlinearSolve.NonlinearProblem(F, β₁, -H)
-            Solution⁻            = if Differentiation == :Automatic
+            Solution⁻            = if diff == :automatic
                 try
                     NonlinearSolve.solve(Problem⁻, nothing, abstol = 1E-9, reltol = 1E-9)
                 catch
                     NonlinearSolve.solve(Problem⁻, NonlinearSolve.FastShortcutNonlinearPolyalg(autodiff = NonlinearSolve.AutoFiniteDiff()), abstol = 1E-9, reltol = 1E-9)
                 end
-            elseif Differentiation == :Numeric
+            elseif diff == :numeric
                 NonlinearSolve.solve(Problem⁻, NonlinearSolve.FastShortcutNonlinearPolyalg(autodiff = NonlinearSolve.AutoFiniteDiff()), abstol = 1E-9, reltol = 1E-9)
             end
             FittingPoints⁻[i, 1] = -H
@@ -203,13 +210,13 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::SORM; FORMConfig::FO
 
             # Positive side:
             Problem⁺             = NonlinearSolve.NonlinearProblem(F, β₁, +H)
-            Solution⁺            = if Differentiation == :Automatic
+            Solution⁺            = if diff == :automatic
                 try
                     NonlinearSolve.solve(Problem⁺, nothing, abstol = 1E-9, reltol = 1E-9)
                 catch
                     NonlinearSolve.solve(Problem⁺, NonlinearSolve.FastShortcutNonlinearPolyalg(autodiff = NonlinearSolve.AutoFiniteDiff()), abstol = 1E-9, reltol = 1E-9)
                 end
-            elseif Differentiation == :Numeric
+            elseif diff == :numeric
                 NonlinearSolve.solve(Problem⁺, NonlinearSolve.FastShortcutNonlinearPolyalg(autodiff = NonlinearSolve.AutoFiniteDiff()), abstol = 1E-9, reltol = 1E-9)
             end
             FittingPoints⁺[i, 1] = +H

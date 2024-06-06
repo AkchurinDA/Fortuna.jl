@@ -13,6 +13,8 @@ import Random
 import SpecialFunctions
 using  DocStringExtensions
 
+import ProgressMeter
+
 # --------------------------------------------------
 # REEXPORT PACKAGES
 # --------------------------------------------------
