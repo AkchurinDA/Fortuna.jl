@@ -55,7 +55,7 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::MC; showprogressbar 
 
     # Evaluate the limit state function at the generate samples:
     gValues = Vector{Float64}(undef, NumSimulations)
-    ProgressMeter.@showprogress desc = "Running Monte Carlo simulations..." enabled = showprogressbar for i in axes(Samples, 2)
+    ProgressMeter.@showprogress desc = "Evaluating the limit state function..." enabled = showprogressbar for i in axes(Samples, 2)
         gValues[i] = g(Samples[:, i])
     end
 

@@ -11,9 +11,9 @@ X  = [X₁, X₂]
 
 # Define the FE model of the cantilever beam:
 WorkDirectory = "C:\\Users\\...\\Fortuna.jl\\examples\\Abaqus" # This must be an absolute path!
-IFilename     = "CantileverBeam.inp"
-OFilename     = "CantileverBeamTemp.txt"
 PYFilename    = "CantileverBeam.py"
+IFilename     = "CantileverBeam.inp"
+OFilename     = "Output.txt"
 Placeholders  = [":E", ":I"]
 function CantileverBeam(x::Vector)
     # Inject values into the input file:
@@ -40,7 +40,8 @@ function CantileverBeam(x::Vector)
 
     # Delete the created files to prevent cluttering the work directory:
     rm(joinpath(WorkDirectory, TempIFilename))
-    Extensions = [".dat", ".msg", ".env", ".sta", ".rpy", ".stt", ".res", ".prt", ".com", ".sim", ".log", ".odb", ".txt"]
+    rm(joinpath(WorkDirectory,     OFilename))
+    Extensions = [".dat", ".msg", ".env", ".sta", ".rpy", ".stt", ".res", ".prt", ".com", ".sim", ".log", ".odb"]
     [foreach(rm, filter(endswith(Extension), readdir(WorkDirectory))) for Extension in Extensions]
 
     # Return the result:
@@ -54,7 +55,7 @@ g(x::Vector) = 1 - CantileverBeam(x)
 Problem = ReliabilityProblem(X, ρˣ, g)
 
 # Perform the reliability analysis using the FORM:
-FORMSolution = solve(Problem, FORM(iHLRF(MaxNumIterations = 3)), diff = :numeric)
+FORMSolution = solve(Problem, FORM(), diff = :numeric)
 println("FORM:")
 println("β: $(FORMSolution.β)")
 println("PoF: $(FORMSolution.PoF)")

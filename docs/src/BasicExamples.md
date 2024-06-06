@@ -13,9 +13,9 @@ Random.seed!(123)
 
 ```@example 1
 # Define random vector:
-X₁  = randomvariable("Gamma", "M", [10, 1.5])
-X₂  = randomvariable("Gamma", "M", [15, 2.5])
-X   = [X₁, X₂]
+X₁ = randomvariable("Gamma", "M", [10, 1.5])
+X₂ = randomvariable("Gamma", "M", [15, 2.5])
+X  = [X₁, X₂]
 
 # Define correlation matrix:
 ρˣ = [1 -0.75; -0.75 1]
@@ -35,8 +35,8 @@ nothing # hide
 
 ```@example 1
 # Compute joint PDF of random vector:
-xRange₁ = range(0, 20, 500)
-xRange₂ = range(5, 25, 500)
+xRange₁  = range(0, 20, 500)
+xRange₂  = range(5, 25, 500)
 fSamples = [pdf(NatafObject, [x₁, x₂]) for x₁ in xRange₁, x₂ in xRange₂]
 
 nothing # hide
@@ -52,16 +52,16 @@ nothing # hide
 
 ```@example 1
 # Define random vector:
-X₁  = randomvariable("Normal", "M", [0, 1])
-X₂  = randomvariable("Normal", "M", [0, 1])
-X   = [X₁, X₂]
+X₁ = randomvariable("Normal", "M", [0, 1])
+X₂ = randomvariable("Normal", "M", [0, 1])
+X  = [X₁, X₂]
 
 # Define correlation matrix:
 ρˣ  = [1 0; 0 1]
 
 # Define limit state function:
-β               = 3
-g(x::Vector)    = β * sqrt(2) - x[1] - x[2]
+β            = 3
+g(x::Vector) = β * sqrt(2) - x[1] - x[2]
 
 # Define reliability problem:
 Problem = ReliabilityProblem(X, ρˣ, g)
@@ -102,9 +102,9 @@ println("PoF: $(Solution.PoF)")
 
 ```@example 1
 # Define random vector:
-X₁  = randomvariable("Normal", "M", [10, 2])
-X₂  = randomvariable("Normal", "M", [20, 5])
-X   = [X₁, X₂]
+X₁ = randomvariable("Normal", "M", [10, 2])
+X₂ = randomvariable("Normal", "M", [20, 5])
+X  = [X₁, X₂]
 
 # Define correlation matrix:
 ρˣ = [1 0.5; 0.5 1]
@@ -153,20 +153,20 @@ println("β from g₂: $(Solution₂.β)")
 
 ```@example 1
 # Define random vector:
-M₁  = randomvariable("Normal", "M", [250, 250 * 0.3])
-M₂  = randomvariable("Normal", "M", [125, 125 * 0.3])
-P   = randomvariable("Gumbel", "M", [2500, 2500 * 0.2])
-Y   = randomvariable("Weibull", "M", [40000, 40000 * 0.1])
-X   = [M₁, M₂, P, Y]
+M₁ = randomvariable("Normal", "M", [250, 250 * 0.3])
+M₂ = randomvariable("Normal", "M", [125, 125 * 0.3])
+P  = randomvariable("Gumbel", "M", [2500, 2500 * 0.2])
+Y  = randomvariable("Weibull", "M", [40000, 40000 * 0.1])
+X  = [M₁, M₂, P, Y]
 
 # Define correlation matrix:
 ρˣ = [1 0.5 0.3 0; 0.5 1 0.3 0; 0.3 0.3 1 0; 0 0 0 1]
 
 # Define limit state function:
-a               = 0.190
-s₁              = 0.030
-s₂              = 0.015
-g(x::Vector)    = 1 - x[1] / (s₁ * x[4]) - x[2] / (s₂ * x[4]) - (x[3] / (a * x[4])) ^ 2
+a            = 0.190
+s₁           = 0.030
+s₂           = 0.015
+g(x::Vector) = 1 - x[1] / (s₁ * x[4]) - x[2] / (s₂ * x[4]) - (x[3] / (a * x[4])) ^ 2
 
 # Define reliability problem:
 Problem = ReliabilityProblem(X, ρˣ, g)
@@ -200,16 +200,16 @@ println("PoF from SORM: $(Solution.PoF₂[2]) (Breitung)")
 
 ```@example 1
 # Define random vector:
-X₁  = randomvariable("Normal", "M", [0, 1])
-X₂  = randomvariable("Normal", "M", [0, 1])
-X   = [X₁, X₂]
+X₁ = randomvariable("Normal", "M", [0, 1])
+X₂ = randomvariable("Normal", "M", [0, 1])
+X  = [X₁, X₂]
 
 # Define correlation matrix:
 ρˣ  = [1 0; 0 1]
 
 # Define limit state function:
-β               = 3
-g(x::Vector)    = β * sqrt(2) - x[1] - x[2]
+β            = 3
+g(x::Vector) = β * sqrt(2) - x[1] - x[2]
 
 # Define reliability problem:
 Problem = ReliabilityProblem(X, ρˣ, g)
