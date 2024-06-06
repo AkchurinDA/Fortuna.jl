@@ -32,6 +32,8 @@ struct SSMCache
     PoFSubset::Vector{Float64}
     "Probability of failure ``P_{f}``"
     PoF::Float64
+    "Convergance status"
+    Convergance::Bool
 end
 
 """
@@ -67,6 +69,7 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::SSM)
     XSamplesSubset = Vector{Matrix{Float64}}()
     CSubset        = Vector{Float64}(undef, MaxNumSubsets)
     PoFSubset      = Vector{Float64}(undef, MaxNumSubsets)
+    Convergance    = true
 
     # Loop through each subset:
     for i in 1:MaxNumSubsets
@@ -94,7 +97,17 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::SSM)
         CSubset[i] = Distributions.quantile(GSamplesSorted, P₀)
 
         # Check for convergance:
-        if CSubset[i] < 0
+        if CSubset[i] ≤ 0 || i == MaxNumSubsets
+            # Check for convergance:
+            if i == MaxNumSubsets
+                @warn """
+                SSM did not converge in the given maximum number of subsets (MaxNumSubsets = $MaxNumSubsets)! 
+                Try increasing the maximum number of subsets (MaxNumSubsets), increasing the number samples generated within each subset (NumSamples), or changing the probability of failure for each subset (P₀))!
+                """
+
+                Convergance = false
+            end
+
             # Redefine the threshold:
             CSubset[i] = 0
 
@@ -110,35 +123,27 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::SSM)
             CSubset   = CSubset[1:i]
             PoFSubset = PoFSubset[1:i]
 
-            # Break out:
-            break
-        else
-            # Check for convergance:
-            if i == MaxNumSubsets
-                error("SSM did not converge. Try increasing the maximum number of subsets (MaxNumSubsets) or number of samples to generate within with subset (NumSamples).")
-            end
+            # Compute the final probability of failure:
+            PoF = prod(PoFSubset)
 
+            # Return the result:
+            return SSMCache(XSamplesSubset, USamplesSubset, CSubset, PoFSubset, PoF, Convergance)
+        else
             # Retain samples below the threshold:
             Indices = findall(x -> x ≤ CSubset[i], GSamples)
             push!(USamplesSubset, USamples[:, Indices])
             push!(XSamplesSubset, transformsamples(NatafObject, USamples[:, Indices], :U2X))
 
             # Compute the probability of failure:
-            PoFSubset[i] = length(Indices) / size(GSamples)[1]        
+            PoFSubset[i] = length(Indices) / size(GSamples)[1]
         end
     end
-
-    # Compute the final probability of failure:
-    PoF = prod(PoFSubset)
-
-    # Return the result:
-    return SSMCache(XSamplesSubset, USamplesSubset, CSubset, PoFSubset, PoF)
 end
 
 function ModifiedMetropolisHastings(StartingPoint::Vector{Float64}, CurrentThreshold::Float64, NumDimensions::Integer, NumSamplesChain::Integer, NatafObject::NatafTransformation, g::Function)
     # Preallocate:
-    ChainSamples        = zeros(NumDimensions, NumSamplesChain)
-    ChainSamples[:, 1]  = StartingPoint
+    ChainSamples       = zeros(NumDimensions, NumSamplesChain)
+    ChainSamples[:, 1] = StartingPoint
 
     # Define a standard multivariate normal PDF:
     M = zeros(NumDimensions)
@@ -164,13 +169,11 @@ function ModifiedMetropolisHastings(StartingPoint::Vector{Float64}, CurrentThres
         GProposedState = g(XProposedState)
         IF             = GProposedState ≤ CurrentThreshold ? 1 : 0
 
+        # Compute the acceptance ratio:        
+        α = (pdf(ϕ, ProposedState) * IF) / pdf(ϕ, ChainSamples[:, i]) 
+        
         # Accept or reject the proposed state:
-        α = (pdf(ϕ, ProposedState) * IF) / pdf(ϕ, ChainSamples[:, i]) # Acceptance ratio
-        if U[i] <= α # Accept
-            ChainSamples[:, i + 1] = ProposedState
-        else # Reject
-            ChainSamples[:, i + 1] = ChainSamples[:, i]
-        end
+        ChainSamples[:, i + 1] = U[i] <= α ? ProposedState : ChainSamples[:, i]
     end
 
     # Return the result:

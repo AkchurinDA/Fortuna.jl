@@ -177,14 +177,14 @@ struct iHLRFCache
 end
 
 """
-    solve(Problem::ReliabilityProblem, AnalysisMethod::FORM; Differentiation::Symbol = :Automatic)
+    solve(Problem::ReliabilityProblem, AnalysisMethod::FORM; diff::Symbol = :automatic)
 
 Function used to solve reliability problems using First-Order Reliability Method (FORM). \\
-If `Differentiation` is:
-- `:Automatic`, then the function will use automatic differentiation to compute gradients, jacobians, etc.
-- `:Numeric`, then the function will use numeric differentiation to compute gradients, jacobians, etc.
+If `diff` is:
+- `:automatic`, then the function will use automatic differentiation to compute gradients, jacobians, etc.
+- `:numeric`, then the function will use numeric differentiation to compute gradients, jacobians, etc.
 """
-function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM; Differentiation::Symbol = :Automatic)
+function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM; diff::Symbol = :automatic)
     # Extract the analysis method:
     Submethod = AnalysisMethod.Submethod
 
@@ -205,13 +205,13 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM; Differentiatio
         Σˣ = Dˣ * ρˣ * Dˣ
 
         # Compute gradient of the limit state function and evaluate it at the means of the marginal distributions:
-        ∇g = if Differentiation == :Automatic
+        ∇g = if diff == :automatic
             try
                 ForwardDiff.gradient(g, Mˣ)
             catch
                 FiniteDiff.finite_difference_gradient(g, Mˣ)
             end
-        elseif Differentiation == :Numeric
+        elseif diff == :numeric
             FiniteDiff.finite_difference_gradient(g, Mˣ)
         end
 
@@ -254,7 +254,7 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM; Differentiatio
         end
 
         Problem   = NonlinearSolve.NonlinearProblem(F, mean(X[end]), x[:, 1])
-        x[end, 1] = if Differentiation == :Automatic
+        x[end, 1] = if diff == :automatic
             try
                 Solution = NonlinearSolve.solve(Problem, nothing, abstol = 1E-9, reltol = 1E-9)
                 Solution.u
@@ -262,7 +262,7 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM; Differentiatio
                 Solution = NonlinearSolve.solve(Problem, NonlinearSolve.FastShortcutNonlinearPolyalg(autodiff = NonlinearSolve.AutoFiniteDiff()), abstol = 1E-9, reltol = 1E-9)
                 Solution.u
             end
-        elseif Differentiation == :Numeric
+        elseif diff == :numeric
             Solution = NonlinearSolve.solve(Problem, NonlinearSolve.FastShortcutNonlinearPolyalg(autodiff = NonlinearSolve.AutoFiniteDiff()), abstol = 1E-9, reltol = 1E-9)
             Solution.u
         end
@@ -279,13 +279,13 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM; Differentiatio
             u[:, i] = (x[:, i] - μ[:, i]) ./ σ[:, i]
 
             # Evaluate gradient of the limit state function at the design point in U-space:
-            ∇G[:, i] = if Differentiation == :Automatic
+            ∇G[:, i] = if diff == :automatic
                 try
                     -σ[:, i] .* ForwardDiff.gradient(g, x[:, i])
                 catch
                     -σ[:, i] .* FiniteDiff.finite_difference_gradient(g, x[:, i])
                 end
-            elseif Differentiation == :Numeric
+            elseif diff == :numeric
                 -σ[:, i] .* FiniteDiff.finite_difference_gradient(g, x[:, i])
             end
 
@@ -301,7 +301,7 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM; Differentiatio
                 if Criterion < ϵ || i == MaxNumIterations
                     if i == MaxNumIterations
                         @warn """
-                        RF method did not converge in the given maximum number of iterations (MaxNumIterations = $MaxNumIterations) and for the specified convergance criterion (ϵ = $ϵ)! 
+                        RF method did not converge in the given maximum number of iterations (MaxNumIterations = $MaxNumIterations)!
                         Try increasing the maximum number of iterations (MaxNumIterations) or relaxing the convergance criterion (ϵ)!
                         """
 
@@ -333,7 +333,7 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM; Differentiatio
 
             # Force the design point to lay on the failure boundary:
             Problem       = NonlinearSolve.NonlinearProblem(F, x[end, i + 1], x[:, i + 1])
-            x[end, i + 1] = if Differentiation == :Automatic
+            x[end, i + 1] = if diff == :automatic
                 try
                     Solution = NonlinearSolve.solve(Problem, nothing, abstol = 1E-9, reltol = 1E-9)
                     Solution.u
@@ -341,7 +341,7 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM; Differentiatio
                     Solution = NonlinearSolve.solve(Problem, NonlinearSolve.FastShortcutNonlinearPolyalg(autodiff = NonlinearSolve.AutoFiniteDiff()), abstol = 1E-9, reltol = 1E-9)
                     Solution.u
                 end
-            elseif Differentiation == :Numeric
+            elseif diff == :numeric
                 Solution = NonlinearSolve.solve(Problem, NonlinearSolve.FastShortcutNonlinearPolyalg(autodiff = NonlinearSolve.AutoFiniteDiff()), abstol = 1E-9, reltol = 1E-9)
                 Solution.u
             end
@@ -389,13 +389,13 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM; Differentiatio
             G[i] = g(x[:, i])
 
             # Evaluate gradient of the limit state function at the design point in X-space:
-            ∇g = if Differentiation == :Automatic
+            ∇g = if diff == :automatic
                 try
                     LinearAlgebra.transpose(ForwardDiff.gradient(g, x[:, i]))
                 catch
                     LinearAlgebra.transpose(FiniteDiff.finite_difference_gradient(g, x[:, i]))
                 end
-            elseif Differentiation == :Numeric
+            elseif diff == :numeric
                 LinearAlgebra.transpose(FiniteDiff.finite_difference_gradient(g, x[:, i]))
             end
 
@@ -415,7 +415,7 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM; Differentiatio
                 # Check for convergance:
                 if i == MaxNumIterations  
                     @warn """
-                    HL-RF method did not converge in the given maximum number of iterations (MaxNumIterations = $MaxNumIterations) and for the specified convergance criteria (ϵ₁ = $ϵ₁, ϵ₂ = $ϵ₂)! 
+                    HL-RF method did not converge in the given maximum number of iterations (MaxNumIterations = $MaxNumIterations)!
                     Try increasing the maximum number of iterations (MaxNumIterations) or relaxing the convergance criteria (ϵ₁, ϵ₂)!
                     """
 
@@ -497,14 +497,14 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM; Differentiatio
             G[i] = g(x[:, i])
 
             # Evaluate gradient of the limit state function at the design point in X-space:
-            ∇g = if Differentiation == :Automatic
+            ∇g = if diff == :automatic
                 try
                     LinearAlgebra.transpose(ForwardDiff.gradient(g, x[:, i]))
                 catch
                     @warn "Automatic differentiation has failed. Switching to numeric differentiation."
                     LinearAlgebra.transpose(FiniteDiff.finite_difference_gradient(g, x[:, i]))
                 end
-            elseif Differentiation == :Numeric
+            elseif diff == :numeric
                 LinearAlgebra.transpose(FiniteDiff.finite_difference_gradient(g, x[:, i]))
             end
 
@@ -524,7 +524,7 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM; Differentiatio
                 # Check for convergance:
                 if i == MaxNumIterations  
                     @warn """
-                    iHL-RF method did not converge in the given maximum number of iterations (MaxNumIterations = $MaxNumIterations) and for the specified convergance criteria (ϵ₁ = $ϵ₁, ϵ₂ = $ϵ₂)! 
+                    iHL-RF method did not converge in the given maximum number of iterations (MaxNumIterations = $MaxNumIterations)!
                     Try increasing the maximum number of iterations (MaxNumIterations) or relaxing the convergance criteria (ϵ₁, ϵ₂)!
                     """
 
