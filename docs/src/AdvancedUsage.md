@@ -321,7 +321,7 @@ Besides being able to define limit state functions using FE models of complex sy
 
 In general, the following approach is taken to solve reliability problems involving FE models built using `OpenSees` and `Abaqus` softwares in `Fortuna.jl` packages:
 
-1. Input files describing the models are created: `.tcl` in case of `OpenSees` and `.inp` in case of `Abaqus`. The random variables involved in the definition of a model are defined using *unique* "placeholders" in model's input file. These "placeholders" are then used to inject samples of corresponding random variables to create executable files. For example, "placeholder" for Young's modulus in the definition of a FE model built using `Abaqus` may look like `:E` because `:` symbol generally does not appear in `.inp` files; thus, the section describing the material properties of a model in the associated `ExampleModel.inp` file will look like:
+- Input files describing the models are created: `.tcl` in case of `OpenSees` and `.inp` in case of `Abaqus`. The random variables involved in the definition of a model are defined using *unique* "placeholders" in model's input file. These "placeholders" are then used to inject samples of corresponding random variables to create executable files. For example, "placeholder" for Young's modulus in the definition of a FE model built using `Abaqus` may look like `:E` because `:` symbol generally does not appear in `.inp` files; thus, the section describing the material properties of a model in the associated `ExampleModel.inp` file will look like:
 ```
 ...
 *MATERIAL, NAME=STEEL
@@ -329,7 +329,7 @@ In general, the following approach is taken to solve reliability problems involv
 :E, 0.3
 ...
 ```
-2. Random variables are then sampled and a temporary input file with samples injected in place of "placeholders" is created. Following the example from above, if the Young's modulus is a normally-distributed random variable with mean of 29000 ksi and coefficient of variation of 0.05, then the section describing the material properties of the model in the temporary `ExampleModelTemp.inp` input file with a sample of this random variable of 27569.312 already injected will look like:
+- Random variables are then sampled and a temporary input file with samples injected in place of "placeholders" is created. Following the example from above, if the Young's modulus is a normally-distributed random variable with mean of 29000 ksi and coefficient of variation of 0.05, then the section describing the material properties of the model in the temporary `ExampleModelTemp.inp` input file with a sample of this random variable of 27569.312 already injected will look like:
 ```
 ...
 *MATERIAL, NAME=STEEL
@@ -337,13 +337,13 @@ In general, the following approach is taken to solve reliability problems involv
 27569.312, 0.3
 ...
 ```
-3. These temporary input files with samples injected in place of "placeholders" are now executable and can used to evaluate the defined model using Julia's `run()` and `pipeline()` functions: `run()` function allows to execute commands directly from Julia and `pipeline()` function directs all unwanted text created by external FE softwares elsewhere. For example, the model defined in the temporary `ExampleModelTemp.inp` input file can be executed using the following command in Julia given that Abaqus' execution files are added to your system's path:
+- These temporary input files with samples injected in place of "placeholders" are now executable and can used to evaluate the defined model using Julia's `run()` and `pipeline()` functions: `run()` function allows to execute commands directly from Julia and `pipeline()` function directs all unwanted text created by external FE softwares elsewhere. For example, the model defined in the temporary `ExampleModelTemp.inp` input file can be executed using the following command in Julia given that Abaqus' execution files are added to your system's path:
 ```
 run(pipeline(`cmd /C "abaqus interactive job=ExampleModelTemp"`,
     stdout = devnull,
     stderr = devnull))
 ```
-4. After the model defined in the temporary input file is executed, we need to process the output file (`.out` file created by [`recorder`](https://opensees.berkeley.edu/wiki/index.php/Recorder_Command) function for `OpenSees` or `.odb` created by `Abaqus`) to get the output variable of interest involved in the definition of the associated limit state function. 
+- After the model defined in the temporary input file is executed, we need to process the output file (`.out` file created by [`recorder`](https://opensees.berkeley.edu/wiki/index.php/Recorder_Command) function for `OpenSees` or `.odb` created by `Abaqus`) to get the output variable of interest involved in the definition of the associated limit state function. 
     - In case of OpenSees, everything is quite easy since `.out` files are text-based and can be read directly in Julia, for example, using [`DelimitedFiles.jl`](https://github.com/JuliaData/DelimitedFiles.jl?tab=readme-ov-file) package. 
     - In case of Abaqus, there need to be an additional Python script that reads binary `.odb` files and produces text-based files that can be read by Julia.
 
