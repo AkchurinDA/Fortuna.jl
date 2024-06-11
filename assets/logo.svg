@@ -7,7 +7,7 @@
    viewBox="0 0 500 500"
    version="1.1"
    id="svg1"
-   sodipodi:docname="Fortuna.svg"
+   sodipodi:docname="FortunaLogo.svg"
    inkscape:version="1.3.2 (091e20e, 2023-11-25)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
@@ -25,14 +25,14 @@
      inkscape:document-units="mm"
      showguides="true"
      inkscape:zoom="0.19078553"
-     inkscape:cx="704.98011"
-     inkscape:cy="967.0545"
+     inkscape:cx="707.60083"
+     inkscape:cy="967.05447"
      inkscape:window-width="1512"
      inkscape:window-height="858"
      inkscape:window-x="0"
      inkscape:window-y="38"
      inkscape:window-maximized="0"
-     inkscape:current-layer="svg1"
+     inkscape:current-layer="layer2"
      showborder="false"
      borderlayer="false"
      showgrid="false" />
@@ -205,20 +205,12 @@
      inkscape:groupmode="layer"
      id="layer2"
      inkscape:label="Text"
-     style="display:inline"
-     sodipodi:insensitive="true">
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:70.5556px;line-height:0;font-family:'PT Mono';-inkscape-font-specification:'PT Mono, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;text-anchor:middle;opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none"
+     style="display:inline">
+    <path
+       d="m 102.5086,353.22305 h 31.32669 v 8.60778 h -21.66057 v 12.20612 h 20.10835 v 8.60778 h -20.10835 v 19.96724 h -9.66612 z m 38.94672,24.69446 q 0,-5.99723 1.12889,-10.79501 1.12889,-4.79778 3.45723,-8.04334 2.32833,-3.31611 5.78556,-5.08 3.52778,-1.76389 8.255,-1.76389 5.08001,0 8.60779,1.905 3.52778,1.905 5.715,5.29167 2.25778,3.38667 3.24556,8.11389 1.05833,4.72723 1.05833,10.37168 0,12.06501 -4.65667,18.9089 -4.58611,6.77334 -13.97001,6.77334 -5.08,0 -8.67833,-1.905 -3.52779,-1.90501 -5.78556,-5.29167 -2.18723,-3.38667 -3.17501,-8.1139 -0.98778,-4.72722 -0.98778,-10.37167 z m 10.16001,0 q 0,3.59833 0.28222,6.70278 0.35278,3.10445 1.19945,5.43278 0.91722,2.25778 2.54,3.59834 1.69334,1.34055 4.445,1.34055 2.46945,0 4.09223,-0.98777 1.62278,-1.05834 2.61056,-3.17501 0.98777,-2.11666 1.34055,-5.29167 0.42334,-3.24555 0.42334,-7.62 0,-3.45723 -0.28223,-6.56167 -0.21166,-3.10445 -1.12889,-5.43278 -0.84666,-2.32834 -2.54,-3.6689 -1.69333,-1.41111 -4.51556,-1.41111 -4.93889,0 -6.70278,4.30389 -1.76389,4.3039 -1.76389,12.77057 z m 34.00783,-24.20057 q 1.62278,-0.28223 3.45722,-0.49389 1.90501,-0.28223 3.73945,-0.42334 1.905,-0.14111 3.66889,-0.21166 1.76389,-0.0706 3.24556,-0.0706 3.45723,0 6.77334,0.70556 3.38667,0.635 5.99722,2.25778 2.68112,1.62278 4.23334,4.37444 1.62278,2.75167 1.62278,6.8439 0,3.03389 -0.635,5.29167 -0.56445,2.18722 -1.62278,3.88056 -1.05833,1.69333 -2.61056,2.96333 -1.48166,1.19945 -3.24555,2.18722 l 11.92389,21.59002 h -11.14778 l -9.94834,-19.33224 h -5.78556 v 19.33224 h -9.66612 z m 14.81668,7.40833 q -1.48167,0 -2.96334,0.0706 -1.41111,0.0706 -2.18722,0.28222 v 14.32279 h 3.81 q 4.02167,0 6.56167,-1.83445 2.54,-1.83444 2.54,-6.06778 0,-3.175 -1.97555,-4.93889 -1.97556,-1.83445 -5.78556,-1.83445 z m 31.46782,33.72558 h 8.04334 v -33.86669 h -6.77334 v 8.53723 h -7.76111 v -16.29834 h 38.66447 v 16.29834 h -7.76112 v -8.53723 h -6.70278 v 33.86669 h 7.97278 v 7.76112 h -25.68224 z m 63.64118,-41.6278 h 9.17223 v 31.60891 q 0,4.79778 -1.27,8.32556 -1.27,3.45722 -3.59833,5.78556 -2.25778,2.25778 -5.43279,3.38667 -3.175,1.12889 -6.985,1.12889 -9.17223,0 -13.61723,-4.44501 -4.37445,-4.445 -4.37445,-12.98223 v -32.80835 h 9.66612 v 30.90335 q 0,5.64445 2.04611,8.18445 2.04611,2.54 6.42056,2.54 4.23334,0 6.06778,-2.68111 1.905,-2.75167 1.905,-8.04334 z m 25.75283,20.1789 h -0.35278 l 0.42333,5.85611 v 23.35391 h -9.17223 v -49.38892 h 8.46668 l 17.07445,30.19779 h 0.35278 l -0.635,-5.92667 v -24.27112 h 9.17223 v 49.38892 h -8.46667 z m 57.50284,18.2739 h -14.74612 l -3.38667,10.93612 h -9.66612 l 15.94557,-49.38892 h 9.66612 l 15.87501,49.38892 h -10.16001 z m -12.48834,-7.76112 h 10.58334 l -5.00945,-16.51001 h -0.635 z"
        id="text14"
-       y="402.61197"
-       x="244.74879"
-       inkscape:label="Text"><tspan
-         sodipodi:role="line"
-         id="tspan14"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:70.5556px;font-family:'PT Mono';-inkscape-font-specification:'PT Mono, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none"
-         x="244.74881"
-         y="402.61197"
-         inkscape:label="TextSpan">FORTUNA</tspan></text>
+       style="font-weight:bold;font-size:70.5556px;line-height:0;font-family:'PT Mono';-inkscape-font-specification:'PT Mono, Bold';text-align:center;text-anchor:middle;stroke-width:0;fill:#000000;fill-opacity:1"
+       inkscape:label="Text"
+       aria-label="FORTUNA" />
   </g>
 </svg>

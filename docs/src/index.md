@@ -1,3 +1,7 @@
+```@raw html
+<img src="../../assets/social-preview.svg" class="center" style="border-radius:2.5px;"/>
+```
+
 > **Audentes Fortuna Iuvat**
 
 ## Description
