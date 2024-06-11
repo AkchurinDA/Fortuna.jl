@@ -1,5 +1,5 @@
 ```@raw html
-<img src="../../assets/social-preview.svg" class="center" style="border-radius:40px;"/>
+<img src="../assets/social-preview.svg" class="center" style="border-radius:40px;"/>
 ```
 
 > **Audentes Fortuna Iuvat**
