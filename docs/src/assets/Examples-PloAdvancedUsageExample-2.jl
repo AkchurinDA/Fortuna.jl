@@ -76,6 +76,17 @@ begin
     hidedecorations!(A)
     hidespines!(A)
 
+    Inset = Axis(F[1, 1],
+        height = Relative(0.25),
+        valign = 0.40,
+        aspect = DataAspect())
+
+    Fire = load(assetpath("/Users/damirakchurin/Desktop/Programming Projects/Fortuna.jl/docs/src/assets/Fire.png"))
+    image!(Inset, rotr90(Fire))
+
+    hidedecorations!(Inset)
+    hidespines!(Inset)
+
     display(F)
 end
 
