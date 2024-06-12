@@ -1,10 +1,5 @@
 using CairoMakie, MathTeXEngine
-CairoMakie.activate!(type = :svg)
-
-L = 180
-A = 9.12
-H = 1
-P = 50
+CairoMakie.activate!(type = :png, px_per_unit = 10)
 
 begin
     F = Figure(size = 72 .* (8, 6), fonts = (; regular = texfont()), fontsize = 16)
@@ -62,4 +57,4 @@ begin
     display(F)
 end
 
-save("docs/src/assets/Plots (Examples)/OpenSees-1.svg", F)
+save("docs/src/assets/Examples-AdvancedUsage-1.png", F)

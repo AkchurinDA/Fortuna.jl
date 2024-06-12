@@ -6,7 +6,7 @@
 - A lot of optional keyword arguments are switched to lowercase to conform to the community standards. Most notably, `Differentiation` keyword in `solve()` is changed to `diff` to conform to community standards. The possible arguments are `:automatic` and `:numeric`.
 - `solve()` function invoked with `AnalysisMethod` of type `SORM` now accepts a new optional `FORMSolution` keyword argument, which can be used to pass an existing solution of a reliability problem obtained using FORM, significantly speeding up the SORM.
 - Fixed a problem with SORM prematurely erroring out if Hohenbichler-Rackwitz and/or Breitung conditions are not satisfied.
-- solve()` function invoked with `AnalysisMethod` of type `MC` and `IS` now accepts a new optional `showprogressbar` keyword argument, which can be used to track the progress of the progress in real time. Is in it nice?!
+- `solve()` function invoked with `AnalysisMethod` of type `MC` and `IS` now accepts a new optional `showprogressbar` keyword argument, which can be used to track the progress of the progress in real time. Is in it nice?!
 - Small code optimizations here and there.
 
 ## Release V0.9.1

@@ -9,7 +9,7 @@ X  = [X₁, X₂]
 # Define the correlation matrix:
 ρˣ = [1 0; 0 1]
 
-# Define the FE model of the cantilever beam:
+# Define the FE model of the frame under fire:
 WorkDirectory = "C:\\Users\\...\\Fortuna.jl\\examples\\SAFIR" # This must be an absolute path!
 IFilename     = "FrameUnderFire.IN"
 OFilename     = "FrameUnderFireTemp.OUT"
@@ -49,7 +49,7 @@ function FrameUnderFire(x::Vector)
 end
 
 # Define the limit state function:
-g(x::Vector) = 1 - FrameUnderFire(x)
+g(x::Vector) = 0.075 - FrameUnderFire(x)
 
 # Define the reliability problem:
 Problem = ReliabilityProblem(X, ρˣ, g)
