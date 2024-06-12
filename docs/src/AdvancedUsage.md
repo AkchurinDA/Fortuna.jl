@@ -21,7 +21,7 @@ pkg> add InstantFrame
 Consider a cantilever beam subjected to simultaneous axial and transverse loading based on the example provided in [Denavit:2013](@citet) with the only difference that Young's modulus ``E = X_{1}`` and moment of inertia about major axis ``I = X_{2}`` are uncorrelated normally-distributed random variables. The cross-sectional area of the beam ``A`` is ``9.12 \text{ in.}^{2}``.
 
 ```@raw html
-<img src="../assets/Examples-OpenSees-1.png" class="center" style="max-height:350px; border-radius:2.5px;"/>
+<img src="../assets/Examples-AdvancedUsage-1.png" class="center" style="max-height:350px; border-radius:2.5px;"/>
 ```
 
 Let's define the limit state function as 
@@ -209,7 +209,7 @@ Conda.pip("install", "openseespy")
 using Pkg
 ENV["PYTHON"] = ""
 Pkg.build("PyCall")
-```
+``` 
 
 ```@example OpenSeesPyExample
 # Preamble:
@@ -313,15 +313,15 @@ println("β: $(SORMSolution.β₂[1]) (Hohenbichler and Rackwitz)")
 println("β: $(SORMSolution.β₂[2]) (Breitung)")
 println("PoF: $(SORMSolution.PoF₂[1]) (Hohenbichler and Rackwitz)")
 println("PoF: $(SORMSolution.PoF₂[2]) (Breitung)")
-```
+``` 
 
 ## "External" Finite Element Models
 
-Besides being able to define limit state functions using FE models of complex systems using Julia- and Python-based FE softwares, it also possible to define FE models using external FE software, most notably Tcl-based [`OpenSees`](https://en.wikipedia.org/wiki/OpenSees) and [`Abaqus`](https://en.wikipedia.org/wiki/Abaqus). 
+Besides being able to define limit state functions using FE models of complex systems using Julia- and Python-based FE softwares, it also possible to define FE models using external FE software, most notably Tcl-based [`OpenSees`](https://en.wikipedia.org/wiki/OpenSees), [`Abaqus`](https://en.wikipedia.org/wiki/Abaqus), and [`SAFIR`](https://www.uee.uliege.be/cms/c_10613577/fr/uee-safir). 
 
-In general, the following approach is taken to solve reliability problems involving FE models built using `OpenSees` and `Abaqus` softwares in `Fortuna.jl` packages:
+In general, the following approach is taken to solve reliability problems involving FE models built using `OpenSees`, `Abaqus`, and `SAFIR` softwares in `Fortuna.jl` packages:
 
-- Input files describing the models are created: `.tcl` in case of `OpenSees` and `.inp` in case of `Abaqus`. The random variables involved in the definition of a model are defined using *unique* "placeholders" in model's input file. These "placeholders" are then used to inject samples of corresponding random variables to create executable files. For example, "placeholder" for Young's modulus in the definition of a FE model built using `Abaqus` may look like `:E` because `:` symbol generally does not appear in `.inp` files; thus, the section describing the material properties of a model in the associated `ExampleModel.inp` file will look like:
+- Input files describing the models are created: `.tcl` in case of `OpenSees`, `.inp` in case of `Abaqus`, `.in` in case of `SAFIR`. The random variables involved in the definition of a model are defined using *unique* "placeholders" in model's input file. These "placeholders" are then used to inject samples of corresponding random variables to create executable files. For example, "placeholder" for Young's modulus in the definition of a FE model built using `Abaqus` may look like `:E` because `:` symbol generally does not appear in `.inp` files; thus, the section describing the material properties of a model in the associated `ExampleModel.inp` file will look like:
 ```
 ...
 *MATERIAL, NAME=STEEL
@@ -343,11 +343,11 @@ run(pipeline(`cmd /C "abaqus interactive job=ExampleModelTemp"`,
     stdout = devnull,
     stderr = devnull))
 ```
-- After the model defined in the temporary input file is executed, we need to process the output file (`.out` file created by [`recorder`](https://opensees.berkeley.edu/wiki/index.php/Recorder_Command) function for `OpenSees` or `.odb` created by `Abaqus`) to get the output variable of interest involved in the definition of the associated limit state function. 
-    - In case of OpenSees, everything is quite easy since `.out` files are text-based and can be read directly in Julia, for example, using [`DelimitedFiles.jl`](https://github.com/JuliaData/DelimitedFiles.jl?tab=readme-ov-file) package. 
-    - In case of Abaqus, there need to be an additional Python script that reads binary `.odb` files and produces text-based files that can be read by Julia.
+- After the model defined in the temporary input file is executed, we need to process the output file (`.out` file created by [`recorder`](https://opensees.berkeley.edu/wiki/index.php/Recorder_Command) function for `OpenSees`, `.odb` created by `Abaqus`, or `.out` created by `SAFIR`) to get the output variable of interest involved in the definition of the associated limit state function. 
+    - In case of `OpenSees` and `SAFIR`, everything is quite easy since `.out` files are text-based and can be read directly in Julia, for example, using [`DelimitedFiles.jl`](https://github.com/JuliaData/DelimitedFiles.jl?tab=readme-ov-file) package. 
+    - In case of `Abaqus`, there need to be an additional Python script that reads binary `.odb` files and produces text-based files that can be read by Julia.
 
-After that, a FE model should be easily used to define an associated limit state function and solve the reliability problem of interest.
+After that, a FE model can be easily used to define an associated limit state function and solve the reliability problem of interest.
 
 ### `OpenSees`
 
@@ -406,7 +406,7 @@ end
 ### `Abaqus`
 
 !!! warning
-    Although it is possible, it is recommended to avoid using `Abaqus` for relatively inexpensive FE models due to the significant overhead caused by `Abaqus`' intense I/O usage. Use `Abaqus` only when the FE model is extremely expensive, making the trade-off worth it; otherwise, use a different solver.
+    It is recommended to avoid using `Abaqus` for relatively inexpensive FE models due to the significant overhead caused by `Abaqus`' intense I/O usage. Use `Abaqus` only when the FE model is extremely expensive, making the trade-off worth it; otherwise, use a different solver.
 
 #### Installation
 
@@ -458,8 +458,71 @@ function CantileverBeam(x::Vector)
     # Delete the created files to prevent cluttering the work directory:
     rm(joinpath(WorkDirectory, TempIFilename))
     rm(joinpath(WorkDirectory,     OFilename))
-    Extensions = [".dat", ".msg", ".env", ".sta", ".rpy", ".stt", ".res", ".prt", ".com", ".sim", ".log", ".odb"]
-    [foreach(rm, filter(endswith(Extension), readdir(WorkDirectory))) for Extension in Extensions]
+
+    # Return the result:
+    return Δ
+end
+```
+
+### `SAFIR`
+
+#### Installation
+
+`SAFIR` [Franssen:2017](@cite) can be installed from its official website [here](https://www.gesval.be/en/catalogue).
+
+#### Example
+
+!!! note
+    The base `FrameUnderFire.IN` input file can be found [here](https://github.com/AkchurinDA/Fortuna.jl/tree/main/examples/SAFIR/FrameUnderFire.IN).
+
+Consider a frame with steel beam and concrete columns based on this [example](https://mars.jhu.edu/wp-content/uploads/2018/10/SAFIR_Training-3D-Beam.pdf) (courtesy of [Dr. Thomas Gernay](https://engineering.jhu.edu/faculty/thomas-gernay/)). The columns and beam are exposed to ASTM E119 standard fire on 3 faces. The frame's bases are fixed. The only difference is that the Young's modulus ``E = X_{1}`` and lateral load ``F = X_{2}`` are uncorrelated normally-distributed random variables.
+
+```@raw html
+<img src="../assets/Examples-AdvancedUsage-2.png" class="center" style="max-height:350px; border-radius:2.5px;"/>
+```
+
+Let's solve the defined problem using `SAFIR` by constructing `FrameUnderFire(x::Vector)` function, which:
+
+1. Injects samples `x` into the base `FrameUnderFire.IN` input file in place of `:E` (Young's modulus) and `:F` (lateral load) "placeholders".
+2. Creates a temporary `FrameUnderFireTemp.IN` input file.
+3. Executes the temporary input file using `SAFIR`.
+4. Reads and return the vertical displacement at the midpoint of the beam stored in `FrameUnderFireTemp.OUT` file.
+
+```julia
+# Define the FE model of the frame under fire:
+WorkDirectory = "C:\\Users\\..." # This must be an absolute path!
+IFilename     = "FrameUnderFire.IN"
+OFilename     = "FrameUnderFireTemp.out"
+Placeholders  = [":E", ":F"]
+function FrameUnderFire(x::Vector)
+    # Inject values into the input file:
+    IFileString = read(joinpath(WorkDirectory, IFilename), String)
+    for (Placeholder, Value) in zip(Placeholders, x)
+        IFileString = replace(IFileString, Placeholder => string(Value))
+    end
+
+    # Write the modified input file:
+    TempIFilename = replace(IFilename, ".IN" => "Temp.IN")
+    write(joinpath(WorkDirectory, TempIFilename), IFileString)
+
+    # Run the model from the work directory:
+    cd(WorkDirectory)
+    run(pipeline(`cmd /C "SAFIR $(replace(TempIFilename, ".IN" => ""))"`, 
+        stdout = devnull,
+        stderr = devnull))
+    
+    # Extract the output:
+    OFileString = read(OFilename, String)
+    SIndex      = findlast("TOTAL DISPLACEMENTS.\r\n --------------------\r\n NODE    DOF 1     DOF 2     DOF 3     DOF 4     DOF 5     DOF 6     DOF 7\r\n", OFileString)
+    OFileString = OFileString[(SIndex[end] + 1):end]
+    FIndex      = findfirst("\r\n\r\n", OFileString)
+    OFileString = OFileString[1:(FIndex[1] - 1)]
+    write(joinpath(WorkDirectory, OFilename), OFileString)
+    Δ = -readdlm(joinpath(WorkDirectory, OFilename))[38, 3]
+
+    # Delete the created files to prevent cluttering the work directory:
+    rm(joinpath(WorkDirectory, TempIFilename))
+    rm(joinpath(WorkDirectory,     OFilename))
 
     # Return the result:
     return Δ

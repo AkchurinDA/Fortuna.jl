@@ -10,8 +10,8 @@ X  = [X₁, X₂]
 ρˣ = [1 0; 0 1]
 
 # Define the FE model of the cantilever beam:
-OpenSeesPath  = "/Users/.../bin/OpenSees"                 # This must be an absolute path!
-WorkDirectory = "/Users/.../Fortuna.jl/examples/OpenSees" # This must be an absolute path!
+OpenSeesPath  = "C:\\Users\\...\\bin\\OpenSees"           # This must be an absolute path!
+WorkDirectory = "C:\\Users\\...\\Fortuna.jl\\examples\\OpenSees" # This must be an absolute path!
 IFilename     = "CantileverBeam.tcl"
 OFilename     = "Output.out"
 Placeholders  = [":E", ":I"]
