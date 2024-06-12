@@ -21,7 +21,7 @@ pkg> add InstantFrame
 Consider a cantilever beam subjected to simultaneous axial and transverse loading based on the example provided in [Denavit:2013](@citet) with the only difference that Young's modulus ``E = X_{1}`` and moment of inertia about major axis ``I = X_{2}`` are uncorrelated normally-distributed random variables. The cross-sectional area of the beam ``A`` is ``9.12 \text{ in.}^{2}``.
 
 ```@raw html
-<img src="./assets/Examples-AdvancedUsage-1.png" class="center" style="max-height:350px; border-radius:2.5px;"/>
+<img src="../assets/Examples-AdvancedUsage-1.png" class="center" style="max-height:350px; border-radius:2.5px;"/>
 ```
 
 Let's define the limit state function as 
@@ -347,7 +347,7 @@ run(pipeline(`cmd /C "abaqus interactive job=ExampleModelTemp"`,
     - In case of `OpenSees` and `SAFIR`, everything is quite easy since `.out` files are text-based and can be read directly in Julia, for example, using [`DelimitedFiles.jl`](https://github.com/JuliaData/DelimitedFiles.jl?tab=readme-ov-file) package. 
     - In case of `Abaqus`, there need to be an additional Python script that reads binary `.odb` files and produces text-based files that can be read by Julia.
 
-After that, a FE model should be easily used to define an associated limit state function and solve the reliability problem of interest.
+After that, a FE model can be easily used to define an associated limit state function and solve the reliability problem of interest.
 
 ### `OpenSees`
 
@@ -468,17 +468,17 @@ end
 
 #### Installation
 
-`SAFIR` can be installed from its official website [here](https://www.gesval.be/en/catalogue).
+`SAFIR` [Franssen:2017](@cite) can be installed from its official website [here](https://www.gesval.be/en/catalogue).
 
 #### Example
 
 !!! note
     The base `FrameUnderFire.IN` input file can be found [here](https://github.com/AkchurinDA/Fortuna.jl/tree/main/examples/SAFIR/FrameUnderFire.IN).
 
-Consider a frame with steel beam and concrete columns from this [example](https://mars.jhu.edu/wp-content/uploads/2018/10/SAFIR_Training-3D-Beam.pdf) (courtesy of [Dr. Thomas Gernay](https://engineering.jhu.edu/faculty/thomas-gernay/)). The columns and beam are exposed to ASTM E119 standard fire on 3 faces. The frame's bases are fixed. The only difference is that the Young's modulus ``E = X_{1}`` and lateral load ``F = X_{2}`` are uncorrelated normally-distributed random variables.
+Consider a frame with steel beam and concrete columns based on this [example](https://mars.jhu.edu/wp-content/uploads/2018/10/SAFIR_Training-3D-Beam.pdf) (courtesy of [Dr. Thomas Gernay](https://engineering.jhu.edu/faculty/thomas-gernay/)). The columns and beam are exposed to ASTM E119 standard fire on 3 faces. The frame's bases are fixed. The only difference is that the Young's modulus ``E = X_{1}`` and lateral load ``F = X_{2}`` are uncorrelated normally-distributed random variables.
 
 ```@raw html
-<img src="./assets/Examples-AdvancedUsage-2.png" class="center" style="max-height:350px; border-radius:2.5px;"/>
+<img src="../assets/Examples-AdvancedUsage-2.png" class="center" style="max-height:350px; border-radius:2.5px;"/>
 ```
 
 Let's solve the defined problem using `SAFIR` by constructing `FrameUnderFire(x::Vector)` function, which:
