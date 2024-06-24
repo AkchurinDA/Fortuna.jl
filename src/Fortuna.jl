@@ -14,6 +14,9 @@ import SpecialFunctions
 using  DocStringExtensions
 
 import ProgressMeter
+import StaticArrays
+import LinearAlgebra
+import Combinatorics
 
 # --------------------------------------------------
 # REEXPORT PACKAGES
@@ -90,6 +93,7 @@ export IS, ISCache
 export FORM, MCFOSM, MCFOSMCache, RF, RFCache, HLRF, HLRFCache, iHLRF, iHLRFCache
 export SORM, CF, CFCache, PF, PFCache
 export SSM, SSMCache
+export DCM, DCMCache, IntegrationBox
 export SensitivityProblemTypeI, SensitivityProblemTypeII, SensitivityProblemCache
 export InverseReliabilityProblem, InverseReliabilityProblemCache
 export randomvariable

@@ -96,7 +96,6 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::SORM;
     isa(FORMConfiguration.Submethod, MCFOSM) && throw(ArgumentError("MCFOSM cannot be used with SORM as it does not provide any information about the design point!"))
 
     # Determine the design point using FORM:
-    
     FORMSolution = isnothing(FORMSolution) ? solve(Problem, FORMConfiguration, diff = diff) : FORMSolution
     u            = FORMSolution.u[:, end]
     ∇G           = FORMSolution.∇G[:, end]

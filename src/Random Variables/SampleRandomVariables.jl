@@ -34,7 +34,7 @@ function Distributions.rand(RNG::Distributions.AbstractRNG, RandomVariable::Dist
         Samples = Distributions.rand(RNG, RandomVariable, NumSamples)
     elseif SamplingTechnique == :LHS
         # Define the lower limits of each strata:
-        LowerLimits = collect(0:(1 / NumSamples):((NumSamples - 1) / NumSamples))
+        LowerLimits = collect((1 / NumSamples) * range(0, NumSamples - 1))
 
         # Generate samples within each strata:
         UniformSamples = LowerLimits + Distributions.rand(RNG, Distributions.Uniform(0, 1 / NumSamples), NumSamples)
