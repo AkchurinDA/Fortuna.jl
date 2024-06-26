@@ -22,29 +22,29 @@ In any field of engineering, addressing uncertainties is crucial to ensure the a
 
 # Statement of Need
 
-Due to largely numerical nature of almost all reliability analysis methods, which often require computation of gradient vectors and Hessian matrices, the use of computational resources is necessary for all but the most trivial problems. As a result, a large number of both open-source and commercial software packages have been developed in different programming languages over the past 30 years, such as `UQpy` (Python) `[@Olivier:2020]`, `Pystra` (Python), `FERUM` (MATLAB) `[@Bourinet:2009]`, and `CalREL` (FORTRAN) `[@DerKiureghian:2006]` [4].
+Due to largely numerical nature of almost all reliability analysis methods, which often require computation of gradient vectors and Hessian matrices, the use of computational resources is necessary for all but the most trivial problems. As a result, a large number of both open-source and commercial software packages have been developed in different programming languages over the past 30 years, such as `UQpy` (Python) `[@Olivier:2020]`, `Pystra` (Python), `FERUM` (MATLAB) [@Bourinet:2009], and `CalREL` (FORTRAN) [@DerKiureghian:2006].
 The development of `Fortuna.jl` was mainly motivated by the absence of packages for structural and system reliability analysis written in Julia. Additionally, it aimed to achieve an improved balance between user experience, ease of implementing new reliability analysis methods, computational efficiency, and interoperability with external finite element (FE) modeling software not directly available through Julia.
-A key distinguishing feature of `Fortuna.jl` is that it is capable of performing differentiation of the limit state function, which defines failure criterion for a given reliability problem, required by most reliability analysis methods using automatic differentiation techniques provided by `ForwardDiff.jl` package `[@Revels:2016]`, significantly speeding up the analysis process. This contrasts with other software packages for structural and system reliability analysis, which typically rely on variants of finite difference approximations. As it was mentioned before, `Fortuna.jl` also allows to easily define limit state functions using external FE modeling software, such as `Abaqus`, `OpenSees` `[@McKenna:2010]`, and `SAFIR` `[@Franssen:2017]`. In cases where the evaluation of the limit state function defined using FE model is computationally expensive due to model’s complexity, `Fortuna.jl` allows to easily create a surrogate model of the limit state function, which is less expensive to evaluate, using the functionality provided by `Surrogates.jl` package. Lastly, `Fortuna.jl`’s ability to define and operate random variables is based on a widely-adopted `Distributions.jl` package `[@Besancon:2021]`, enabling seamless integration with other software packages for probabilistic analysis written in Julia, such as `Copulas.jl` `[@Laverny:2024]`, `RxInter.jl` `[@Bagaev:2023]`, and `Turing.jl` `[@Ge:2018]`, which provide all the functionality needed for implementation of more modern reliability analysis methods based on Bayesian inference.
-`Fortuna.jl` has already been successfully used to compare the levels of safety achieved by the Allowable Strength Design and Load (ASD) and Resistance Factor Design (LRFD) methods, two design frameworks used to design individual component in structures `[@Sabelli:2024; @Akchurin:2024]`. `Fortuna.jl` is also being actively used to develop and implement a next-generation design framework that can account for and optimize system behavior in the design of steel structures, which cannot be achieved using the current methods such as the ASD and LRFD.
+A key distinguishing feature of `Fortuna.jl` is that it is capable of performing differentiation of the limit state function, which defines failure criterion for a given reliability problem, required by most reliability analysis methods using automatic differentiation techniques provided by `ForwardDiff.jl` package [@Revels:2016], significantly speeding up the analysis process. This contrasts with other software packages for structural and system reliability analysis, which typically rely on variants of finite difference approximations. As it was mentioned before, `Fortuna.jl` also allows to easily define limit state functions using external FE modeling software, such as `Abaqus`, `OpenSees` [@McKenna:2010], and `SAFIR` [@Franssen:2017]. In cases where the evaluation of the limit state function defined using FE model is computationally expensive due to model’s complexity, `Fortuna.jl` allows to easily create a surrogate model of the limit state function, which is less expensive to evaluate, using the functionality provided by `Surrogates.jl` package. Lastly, `Fortuna.jl`’s ability to define and operate random variables is based on a widely-adopted `Distributions.jl` package [@Besancon:2021], enabling seamless integration with other software packages for probabilistic analysis written in Julia, such as `Copulas.jl` [@Laverny:2024], `RxInter.jl` [@Bagaev:2023], and `Turing.jl` [@Ge:2018], which provide all the functionality needed for implementation of more modern reliability analysis methods based on Bayesian inference.
+`Fortuna.jl` has already been successfully used to compare the levels of safety achieved by the Allowable Strength Design and Load (ASD) and Resistance Factor Design (LRFD) methods, two design frameworks used to design individual component in structures [@Sabelli:2024; @Akchurin:2024]. `Fortuna.jl` is also being actively used to develop and implement a next-generation design framework that can account for and optimize system behavior in the design of steel structures, which cannot be achieved using the current methods such as the ASD and LRFD.
 
 # Example
 
-![Failure domain defined by the limit state function in Eq. \autoref{LimitStateFunction}. \label{FailureDomain}](Example.pdf){width = 50%}
-Consider a simple reliability problem from `@Echard:2013` with the limit state function given by
+![Failure domain defined by the limit state function in Eq. \autoref{EQ:LimitStateFunction}.\label{FIG:FailureDomain}](Example.pdf){ width=50% }
+Consider a simple reliability problem from @Echard:2013 with the limit state function given by
 \begin{equation}
 g(U_1,U_2) = \dfrac{1}{2} (U_1 - 2) ^ 2 - \dfrac{3}{2} (U_2 - 5) ^ 3 - 3,
-\label{LimitStateFunction}
+\label{EQ:LimitStateFunction}
 \end{equation}
-where $U_1$ and $U_2$ are two independent standard normal random variables. The failure domain defined by this limit state function is shown in Fig. \autoref{FailureDomain}.
-The reference geometric reliability index $\beta$ and failure probability $P_f$ obtained using the first-order reliability method (FORM) are $3.93$ and $4.21 \times 10 ^ {-5}$, respectively. These results can be easily recreated using Fortuna.jl:
+where $U_1$ and $U_2$ are two independent standard normal random variables. The failure domain defined by this limit state function is shown in Fig. \autoref{FIG:FailureDomain}.
+The reference geometric reliability index $\beta$ and failure probability $P_f$ obtained using the first-order reliability method (FORM) are $3.93$ and $4.21 \times 10 ^ {-5}$, respectively. These results can be easily recreated using `Fortuna.jl`:
 ```julia
 # Preamble:
 using Fortuna
 
 # Define the random vector:
-U₁ = randomvariable("Normal", "M", [0, 1])
-U₂ = randomvariable("Normal", "M", [0, 1])
-U = [U₁, U₂]
+U1 = randomvariable("Normal", "M", [0, 1])
+U1 = randomvariable("Normal", "M", [0, 1])
+U = [U1, U2]
 
 # Define the correlation matrix:
 ρ = [1 0; 0 1]
