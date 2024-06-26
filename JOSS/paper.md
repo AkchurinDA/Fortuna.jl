@@ -29,7 +29,7 @@ A key distinguishing feature of `Fortuna.jl` is that it is capable of performing
 
 # Example
 
-![Failure domain defined by the limit state function in Eq. \autoref{EQ:LimitStateFunction}.\label{FIG:FailureDomain}](Example.pdf){ width=50% }
+![Failure domain defined by the limit state function in Eq. \autoref{EQ:LimitStateFunction}.\label{FIG:FailureDomain}](Example.pdf)
 Consider a simple reliability problem from @Echard:2013 with the limit state function given by
 \begin{equation}
 g(U_1,U_2) = \dfrac{1}{2} (U_1 - 2) ^ 2 - \dfrac{3}{2} (U_2 - 5) ^ 3 - 3,

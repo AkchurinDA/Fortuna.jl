@@ -35,7 +35,7 @@ fValues = fValues ./ maximum(fValues)
 gValues = [g([u₁, u₂]) for u₁ in uRange₁, u₂ in uRange₂]
 
 begin
-    F = Figure(size = 72 .* (6, 6), fonts = (; regular = texfont()))
+    F = Figure(size = 72 .* (12, 6), fonts = (; regular = texfont()))
 
     A = Axis(F[1, 1],
         xlabel = L"u_1",
