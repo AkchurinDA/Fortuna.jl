@@ -62,7 +62,7 @@ println("Failure probability: ", Solution.PoF)
 ```
 As can be observed, the results obtained using `Fortuna.jl` are consistent with the reference values.
 
-![Failure domain defined by the limit state function in \autoref{EQ:LimitStateFunction}. \label{FIG:FailureDomain}](Example.pdf)
+![Failure domain defined by the limit state function in \autoref{EQ:LimitStateFunction}. \label{FIG:FailureDomain}](Example.pdf){width = 75%}
 
 # Acknowledgements
 
