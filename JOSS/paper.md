@@ -33,14 +33,12 @@ A key distinguishing feature of `Fortuna.jl` is that it is capable of performing
 
 # Example
 
-![Failure domain defined by the limit state function.](Example.pdf)
-
 Consider a simple reliability problem from @Echard:2013 with the limit state function given by
 \begin{equation}
 g(U_1,U_2) = \dfrac{1}{2} (U_1 - 2) ^ 2 - \dfrac{3}{2} (U_2 - 5) ^ 3 - 3,
 \label{EQ:LimitStateFunction}
 \end{equation}
-where $U_1$ and $U_2$ are two independent standard normal random variables. The reference geometric reliability index $\beta$ and failure probability $P_f$ obtained using the first-order reliability method (FORM) are $3.93$ and $4.21 \times 10 ^ {-5}$, respectively. These results can be easily recreated using `Fortuna.jl`:
+where $U_1$ and $U_2$ are two independent standard normal random variables. The failure domain defined by this limit state function is shown in Fig. \autoref{FIG:FailureDomain}. The reference geometric reliability index $\beta$ and failure probability $P_f$ obtained using the first-order reliability method (FORM) are $3.93$ and $4.21 \times 10 ^ {-5}$, respectively. These results can be easily recreated using `Fortuna.jl`:
 ```julia
 # Preamble:
 using Fortuna
@@ -67,6 +65,8 @@ println("Failure probability: ", Solution.PoF)
 # Failure probability: 4.204761E-5
 ```
 As can be observed, the results obtained using `Fortuna.jl` are consistent with the reference values.
+
+![Failure domain defined by the limit state function in Eq. \autoref{EQ:LimitStateFunction}. \label{FIG:FailureDomain}](Example.pdf)
 
 # Acknowledgements
 
