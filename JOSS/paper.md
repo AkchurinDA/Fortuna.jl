@@ -66,6 +66,6 @@ As can be observed, the results obtained using `Fortuna.jl` are consistent with 
 
 # Acknowledgements
 
-The author would like to thank academic and industrial partners of the “*Reliability 2030: Design of Steel as a System*” initiative for the financial support.
+The author would like to thank academic and industrial partners of the “*Reliability 2030: Design of Steel as a System*” initiative for the financial support. The author also like to thank the American Institute of Steel Construction for the financial support of the "*System Reliability for Structural Steel*" project.
 
 # References
