@@ -7,10 +7,10 @@
   | :--- | :--- |
   | Build Status | [![Build Status](https://github.com/AkchurinDA/Fortuna.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/AkchurinDA/Fortuna.jl/actions/workflows/CI.yml) |
   | Latest Release | [![Latest Release](https://juliahub.com/docs/Fortuna/version.svg)](https://github.com/AkchurinDA/Fortuna.jl/releases) |
+  | Citation | [![status](https://joss.theoj.org/papers/9df63bb9d4f1722272f85a0fc2249856/status.svg)](https://joss.theoj.org/papers/9df63bb9d4f1722272f85a0fc2249856) |
   | Documentation | [![Documentation](https://img.shields.io/badge/Documentation-Stable-blue.svg)](https://AkchurinDA.github.io/Fortuna.jl/stable) <br> [![Documentation](https://img.shields.io/badge/Documentation-Dev-blue.svg)](https://AkchurinDA.github.io/Fortuna.jl/dev) |
   | Downloads | [![Downloads](https://img.shields.io/badge/dynamic/json?url=http%3A%2F%2Fjuliapkgstats.com%2Fapi%2Fv1%2Ftotal_downloads%2FFortuna&query=total_requests&label=Total)](http://juliapkgstats.com/pkg/Fortuna) <br> [![Downloads](https://img.shields.io/badge/dynamic/json?url=http%3A%2F%2Fjuliapkgstats.com%2Fapi%2Fv1%2Fmonthly_downloads%2FFortuna&query=total_requests&label=Monthly&suffix=%2FMonth)](http://juliapkgstats.com/pkg/Fortuna) |
   | License | [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/AkchurinDA/Fortuna.jl/blob/main/LICENSE.md) |
-
 </div>
 
 ## Description
