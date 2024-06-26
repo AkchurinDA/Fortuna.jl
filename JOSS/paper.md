@@ -43,21 +43,17 @@ where $U_1$ and $U_2$ are two independent standard normal random variables. The 
 # Preamble:
 using Fortuna
 
-# Define the random vector:
+# Define the random vector and its correlation matrix:
 U1 = randomvariable("Normal", "M", [0, 1])
 U1 = randomvariable("Normal", "M", [0, 1])
 U = [U1, U2]
-
-# Define the correlation matrix:
 ρ = [1 0; 0 1]
 
 # Define the limit state function:
 g(u::Vector) = 0.5 * (u[1] - 2) ^ 2 - 1.5 * (u[2] - 5) ^ 3 - 3
 
-# Define the reliability problem:
+# Define and solve the reliability problem using the FORM:
 Problem = ReliabilityProblem(U, ρ, g)
-
-# Solve the reliability problem using the FORM:
 Solution = solve(Problem, FORM())
 println("Geometric reliability index: ", Solution.β)
 println("Failure probability: ", Solution.PoF)
