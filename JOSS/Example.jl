@@ -23,6 +23,7 @@ println("Failure probability: ", Solution.PoF)
 # Failure probability: 4.204761E-5
 
 # Plot the failure domain:
+using Colors
 using CairoMakie, MathTeXEngine
 CairoMakie.activate!(type = :svg)
 
@@ -34,6 +35,7 @@ fValues = [pdf(NatafObject, [u₁, u₂]) for u₁ in uRange₁, u₂ in uRange�
 fValues = fValues ./ maximum(fValues)
 gValues = [g([u₁, u₂]) for u₁ in uRange₁, u₂ in uRange₂]
 
+JuliaLogoColors = Colors.JULIA_LOGO_COLORS
 begin
     F = Figure(size = 72 .* (6, 6), fonts = (; regular = texfont()))
 
@@ -49,23 +51,23 @@ begin
         limits = (-6, 6, -6, 6),
         aspect = 1)
 
-    contourf!(A, uRange₁, uRange₂, fValues, 
-        levels   = 0:0.1:1, 
-        colormap = cgrad([:transparent, :teal]))
-
-    contour!(A, uRange₁, uRange₂, fValues, 
-        levels    = 0:0.1:1, 
-        colormap  = cgrad([:transparent, :black]),
-        linewidth = 0.5)
-
     contourf!(A, uRange₁, uRange₂, gValues,
         levels     = [0],
-        extendlow  = (  :red, 0.1),
-        extendhigh = (:green, 0.1))
+        extendlow  = (  JuliaLogoColors.red, 0.4),
+        extendhigh = (JuliaLogoColors.green, 0.4))
 
     contour!(A, uRange₁, uRange₂, gValues,
         levels    = [0],
         color     = :black,
+        linewidth = 0.5)
+
+    contourf!(A, uRange₁, uRange₂, fValues, 
+        levels   = 0:0.1:1, 
+        colormap = cgrad([:transparent, JuliaLogoColors.purple]))
+
+    contour!(A, uRange₁, uRange₂, fValues, 
+        levels    = 0:0.1:1, 
+        colormap  = cgrad([:transparent, :black]),
         linewidth = 0.5)
 
     text!(A, (+2, +5), 
