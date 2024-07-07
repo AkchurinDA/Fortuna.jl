@@ -45,9 +45,8 @@ where $U_1$ and $U_2$ are two independent standard normal random variables. The 
 using Fortuna
 
 # Define the random vector and its correlation matrix:
-U1 = randomvariable("Normal", "M", [0, 1])
-U1 = randomvariable("Normal", "M", [0, 1])
-U = [U1, U2]
+U = [randomvariable("Normal", "M", [0, 1]), 
+     randomvariable("Normal", "M", [0, 1])]
 ρ = [1 0; 0 1]
 
 # Define the limit state function:
