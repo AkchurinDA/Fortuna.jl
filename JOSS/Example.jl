@@ -53,8 +53,8 @@ begin
 
     contourf!(A, uRange₁, uRange₂, gValues,
         levels     = [0],
-        extendlow  = (  JuliaLogoColors.red, 0.4),
-        extendhigh = (JuliaLogoColors.green, 0.4))
+        extendlow  = (colorant"#FF1F5B", 0.30),
+        extendhigh = (colorant"#00CD6C", 0.30))
 
     contour!(A, uRange₁, uRange₂, gValues,
         levels    = [0],
@@ -63,7 +63,7 @@ begin
 
     contourf!(A, uRange₁, uRange₂, fValues, 
         levels   = 0:0.1:1, 
-        colormap = cgrad([:transparent, JuliaLogoColors.purple]))
+        colormap = cgrad([:transparent, colorant"#009ADE"]))
 
     contour!(A, uRange₁, uRange₂, fValues, 
         levels    = 0:0.1:1, 
