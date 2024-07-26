@@ -1,5 +1,9 @@
 # News
 
+## Release V0.10.1
+
+- Fixed a bug which caused the LHS technique to fail when the number samples is large (>1E8).
+
 ## Release V0.10.0
 
 - `Fortuna.jl` package now can solve reliability problems defined using Tcl-based `OpenSees` and `Abaqus` software. A simple example with a cantilever beam can be found in `examples/OpenSees` and `example/Abaqus`. A detailed description of the general procedure is described in the documentation.
