@@ -29,14 +29,12 @@ pkg> add Fortuna
 
 If you have used `Fortuna.jl` package for a scientific publication, please cite the following journal article on the package published in the [Journal of Open Source Software](https://joss.theoj.org):
 
-```
 Akchurin, D., (2024). Fortuna.jl: Structural and System Reliability Analysis in Julia. Journal of Open Source Software, 9(100), 6967, https://doi.org/10.21105/joss.06967
-```
 
-As an alternative, use the following BibTeX entry:
+As an alternative, use the following BibTeX entry to cite the journal article:
 
 ```bib
-@article{Akchurin:Fortuna.jl:2024, 
+@article{Fortuna.jl:Akchurin:2024, 
   title     = {Fortuna.jl: Structural and System Reliability Analysis in Julia},
   author    = {Damir Akchurin},
   year      = {2024},
