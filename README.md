@@ -40,11 +40,11 @@ As an alternative, use the following BibTeX entry:
   title     = {Fortuna.jl: Structural and System Reliability Analysis in Julia},
   author    = {Damir Akchurin},
   year      = {2024},
-  publisher = {The Open Journal}
-  journal   = {Journal of Open Source Software}
+  publisher = {The Open Journal},
+  journal   = {Journal of Open Source Software},
   volume    = {9},
   number    = {100},
-  pages     = {6967}
+  pages     = {6967},
   doi       = {10.21105/joss.06967}, 
   url       = {https://doi.org/10.21105/joss.06967}
 }
