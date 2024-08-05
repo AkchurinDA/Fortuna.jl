@@ -96,13 +96,13 @@ end
 Problem = ReliabilityProblem(X, ρˣ, g)
 
 # Perform the reliability analysis using the FORM:
-Solution = solve(Problem, FORM(), Differentiation = :Numeric)
+Solution = solve(Problem, FORM(), diff = :numeric)
 println("FORM:")
 println("β:   $(Solution.β)  ")
 println("PoF: $(Solution.PoF)")
 
 # Perform the reliability analysis using the SORM:
-Solution = solve(Problem, SORM(), Differentiation = :Numeric)
+Solution = solve(Problem, SORM(), diff = :numeric)
 println("SORM:")
 println("β:   $(Solution.β₂)  ")
 println("PoF: $(Solution.PoF₂)")

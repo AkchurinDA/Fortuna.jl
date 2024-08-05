@@ -7,7 +7,7 @@ Base.@kwdef struct IS <: AbstractReliabililyAnalysisMethod
     "Proposal probability density function ``q``"
     q::Distributions.ContinuousMultivariateDistribution
     "Number of samples to generate ``N``"
-    NumSamples::Integer = 1E6
+    NumSimulations::Integer = 1E6
 end
 
 """
@@ -16,21 +16,27 @@ end
 Type used to store results of reliability analysis performed using Importance Sampling (IS) method.
 """
 struct ISCache
-    "Generated samples"
+    "Samples generated from the proposal probability density function ``\\vec{x}_{i}``"
     Samples::Matrix{Float64}
+    "Target probability density function evaluated at each sample ``f(\\vec{x}_{i})``"
+    fValues::Vector{Float64}
+    "Proposal probability density function evaluated at each sample ``q(\\vec{x}_{i})``"
+    qValues::Vector{Float64}
+    "Limit state function evalued at each sample ``g(\\vec{x}_{i})``"
+    gValues::Vector{Float64}
     "Probability of failure ``P_{f}``"
     PoF::Float64
 end
 
 """
-    solve(Problem::ReliabilityProblem, AnalysisMethod::IS)
+    solve(Problem::ReliabilityProblem, AnalysisMethod::IS; showprogressbar = false)
 
 Function used to solve reliability problems using Importance Sampling (IS) method.
 """
-function solve(Problem::ReliabilityProblem, AnalysisMethod::IS)
+function solve(Problem::ReliabilityProblem, AnalysisMethod::IS; showprogressbar = false)
     # Extract the analysis details:
-    q          = AnalysisMethod.q
-    NumSamples = AnalysisMethod.NumSamples
+    q              = AnalysisMethod.q
+    NumSimulations = AnalysisMethod.NumSimulations
 
     # Extract data:
     g  = Problem.g
@@ -44,26 +50,25 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::IS)
     NatafObject = NatafTransformation(X, ρˣ)
 
     # Generate samples:
-    XSamples = rand(q, NumSamples)
-
-    # Clean up the generated samples:
-    XSamplesClean = eachcol(XSamples)
-    XSamplesClean = Vector.(XSamplesClean)
+    Samples = rand(q, NumSimulations)
 
     # Evaluate the target and proposal probability density functions at the generate samples:
-    fSamples = pdf(NatafObject, XSamples)
-    qSamples = pdf(q, XSamples)
+    fValues = pdf(NatafObject, Samples)
+    qValues = pdf(q, Samples)
 
     # Evaluate the limit state function at the generate samples:
-    gSamples = g.(XSamplesClean)
+    gValues = Vector{Float64}(undef, NumSimulations)
+    ProgressMeter.@showprogress desc = "Evaluating the limit state function..." enabled = showprogressbar for i in axes(Samples, 2)
+        gValues[i] = g(Samples[:, i])
+    end
 
     # Evaluate the indicator function at the generate samples:
-    ISamples = gSamples .≤ 0
-    ISamples = Int.(ISamples)
+    IValues = gValues .≤ 0
+    IValues = Int.(IValues)
 
     # Compute the probability of failure:
-    PoF = mean((ISamples .* fSamples) ./ qSamples)
+    PoF = mean((IValues .* fValues) ./ qValues)
 
     # Return results:
-    return ISCache(XSamples, PoF)
+    return ISCache(Samples, fValues, qValues, gValues, PoF)
 end

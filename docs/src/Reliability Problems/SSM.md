@@ -1,6 +1,3 @@
-!!! warning
-    This feature is experimental and not well-tested.
-
 # Subset Simulation Method
 
 ## Overview

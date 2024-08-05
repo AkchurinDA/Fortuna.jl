@@ -1,16 +1,16 @@
 <div align="center">
-  <img src="assets/logo.svg" alt = "Logo" width="35%">
+  <img src="assets/social-preview.svg" alt = "Social preview">
 
   **Audentes Fortuna Iuvat**
 
-  | Contributors | [Damir Akchurin](https://scholar.google.com/citations?user=chYaDcIAAAAJ&hl=en) |
-  | :---: | :---: |
+  | Developer | [Damir Akchurin](https://scholar.google.com/citations?user=chYaDcIAAAAJ&hl=en) |
+  | :--- | :--- |
   | Build Status | [![Build Status](https://github.com/AkchurinDA/Fortuna.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/AkchurinDA/Fortuna.jl/actions/workflows/CI.yml) |
-  | Documentation | [![Documentation](https://img.shields.io/badge/Documentation-blue.svg)](https://AkchurinDA.github.io/Fortuna.jl/dev) |
   | Latest Release | [![Latest Release](https://juliahub.com/docs/Fortuna/version.svg)](https://github.com/AkchurinDA/Fortuna.jl/releases) |
-  | Downloads | [![Downloads](https://img.shields.io/badge/dynamic/json?url=http%3A%2F%2Fjuliapkgstats.com%2Fapi%2Fv1%2Fmonthly_downloads%2FFortuna&query=total_requests&suffix=%2Fmonth&label=Downloads)](http://juliapkgstats.com/pkg/Fortuna) |
+  | Citation | [![status](https://joss.theoj.org/papers/9df63bb9d4f1722272f85a0fc2249856/status.svg)](https://joss.theoj.org/papers/9df63bb9d4f1722272f85a0fc2249856) |
+  | Documentation | [![Documentation](https://img.shields.io/badge/Documentation-Stable-blue.svg)](https://AkchurinDA.github.io/Fortuna.jl/stable) <br> [![Documentation](https://img.shields.io/badge/Documentation-Dev-blue.svg)](https://AkchurinDA.github.io/Fortuna.jl/dev) |
+  | Downloads | [![Downloads](https://img.shields.io/badge/dynamic/json?url=http%3A%2F%2Fjuliapkgstats.com%2Fapi%2Fv1%2Ftotal_downloads%2FFortuna&query=total_requests&label=Total)](http://juliapkgstats.com/pkg/Fortuna) <br> [![Downloads](https://img.shields.io/badge/dynamic/json?url=http%3A%2F%2Fjuliapkgstats.com%2Fapi%2Fv1%2Fmonthly_downloads%2FFortuna&query=total_requests&label=Monthly&suffix=%2FMonth)](http://juliapkgstats.com/pkg/Fortuna) |
   | License | [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/AkchurinDA/Fortuna.jl/blob/main/LICENSE.md) |
-
 </div>
 
 ## Description
@@ -23,6 +23,29 @@ To install `Fortuna.jl` package, type `]` in Julia REPL to enter the built-in Ju
 
 ```
 pkg> add Fortuna
+```
+
+## Citation
+
+If you have used `Fortuna.jl` package for a scientific publication, please cite the following journal article on the package published in the [Journal of Open Source Software](https://joss.theoj.org):
+
+Akchurin, D., (2024). Fortuna.jl: Structural and System Reliability Analysis in Julia. Journal of Open Source Software, 9(100), 6967, https://doi.org/10.21105/joss.06967
+
+As an alternative, use the following BibTeX entry to cite the journal article:
+
+```bib
+@article{Fortuna.jl:Akchurin:2024, 
+  title     = {Fortuna.jl: Structural and System Reliability Analysis in Julia},
+  author    = {Damir Akchurin},
+  year      = {2024},
+  publisher = {The Open Journal},
+  journal   = {Journal of Open Source Software},
+  volume    = {9},
+  number    = {100},
+  pages     = {6967},
+  doi       = {10.21105/joss.06967}, 
+  url       = {https://doi.org/10.21105/joss.06967}
+}
 ```
 
 ## License
@@ -64,5 +87,6 @@ The following functionality is planned to be added:
   - [x] w.r.t. parameters of limit state functions
   - [x] w.r.t. parameters and moments of random vectors
 - [x] Limit state functions defined using
-  - [x] Arbitrary finite element models
+  - [x] "Internal" FE models
+  - [x] "External" FE models
   - [x] Surrogate models

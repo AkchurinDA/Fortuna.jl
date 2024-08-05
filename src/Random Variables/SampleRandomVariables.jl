@@ -18,14 +18,14 @@
 # GENERATE SAMPLES FROM A RANDOM VARIABLE
 # --------------------------------------------------
 """
-    rand(RNG::Distributions.AbstractRNG, RandomVariable::Distributions.UnivariateDistribution, NumSamples::Int, SamplingTechnique::Symbol)
+    rand(RNG::Distributions.AbstractRNG, RandomVariable::Distributions.UnivariateDistribution, NumSamples::Integer, SamplingTechnique::Symbol)
 
 Function used to generate samples from an *random variable*.
 If `SamplingTechnique` is:
 - `:ITS` samples are generated using Inverse Transform Sampling technique.
 - `:LHS` samples are generated using Latin Hypercube Sampling technique.
 """
-function Distributions.rand(RNG::Distributions.AbstractRNG, RandomVariable::Distributions.ContinuousUnivariateDistribution, NumSamples::Int, SamplingTechnique::Symbol)
+function Distributions.rand(RNG::Distributions.AbstractRNG, RandomVariable::Distributions.ContinuousUnivariateDistribution, NumSamples::Integer, SamplingTechnique::Symbol)
     # Generate samples:
     if (SamplingTechnique != :ITS) && (SamplingTechnique != :LHS)
         throw(ArgumentError("Provided sampling technique is not supported!"))
@@ -34,7 +34,7 @@ function Distributions.rand(RNG::Distributions.AbstractRNG, RandomVariable::Dist
         Samples = Distributions.rand(RNG, RandomVariable, NumSamples)
     elseif SamplingTechnique == :LHS
         # Define the lower limits of each strata:
-        LowerLimits = collect(0:(1 / NumSamples):((NumSamples - 1) / NumSamples))
+        LowerLimits = collect(range(0, (NumSamples - 1) / NumSamples, NumSamples))
 
         # Generate samples within each strata:
         UniformSamples = LowerLimits + Distributions.rand(RNG, Distributions.Uniform(0, 1 / NumSamples), NumSamples)
@@ -50,21 +50,21 @@ function Distributions.rand(RNG::Distributions.AbstractRNG, RandomVariable::Dist
     return Samples
 end
 
-Distributions.rand(RandomVariable::Distributions.ContinuousUnivariateDistribution, NumSamples::Int, SamplingTechnique::Symbol) = 
+Distributions.rand(RandomVariable::Distributions.ContinuousUnivariateDistribution, NumSamples::Integer, SamplingTechnique::Symbol) = 
 Distributions.rand(Distributions.default_rng(), RandomVariable, NumSamples, SamplingTechnique)
 
 # --------------------------------------------------
 # GENERATE SAMPLES FROM A RANDOM VECTOR
 # --------------------------------------------------
 """
-    rand(RNG::Distributions.AbstractRNG, RandomVector::Vector{<:Distributions.UnivariateDistribution}, NumSamples::Int, SamplingTechnique::Symbol)
+    rand(RNG::Distributions.AbstractRNG, RandomVector::Vector{<:Distributions.UnivariateDistribution}, NumSamples::Integer, SamplingTechnique::Symbol)
 
 Function used to generate samples from a *random vector with uncorrelated marginals*.
 If `SamplingTechnique` is:
 - `:ITS` samples are generated using Inverse Transform Sampling technique.
 - `:LHS` samples are generated using Latin Hypercube Sampling technique.
 """
-function Distributions.rand(RNG::Distributions.AbstractRNG, RandomVector::Vector{<:Distributions.ContinuousUnivariateDistribution}, NumSamples::Int, SamplingTechnique::Symbol)
+function Distributions.rand(RNG::Distributions.AbstractRNG, RandomVector::Vector{<:Distributions.ContinuousUnivariateDistribution}, NumSamples::Integer, SamplingTechnique::Symbol)
     # Compute number of dimensions:
     NumDimensions = length(RandomVector)
 
@@ -76,7 +76,7 @@ function Distributions.rand(RNG::Distributions.AbstractRNG, RandomVector::Vector
     return Samples
 end
 
-Distributions.rand(RandomVector::Vector{<:Distributions.ContinuousUnivariateDistribution}, NumSamples::Int, SamplingTechnique::Symbol) = 
+Distributions.rand(RandomVector::Vector{<:Distributions.ContinuousUnivariateDistribution}, NumSamples::Integer, SamplingTechnique::Symbol) = 
 Distributions.rand(Distributions.default_rng(), RandomVector, NumSamples, SamplingTechnique)
 
 # --------------------------------------------------
@@ -84,14 +84,14 @@ Distributions.rand(Distributions.default_rng(), RandomVector, NumSamples, Sampli
 # --------------------------------------------------
 # Nataf Transformation:
 """
-    rand(RNG::Distributions.AbstractRNG, TransformationObject::NatafTransformation, NumSamples::Int, SamplingTechnique::Symbol)
+    rand(RNG::Distributions.AbstractRNG, TransformationObject::NatafTransformation, NumSamples::Integer, SamplingTechnique::Symbol)
 
 Function used to generate samples from a *random vector with correlated marginals* using Nataf Transformation object.
 If `SamplingTechnique` is:
 - `:ITS` samples are generated using Inverse Transform Sampling technique.
 - `:LHS` samples are generated using Latin Hypercube Sampling technique.
 """
-function Distributions.rand(RNG::Distributions.AbstractRNG, TransformationObject::NatafTransformation, NumSamples::Int, SamplingTechnique::Symbol)
+function Distributions.rand(RNG::Distributions.AbstractRNG, TransformationObject::NatafTransformation, NumSamples::Integer, SamplingTechnique::Symbol)
     # Extract data:
     X = TransformationObject.X
     L = TransformationObject.L
@@ -100,7 +100,7 @@ function Distributions.rand(RNG::Distributions.AbstractRNG, TransformationObject
     NumDimensions = length(X)
 
     # Generate samples of uncorrelated normal random variables U:
-    USamples = [Distributions.rand(RNG, Distributions.Normal(), NumSamples, SamplingTechnique) for i in 1:NumDimensions]
+    USamples = [Distributions.rand(RNG, Distributions.Normal(), NumSamples, SamplingTechnique) for _ in 1:NumDimensions]
     USamples = vcat(USamples'...)
 
     # Generate samples of correlated normal random variables Z:
@@ -113,5 +113,5 @@ function Distributions.rand(RNG::Distributions.AbstractRNG, TransformationObject
     return XSamples, ZSamples, USamples
 end
 
-Distributions.rand(TransformationObject::NatafTransformation, NumSamples::Int, SamplingTechnique::Symbol) = 
+Distributions.rand(TransformationObject::NatafTransformation, NumSamples::Integer, SamplingTechnique::Symbol) = 
 Distributions.rand(Distributions.default_rng(), TransformationObject, NumSamples, SamplingTechnique)

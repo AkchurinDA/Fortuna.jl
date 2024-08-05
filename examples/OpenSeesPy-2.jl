@@ -253,6 +253,6 @@ end
 Problem = ReliabilityProblem(X, ρˣ, g)
 
 # Solve the reliability problem:
-Solution = solve(Problem, FORM(), Differentiation = :Numeric)
+Solution = solve(Problem, FORM(), diff = :numeric)
 println("β   = $(Solution.β)  ")
 println("PoF = $(Solution.PoF)")

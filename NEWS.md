@@ -1,9 +1,41 @@
 # News
 
+## Release V0.10.1
+
+- Fixed a bug which caused the LHS technique to fail when the number samples is large (>1E8).
+
+## Release V0.10.0
+
+- `Fortuna.jl` package now can solve reliability problems defined using Tcl-based `OpenSees` and `Abaqus` software. A simple example with a cantilever beam can be found in `examples/OpenSees` and `example/Abaqus`. A detailed description of the general procedure is described in the documentation.
+- A lot of optional keyword arguments are switched to lowercase to conform to the community standards. Most notably, `Differentiation` keyword in `solve()` is changed to `diff` to conform to community standards. The possible arguments are `:automatic` and `:numeric`.
+- `solve()` function invoked with `AnalysisMethod` of type `SORM` now accepts a new optional `FORMSolution` keyword argument, which can be used to pass an existing solution of a reliability problem obtained using FORM, significantly speeding up the SORM.
+- Fixed a problem with SORM prematurely erroring out if Hohenbichler-Rackwitz and/or Breitung conditions are not satisfied.
+- `solve()` function invoked with `AnalysisMethod` of type `MC` and `IS` now accepts a new optional `showprogressbar` keyword argument, which can be used to track the progress of the progress in real time. Is in it nice?!
+- Small code optimizations here and there.
+
+## Release V0.9.1
+
+- Implementation of FORM's gradient-based descent optimization submethods is now more standardized and follows a better code-implementation practice.
+- Before, if FORM failed converge, it would throw an **error** stating that the solution did not converge and give no other output. Now, if FORM fails to converge to a satisfactory solution, it will throw a **warning** stating that the solution did not converge and provide the solution cache history to help diagnose the problem. Additionally, a new `Convergance` field was added to cache histories of HLRF, iHLRF, and RF methods, which can be used to check whether the convergence was achieved.
+
+```julia
+Solution = solve(Problem, FORM())
+
+if Solution.Convergance == true
+  # Solution converged...
+  # Proceed with the post-processing...
+else
+  # Solution did not converge...
+  # Diagnose the problem and try to solve again...
+end
+```
+
+- Relaxed default tolerances in FORM's submethods from $10^{-9}$ to $10^{-6}$.
+
 ## Release V0.9.0
 
 - Added functionality to solve inverse reliability problems.
-- Added an option to choose desired FORM submethod for SORM.
+- Added an option to choose a desired FORM's submethod for SORM.
 
 ## Release V0.8.2
 
@@ -25,7 +57,7 @@
   - Important to note that if your limit state function is given by an OpenSeesPy model, solving the reliability problem with `Differentiation` = `:Automatic` will not fail because of the fallback onto `FiniteDiff.jl` package; however, it is highly recommended to use `Differentiation` = `:Numeric` from the start to avoid even attempting to use automatic differentiation before falling back onto numeric differentiation.
 - Sampling technique for `rand()` function now must be given by symbols, i.e. `:ITS` or `:LHS`.
 
-## Release V0.7.
+## Release V0.7.1
 
 - `Dual()` number can now be propagated as moments of random variables.
 - Fixed a bug with `randomvariables()` function.
