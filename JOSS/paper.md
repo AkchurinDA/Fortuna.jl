@@ -60,7 +60,7 @@ println("Failure probability: ", Solution.PoF)
 # Geometric reliability index: 3.932419
 # Failure probability: 4.204761E-5
 ```
-As can be observed, the results obtained using `Fortuna.jl` are consistent with the reference values.
+As shown in the code above, the results obtained using `Fortuna.jl` are consistent with the reference values.
 
 ![Failure domain defined by the limit state function in \autoref{EQ:LimitStateFunction}[^*]. \label{FIG:FailureDomain}](Example.pdf){ width=62.5% }
 
