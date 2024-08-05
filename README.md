@@ -54,7 +54,7 @@ As an alternative, use the following BibTeX entry to cite the journal article:
 
 ## Help and Support
 
-For assistance with the package, please raise an issue on the [Github Issues](https://github.com/AkchurinDA/Fortuna.jl/issues) page. Please use the appropriate labels to indicate the specific functionality you are inquiring about. Alternatively, contact the author directly at [AkchurinDA@gmail.com](mailto:AkchurinDA@gmail.com?subject=Fortuna.jl).
+For assistance with the package, please raise an issue on the [GitHub Issues](https://github.com/AkchurinDA/Fortuna.jl/issues) page. Please use the appropriate labels to indicate the specific functionality you are inquiring about. Alternatively, contact the author directly at [AkchurinDA@gmail.com](mailto:AkchurinDA@gmail.com?subject=Fortuna.jl).
 
 ## Acknowledgements
 
