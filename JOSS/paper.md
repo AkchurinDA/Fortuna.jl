@@ -50,7 +50,7 @@ U = [randomvariable("Normal", "M", [0, 1]),
 ρ = [1 0; 0 1]
 
 # Define the limit state function:
-g(u::Vector) = 0.5 * (u[1] - 2) ^ 2 - 1.5 * (u[2] - 5) ^ 3 - 3
+g(u::AbstractVector) = 0.5 * (u[1] - 2) ^ 2 - 1.5 * (u[2] - 5) ^ 3 - 3
 
 # Define the reliability problem and solve it using the FORM:
 Problem = ReliabilityProblem(U, ρ, g)
