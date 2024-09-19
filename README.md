@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="assets/social-preview.svg" alt = "Social preview">
+  <img src="docs/src/assets/social-preview.svg" alt = "Social preview">
 
   **Audentes Fortuna Iuvat**
 
