@@ -13,7 +13,7 @@ makedocs(
     format   = Documenter.HTML(
         sidebar_sitename = false,
         assets = [
-            "assets/Favicon.ico",
+            "assets/favicon.ico",
             "assets/Custom.css"]),
     pages    = [
         "Home"                                          => "index.md",
