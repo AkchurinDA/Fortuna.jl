@@ -17,7 +17,6 @@ All types of contributions are encouraged and valued. See the [Table of Contents
     - [Reporting bugs](#reporting-bugs)
     - [Suggesting enhancements](#suggesting-enhancements)
 
-
 ## I have a question
 
 > If you want to ask a question, we assume that you have read the available [documentation](https://akchurinda.github.io/Fortuna.jl/dev/).
