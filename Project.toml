@@ -4,6 +4,7 @@ authors = ["Damir Akchurin"]
 version = "0.10.1"
 
 [deps]
+DifferentiationInterface = "a0c0ee7d-e4b9-4e03-894e-1c5f64a51d63"
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
 DocStringExtensions = "ffbed154-4ef7-542d-bbb7-c09d3a79fcae"
 FastGaussQuadrature = "442a2c76-b920-505d-bb47-c5924d526838"
@@ -15,9 +16,11 @@ PrecompileTools = "aea7be01-6a6a-4083-8856-8a6e6704d82a"
 ProgressMeter = "92933f4c-e287-5a05-a399-4b506db050ca"
 Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 Reexport = "189a3867-3050-52da-a836-e630ba90ab69"
+ReverseDiff = "37e2e3b7-166d-5795-8a7a-e32c996b4267"
 SpecialFunctions = "276daf66-3868-5448-9aa4-cd146d93841b"
 
 [compat]
+DifferentiationInterface = "0.6.40"
 Distributions = "0.25"
 DocStringExtensions = "0.9"
 FastGaussQuadrature = "0.5, 1"
@@ -27,6 +30,7 @@ NonlinearSolve = "1, 2, 3, 4"
 PrecompileTools = "1"
 ProgressMeter = "1"
 Reexport = "1"
+ReverseDiff = "1.15.3"
 SpecialFunctions = "2"
 julia = "1.9.0"
 

@@ -52,14 +52,11 @@ struct SensitivityProblemCache
 end
 
 """
-    solve(Problem::SensitivityProblemTypeI; diff::Symbol = :automatic)
+    solve(Problem::SensitivityProblemTypeI; backend = AutoForwardDiff())
 
-Function used to solve sensitivity problems of type I (sensitivities w.r.t. the parameters of the limit state function). \\
-If `diff` is:
-- `:automatic`, then the function will use automatic differentiation to compute gradients, jacobians, etc.
-- `:numeric`, then the function will use numeric differentiation to compute gradients, jacobians, etc.
+Function used to solve sensitivity problems of type I (sensitivities w.r.t. the parameters of the limit state function).
 """
-function solve(Problem::SensitivityProblemTypeI; diff::Symbol = :automatic)
+function solve(Problem::SensitivityProblemTypeI; backend = AutoForwardDiff())
     # Extract the problem data:
     X  = Problem.X
     ρˣ = Problem.ρˣ
@@ -71,7 +68,7 @@ function solve(Problem::SensitivityProblemTypeI; diff::Symbol = :automatic)
     FORMProblem = ReliabilityProblem(X, ρˣ, g₁)
 
     # Solve the reliability problem using the FORM:
-    FORMSolution = solve(FORMProblem, FORM(), diff = diff)
+    FORMSolution = solve(FORMProblem, FORM(), backend = backend)
     x            = FORMSolution.x[:, end]
     u            = FORMSolution.u[:, end]
     β            = FORMSolution.β
@@ -80,19 +77,13 @@ function solve(Problem::SensitivityProblemTypeI; diff::Symbol = :automatic)
     NatafObject = NatafTransformation(X, ρˣ)
 
     # Define gradient functions of the limit state function in X- and U-spaces, and compute the sensitivities vector for the reliability index:
-    ∇β = if diff == :automatic
-        try
-            local ∇g(x, θ) = ForwardDiff.gradient(Unknown -> g(x, Unknown), θ)
-            local ∇G(u, θ) = ForwardDiff.gradient(Unknown -> G(g, θ, NatafObject, Unknown), u)
-            ∇g(x, Θ) / LinearAlgebra.norm(∇G(u, Θ))
-        catch
-            local ∇g(x, θ) = FiniteDiff.finite_difference_gradient(Unknown -> g(x, Unknown), θ)
-            local ∇G(u, θ) = FiniteDiff.finite_difference_gradient(Unknown -> G(g, θ, NatafObject, Unknown), u)
-            ∇g(x, Θ) / LinearAlgebra.norm(∇G(u, Θ))
-        end
-    elseif diff == :numeric
-        local ∇g(x, θ) = FiniteDiff.finite_difference_gradient(Unknown -> g(x, Unknown), θ)
-        local ∇G(u, θ) = FiniteDiff.finite_difference_gradient(Unknown -> G(g, θ, NatafObject, Unknown), u)
+    ∇β = try
+        local ∇g(x, θ) = gradient(Unknown -> g(x, Unknown), backend, θ)
+        local ∇G(u, θ) = gradient(Unknown -> G(g, θ, NatafObject, Unknown), backend, u)
+        ∇g(x, Θ) / LinearAlgebra.norm(∇G(u, Θ))
+    catch
+        local ∇g(x, θ) = gradient(Unknown -> g(x, Unknown), AutoFiniteDiff(), θ)
+        local ∇G(u, θ) = gradient(Unknown -> G(g, θ, NatafObject, Unknown), AutoFiniteDiff(), u)
         ∇g(x, Θ) / LinearAlgebra.norm(∇G(u, Θ))
     end
 
@@ -103,14 +94,11 @@ function solve(Problem::SensitivityProblemTypeI; diff::Symbol = :automatic)
 end
 
 """
-    solve(Problem::SensitivityProblemTypeII; diff::Symbol = :automatic)
+    solve(Problem::SensitivityProblemTypeII; backend = AutoForwardDiff())
 
-Function used to solve sensitivity problems of type II (sensitivities w.r.t. the parameters of the random vector). \\
-If `diff` is:
-- `:automatic`, then the function will use automatic differentiation to compute gradients, jacobians, etc.
-- `:numeric`, then the function will use numeric differentiation to compute gradients, jacobians, etc.
+Function used to solve sensitivity problems of type II (sensitivities w.r.t. the parameters of the random vector).
 """
-function solve(Problem::SensitivityProblemTypeII; diff::Symbol = :automatic)
+function solve(Problem::SensitivityProblemTypeII; backend = AutoForwardDiff())
     # Extract the problem data:
     X  = Problem.X
     ρˣ = Problem.ρˣ
@@ -121,22 +109,17 @@ function solve(Problem::SensitivityProblemTypeII; diff::Symbol = :automatic)
     FORMProblem = ReliabilityProblem(X(Θ), ρˣ, g)
 
     # Solve the reliability problem using the FORM:
-    FORMSolution = solve(FORMProblem, FORM(), diff = diff)
+    FORMSolution = solve(FORMProblem, FORM(), backend = backend)
     x            = FORMSolution.x[:, end]
     α            = FORMSolution.α[:, end]
     β            = FORMSolution.β
 
     # Define the Jacobian of the transformation function w.r.t. the parameters of the random vector and compute the sensitivity vector for the reliability index:
-    ∇β = if diff == :automatic
-        try
-            local ∇T(θ) = ForwardDiff.jacobian(Unknown -> transformsamples(NatafTransformation(X(Unknown), ρˣ), x, :X2U), θ)
-            vec(LinearAlgebra.transpose(α) * ∇T(Θ))
-        catch
-            local ∇T(θ) = FiniteDiff.finite_difference_jacobian(Unknown -> transformsamples(NatafTransformation(X(Unknown), ρˣ), x, :X2U), θ)
-            vec(LinearAlgebra.transpose(α) * ∇T(Θ))
-        end
-    elseif diff == :numeric
-        local ∇T(θ) = FiniteDiff.finite_difference_jacobian(Unknown -> transformsamples(NatafTransformation(X(Unknown), ρˣ), x, :X2U), θ)
+    ∇β = try
+        local ∇T(θ) = jacobian(Unknown -> transformsamples(NatafTransformation(X(Unknown), ρˣ), x, :X2U), backend, θ)
+        vec(LinearAlgebra.transpose(α) * ∇T(Θ))
+    catch
+        local ∇T(θ) = jacobian(Unknown -> transformsamples(NatafTransformation(X(Unknown), ρˣ), x, :X2U), AutoFiniteDiff(), θ)
         vec(LinearAlgebra.transpose(α) * ∇T(Θ))
     end
 

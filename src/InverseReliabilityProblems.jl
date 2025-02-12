@@ -60,18 +60,15 @@ end
     solve(Problem::InverseReliabilityProblem, θ₀::Real; 
         x₀::Union{Nothing, Vector{<:Real}} = nothing, 
         MaxNumIterations = 250, ϵ₁ = 10E-6, ϵ₂ = 10E-6, ϵ₃ = 10E-3,
-        diff::Symbol = :automatic)
+        backend = AutoForwardDiff())
 
-Function used to solve inverse reliability problems. \\
-If `diff` is:
-- `:automatic`, then the function will use automatic differentiation to compute gradients, jacobians, etc.
-- `:numeric`, then the function will use numeric differentiation to compute gradients, jacobians, etc.
+Function used to solve inverse reliability problems.
 """
 function solve(Problem::InverseReliabilityProblem, θ₀::Real; 
     MaxNumIterations = 250, ϵ₁ = 1E-6, ϵ₂ = 1E-6, ϵ₃ = 1E-6,
     x₀::Union{Nothing, Vector{<:Real}} = nothing, 
     c₀::Union{Nothing, Real} = nothing,
-    diff::Symbol = :automatic)
+    backend = AutoForwardDiff())
     # Extract the problem data:
     X  = Problem.X
     ρˣ = Problem.ρˣ
@@ -127,28 +124,18 @@ function solve(Problem::InverseReliabilityProblem, θ₀::Real;
         G[i] = g(x[:, i], θ[i])
 
         # Evaluate gradients of the limit state function at the design point in X-space:
-        ∇gx = if diff == :automatic
-            try
-                local ∇gx(x, θ) = LinearAlgebra.transpose(ForwardDiff.gradient(Unknown -> g(Unknown, θ), x))
-                ∇gx(x[:, i], θ[i])
-            catch
-                local ∇gx(x, θ) = LinearAlgebra.transpose(FiniteDiff.finite_difference_gradient(Unknown -> g(Unknown, θ), x))
-                ∇gx(x[:, i], θ[i])
-            end
-        elseif diff == :numeric
+        ∇gx = try
+            local ∇gx(x, θ) = LinearAlgebra.transpose(ForwardDiff.gradient(Unknown -> g(Unknown, θ), x))
+            ∇gx(x[:, i], θ[i])
+        catch
             local ∇gx(x, θ) = LinearAlgebra.transpose(FiniteDiff.finite_difference_gradient(Unknown -> g(Unknown, θ), x))
             ∇gx(x[:, i], θ[i])
         end
 
-        ∇gθ = if diff == :automatic
-            try
-                local ∇gθ(x, θ) = ForwardDiff.derivative(Unknown -> g(x, Unknown), θ)
-                ∇gθ(x[:, i], θ[i])
-            catch
-                local ∇gθ(x, θ) = FiniteDiff.finite_difference_derivative(Unknown -> g(x, Unknown), θ)
-                ∇gθ(x[:, i], θ[i])
-            end
-        elseif diff == :numeric
+        ∇gθ = try
+            local ∇gθ(x, θ) = ForwardDiff.derivative(Unknown -> g(x, Unknown), θ)
+            ∇gθ(x[:, i], θ[i])
+        catch
             local ∇gθ(x, θ) = FiniteDiff.finite_difference_derivative(Unknown -> g(x, Unknown), θ)
             ∇gθ(x[:, i], θ[i])
         end
