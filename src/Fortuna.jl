@@ -5,8 +5,7 @@ module Fortuna
 import Base
 import Distributions
 import FastGaussQuadrature
-import FiniteDiff
-import ForwardDiff
+using DifferentiationInterface, ForwardDiff, ReverseDiff, FiniteDiff
 import LinearAlgebra
 import NonlinearSolve
 import Random

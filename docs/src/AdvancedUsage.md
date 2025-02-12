@@ -149,13 +149,13 @@ g(x::Vector) = 1 - CantileverBeam(x)
 Problem = ReliabilityProblem(X, ρˣ, g)
 
 # Perform the reliability analysis using the FORM:
-FORMSolution = solve(Problem, FORM(), diff = :numeric)
+FORMSolution = solve(Problem, FORM(), backend = AutoFiniteDiff())
 println("FORM:")
 println("β: $(FORMSolution.β)")
 println("PoF: $(FORMSolution.PoF)")
 
 # Perform the reliability analysis using the SORM:
-SORMSolution = solve(Problem, SORM(), FORMSolution = FORMSolution, diff = :numeric)
+SORMSolution = solve(Problem, SORM(), FORMSolution = FORMSolution, backend = AutoFiniteDiff())
 println("SORM:")
 println("β: $(SORMSolution.β₂[1]) (Hohenbichler and Rackwitz)")
 println("β: $(SORMSolution.β₂[2]) (Breitung)")
@@ -163,7 +163,7 @@ println("PoF: $(SORMSolution.PoF₂[1]) (Hohenbichler and Rackwitz)")
 println("PoF: $(SORMSolution.PoF₂[2]) (Breitung)")
 ```
 
-Observe that `diff = :numeric` keyword argument was used in `solve()` function. This forces `Fortuna.jl` package to use numerical differentiation to evaluate the gradients and Hessians of the limit state function since the finite element (FE) model of the cantilever beam, defined using `InstantFrame.jl` package, is not automatically differentiable. Note that you would still obtain a solution if you didn't use `diff = :numeric` keyword argument, but each time `Fortuna.jl` package needs to differentiate the limit state function, it would (1) attempt to differentiate it automatically, and after it fails, (2) it would differentiate it numerically, significantly slowing down the reliability analysis.
+Observe that `backend = AutoDiniteDiff()` keyword argument was used in `solve()` function. This forces `Fortuna.jl` package to use numerical differentiation to evaluate the gradients and Hessians of the limit state function since the finite element (FE) model of the cantilever beam, defined using `InstantFrame.jl` package, is not automatically differentiable. Note that you would still obtain a solution if you didn't use `backend = AutoDiniteDiff()` keyword argument, but each time `Fortuna.jl` package needs to differentiate the limit state function, it would (1) attempt to differentiate it automatically, and after it fails, (2) it would differentiate it numerically, significantly slowing down the reliability analysis.
 
 ### Python-Based FE Models: `OpenSeesPy`
 
@@ -301,13 +301,13 @@ g(x::Vector) = 1 - CantileverBeam(x)
 Problem = ReliabilityProblem(X, ρˣ, g)
 
 # Perform the reliability analysis using the FORM:
-FORMSolution = solve(Problem, FORM(), diff = :numeric)
+FORMSolution = solve(Problem, FORM(), backend = AutoFiniteDiff())
 println("FORM:")
 println("β: $(FORMSolution.β)")
 println("PoF: $(FORMSolution.PoF)")
 
 # Perform the reliability analysis using the SORM:
-SORMSolution = solve(Problem, SORM(), FORMSolution = FORMSolution, diff = :numeric)
+SORMSolution = solve(Problem, SORM(), FORMSolution = FORMSolution, backend = AutoFiniteDiff())
 println("SORM:")
 println("β: $(SORMSolution.β₂[1]) (Hohenbichler and Rackwitz)")
 println("β: $(SORMSolution.β₂[2]) (Breitung)")
@@ -561,13 +561,13 @@ ĝ(x::Vector) = 1 - CantileverBeamSurrogate(x)
 Problem = ReliabilityProblem(X, ρˣ, ĝ)
 
 # Perform the reliability analysis using the FORM:
-FORMSolution = solve(Problem, FORM(), diff = :numeric)
+FORMSolution = solve(Problem, FORM(), backend = AutoFiniteDiff())
 println("FORM:")
 println("β: $(FORMSolution.β)")
 println("PoF: $(FORMSolution.PoF)")
 
 # Perform the reliability analysis using the SORM:
-SORMSolution = solve(Problem, SORM(), FORMSolution = FORMSolution, diff = :numeric)
+SORMSolution = solve(Problem, SORM(), FORMSolution = FORMSolution, backend = AutoFiniteDiff())
 println("SORM:")
 println("β: $(SORMSolution.β₂[1]) (Hohenbichler and Rackwitz)")
 println("β: $(SORMSolution.β₂[2]) (Breitung)")

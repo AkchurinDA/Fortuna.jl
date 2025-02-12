@@ -177,14 +177,11 @@ struct iHLRFCache
 end
 
 """
-    solve(Problem::ReliabilityProblem, AnalysisMethod::FORM; diff::Symbol = :automatic)
+    solve(Problem::ReliabilityProblem, AnalysisMethod::FORM; backend = AutoForwardDiff())
 
-Function used to solve reliability problems using First-Order Reliability Method (FORM). \\
-If `diff` is:
-- `:automatic`, then the function will use automatic differentiation to compute gradients, jacobians, etc.
-- `:numeric`, then the function will use numeric differentiation to compute gradients, jacobians, etc.
+Function used to solve reliability problems using First-Order Reliability Method (FORM).
 """
-function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM; diff::Symbol = :automatic)
+function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM; backend = AutoForwardDiff())
     # Extract the analysis method:
     Submethod = AnalysisMethod.Submethod
 
@@ -205,14 +202,10 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM; diff::Symbol =
         Σˣ = Dˣ * ρˣ * Dˣ
 
         # Compute gradient of the limit state function and evaluate it at the means of the marginal distributions:
-        ∇g = if diff == :automatic
-            try
-                ForwardDiff.gradient(g, Mˣ)
-            catch
-                FiniteDiff.finite_difference_gradient(g, Mˣ)
-            end
-        elseif diff == :numeric
-            FiniteDiff.finite_difference_gradient(g, Mˣ)
+        ∇g = try
+            DifferentiationInterface.gradient(g, backend, Mˣ)
+        catch
+            DifferentiationInterface.gradient(g, AutoFiniteDiff(), Mˣ)
         end
 
         # Compute the reliability index:
@@ -254,18 +247,16 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM; diff::Symbol =
         end
 
         Problem   = NonlinearSolve.NonlinearProblem(F, mean(X[end]), x[:, 1])
-        x[end, 1] = if diff == :automatic
-            try
-                Solution = NonlinearSolve.solve(Problem, nothing, abstol = 1E-9, reltol = 1E-9)
-                Solution.u
-            catch
-                Solution = NonlinearSolve.solve(Problem, NonlinearSolve.FastShortcutNonlinearPolyalg(autodiff = NonlinearSolve.AutoFiniteDiff()), abstol = 1E-9, reltol = 1E-9)
-                Solution.u
-            end
-        elseif diff == :numeric
-            Solution = NonlinearSolve.solve(Problem, NonlinearSolve.FastShortcutNonlinearPolyalg(autodiff = NonlinearSolve.AutoFiniteDiff()), abstol = 1E-9, reltol = 1E-9)
+        x[end, 1] = try
+            Solution = NonlinearSolve.solve(Problem, nothing, abstol = 1E-9, reltol = 1E-9)
+            Solution.u
+        catch
+            Solution = NonlinearSolve.solve(Problem, NonlinearSolve.FastShortcutNonlinearPolyalg(autodiff = AutoFiniteDiff()), abstol = 1E-9, reltol = 1E-9)
             Solution.u
         end
+
+        # Prepare gradient of the limit state function at the initial design point:
+        ∇g = similar(x[:, 1])
         
         # Start iterating:
         for i in 1:MaxNumIterations
@@ -279,15 +270,12 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM; diff::Symbol =
             u[:, i] = (x[:, i] - μ[:, i]) ./ σ[:, i]
 
             # Evaluate gradient of the limit state function at the design point in U-space:
-            ∇G[:, i] = if diff == :automatic
-                try
-                    -σ[:, i] .* ForwardDiff.gradient(g, x[:, i])
-                catch
-                    -σ[:, i] .* FiniteDiff.finite_difference_gradient(g, x[:, i])
-                end
-            elseif diff == :numeric
-                -σ[:, i] .* FiniteDiff.finite_difference_gradient(g, x[:, i])
+            try 
+                gradient!(g, ∇g, backend, x[:, i])
+            catch
+                gradient!(g, AutoFiniteDiff(), ∇g, x[:, i])
             end
+            ∇G[:, i] = -σ[:, i] .* ∇g
 
             # Compute the reliability index:
             β[i] = LinearAlgebra.dot(∇G[:, i], u[:, i]) / LinearAlgebra.norm(∇G[:, i])
@@ -333,16 +321,11 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM; diff::Symbol =
 
             # Force the design point to lay on the failure boundary:
             Problem       = NonlinearSolve.NonlinearProblem(F, x[end, i + 1], x[:, i + 1])
-            x[end, i + 1] = if diff == :automatic
-                try
-                    Solution = NonlinearSolve.solve(Problem, nothing, abstol = 1E-9, reltol = 1E-9)
-                    Solution.u
-                catch
-                    Solution = NonlinearSolve.solve(Problem, NonlinearSolve.FastShortcutNonlinearPolyalg(autodiff = NonlinearSolve.AutoFiniteDiff()), abstol = 1E-9, reltol = 1E-9)
-                    Solution.u
-                end
-            elseif diff == :numeric
-                Solution = NonlinearSolve.solve(Problem, NonlinearSolve.FastShortcutNonlinearPolyalg(autodiff = NonlinearSolve.AutoFiniteDiff()), abstol = 1E-9, reltol = 1E-9)
+            x[end, i + 1] = try
+                Solution = NonlinearSolve.solve(Problem, nothing, abstol = 1E-9, reltol = 1E-9)
+                Solution.u
+            catch
+                Solution = NonlinearSolve.solve(Problem, NonlinearSolve.FastShortcutNonlinearPolyalg(autodiff = AutoFiniteDiff()), abstol = 1E-9, reltol = 1E-9)
                 Solution.u
             end
         end
@@ -380,6 +363,9 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM; diff::Symbol =
         # Set the step size to unity:
         λ = 1
 
+        # Prepare gradient of the limit state function at the initial design point:
+        ∇g = similar(x[:, 1])
+
         # Start iterating:
         for i in 1:MaxNumIterations
             # Compute the Jacobian of the transformation of the design point from X- to U-space:
@@ -389,18 +375,14 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM; diff::Symbol =
             G[i] = g(x[:, i])
 
             # Evaluate gradient of the limit state function at the design point in X-space:
-            ∇g = if diff == :automatic
-                try
-                    LinearAlgebra.transpose(ForwardDiff.gradient(g, x[:, i]))
-                catch
-                    LinearAlgebra.transpose(FiniteDiff.finite_difference_gradient(g, x[:, i]))
-                end
-            elseif diff == :numeric
-                LinearAlgebra.transpose(FiniteDiff.finite_difference_gradient(g, x[:, i]))
+            try 
+                gradient!(g, ∇g, backend, x[:, i])
+            catch
+                gradient!(g, AutoFiniteDiff(), ∇g, x[:, i])
             end
 
             # Convert the evaluated gradient of the limit state function from X- to U-space:
-            ∇G[:, i] = vec(∇g * Jₓᵤ)
+            ∇G[:, i] = transpose(Jₓᵤ) * ∇g # vec(∇g * Jₓᵤ)
 
             # Compute the normalized negative gradient vector at the design point in U-space:
             α[:, i] = -∇G[:, i] / LinearAlgebra.norm(∇G[:, i])
@@ -488,6 +470,9 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM; diff::Symbol =
         # Evaluate the limit state function at the initial design point:
         G₀ = g(x[:, 1])
 
+        # Prepare gradient of the limit state function at the initial design point:
+        ∇g = similar(x[:, 1])
+
         # Start iterating:
         for i in 1:MaxNumIterations
             # Compute the Jacobian of the transformation of the design point from X- to U-space:
@@ -497,19 +482,14 @@ function solve(Problem::ReliabilityProblem, AnalysisMethod::FORM; diff::Symbol =
             G[i] = g(x[:, i])
 
             # Evaluate gradient of the limit state function at the design point in X-space:
-            ∇g = if diff == :automatic
-                try
-                    LinearAlgebra.transpose(ForwardDiff.gradient(g, x[:, i]))
-                catch
-                    @warn "Automatic differentiation has failed. Switching to numeric differentiation."
-                    LinearAlgebra.transpose(FiniteDiff.finite_difference_gradient(g, x[:, i]))
-                end
-            elseif diff == :numeric
-                LinearAlgebra.transpose(FiniteDiff.finite_difference_gradient(g, x[:, i]))
+            try 
+                gradient!(g, ∇g, backend, x[:, i])
+            catch
+                gradient!(g, AutoFiniteDiff(), ∇g, x[:, i])
             end
 
             # Convert the evaluated gradient of the limit state function from X- to U-space:
-            ∇G[:, i] = vec(∇g * Jₓᵤ)
+            ∇G[:, i] = transpose(Jₓᵤ) * ∇g # vec(∇g * Jₓᵤ)
 
             # Compute the normalized negative gradient vector at the design point in U-space:
             α[:, i] = -∇G[:, i] / LinearAlgebra.norm(∇G[:, i])
