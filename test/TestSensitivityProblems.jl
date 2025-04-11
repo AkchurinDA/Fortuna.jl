@@ -175,8 +175,8 @@ end
 
     # Define the moments of the random vector:
     Θ = [
-        5, 5,
-        1, 1]
+        5.0, 5.0,
+        1.0, 1.0]
 
     # Define the limit state function:
     g(x::Vector) = x[1] - x[2]
