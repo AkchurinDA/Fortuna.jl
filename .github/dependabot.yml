@@ -1,5 +1,4 @@
 # Refer to https://docs.github.com/github/administering-a-repository/configuration-options-for-dependency-updates for details.
-name: dependabot
 version: 2
 updates:
   - package-ecosystem: "github-actions"
