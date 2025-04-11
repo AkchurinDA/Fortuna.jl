@@ -2,25 +2,24 @@ module Fortuna
 # --------------------------------------------------
 # IMPORT PACKAGES
 # --------------------------------------------------
-import Base
-import Distributions
-import FastGaussQuadrature
+using Base
+using Distributions
+using FastGaussQuadrature
 using DifferentiationInterface, ForwardDiff, ReverseDiff, FiniteDiff
-import LinearAlgebra
-import NonlinearSolve
-import Random
-import SpecialFunctions
-using  DocStringExtensions
-
-import ProgressMeter
+using LinearAlgebra
+using NonlinearSolve
+using Random
+using SpecialFunctions
+using DocStringExtensions
+using ProgressMeter
 
 # --------------------------------------------------
 # REEXPORT PACKAGES
 # --------------------------------------------------
-import Reexport
-Reexport.@reexport import Distributions: rand, pdf              # Extended functions
-Reexport.@reexport import Distributions: mean, std, cor, params # Useful functions
-Reexport.@reexport import LinearAlgebra: I
+using Reexport
+Reexport.@reexport using Distributions: rand, pdf              # Extended functions
+Reexport.@reexport using Distributions: mean, std, cor, params # Useful functions
+Reexport.@reexport using LinearAlgebra: I
 
 # --------------------------------------------------
 # DEFINE ABSTRACT TYPES
