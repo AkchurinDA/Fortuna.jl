@@ -76,7 +76,6 @@ include("Random Variables/SampleRandomVariables.jl")
 include("Reliability Problems/ReliabilityProblems.jl")
 include("InverseReliabilityProblems.jl")
 include("SensitivityProblems.jl")
-# include("Utilities/MakieRecipes.jl") # Temporarily removed to avoid dependency on Makie - need to create an extension.
 export AbstractSamplingTechnique
 export ITS, LHS
 export AbstractTransformation
