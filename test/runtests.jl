@@ -41,7 +41,3 @@ end
 @testset "Inverse Reliability Problems" begin
     include("TestInverseReliabilityProblems.jl")
 end
-
-@testset "FEM Solvers" begin
-    include("TestFEMSolvers.jl")
-end

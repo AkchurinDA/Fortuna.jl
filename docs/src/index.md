@@ -1,7 +1,3 @@
-```@raw html
-<img src="./assets/social-preview.svg" style="border-radius:40px;"/>
-```
-
 > **Audentes Fortuna Iuvat**
 
 ## Description
@@ -19,10 +15,6 @@ pkg> add Fortuna
 ## Citation
 
 If you have used `Fortuna.jl` package for a scientific publication, please cite the following journal article on the package published in the [Journal of Open Source Software](https://joss.theoj.org):
-
-Akchurin, D., (2024). Fortuna.jl: Structural and System Reliability Analysis in Julia. Journal of Open Source Software, 9(100), 6967, https://doi.org/10.21105/joss.06967
-
-As an alternative, use the following BibTeX entry to cite the journal article:
 
 ```bib
 @article{Fortuna.jl:Akchurin:2024, 

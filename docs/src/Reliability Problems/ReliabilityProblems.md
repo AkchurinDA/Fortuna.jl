@@ -12,24 +12,24 @@ In general, 3 main "items" are always need to fully define a reliability problem
 
 `Fortuna.jl` package uses these 3 "items" to fully define reliability problems using a custom `ReliabilityProblem()` type as shown in the example below.
 
-```@setup 1
+```@setup reliability_problems
 using Fortuna
 ```
 
-```@example 1
+```@example reliability_problems
 # Define random vector:
-X₁  = randomvariable("Normal", "M", [10, 2])
-X₂  = randomvariable("Normal", "M", [20, 5])
-X   = [X₁, X₂]
+X_1 = randomvariable("Normal", "M", [10, 2])
+X_2 = randomvariable("Normal", "M", [20, 5])
+X   = [X_1, X_2]
 
 # Define correlation matrix:
-ρˣ = [1 0.5; 0.5 1]
+ρ_X = [1 0.5; 0.5 1]
 
 # Define limit state function:
 g(x::Vector) = x[1] ^ 2 - 2 * x[2]
 
 # Define reliability problem:
-Problem = ReliabilityProblem(X, ρˣ, g)
+problem = ReliabilityProblem(X, ρ_X, g)
 
 nothing # hide
 ```
@@ -39,13 +39,13 @@ nothing # hide
 
 ## Solving Reliability Problems
 
-After defining a reliability problem, `Fortuna.jl` allows to easily solve it using a whole suite of first- and second-order reliability methods using a single `solve()` function as shown in the example below.
+After defining a reliability problem, `Fortuna.jl` allows to easily solve it using a wide suite of first- and second-order reliability methods using a single `solve()` function as shown in the example below.
 
-```@example 1
+```@example reliability_problems
 # Perform reliability analysis using improved Hasofer-Lind-Rackwitz-Fiessler (iHLRF) method:
-Solution = solve(Problem, FORM(iHLRF()))
-println("β: $(Solution.β)")
-println("PoF: $(Solution.PoF)")
+solution = solve(problem, FORM(iHLRF()))
+println("β: $(solution.β)")
+println("PoF: $(solution.PoF)")
 ```
 
 Descriptions of all first- and second-order reliability methods implemented in `Fortuna.jl` can be found on [First-Order Reliability Methods](@ref FORMPage) and [Second-Order Reliability Methods](@ref SORMPage) pages.
