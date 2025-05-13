@@ -13,18 +13,18 @@ Random.seed!(123)
 
 ```@example 1
 # Define random vector:
-X₁ = randomvariable("Gamma", "M", [10, 1.5])
-X₂ = randomvariable("Gamma", "M", [15, 2.5])
-X  = [X₁, X₂]
+X_1 = randomvariable("Gamma", "M", [10, 1.5])
+X_2 = randomvariable("Gamma", "M", [15, 2.5])
+X   = [X_1, X_2]
 
 # Define correlation matrix:
-ρˣ = [1 -0.75; -0.75 1]
+ρ_X = [1 -0.75; -0.75 1]
 
 # Perform Nataf Transformation:
-NatafObject = NatafTransformation(X, ρˣ)
+nataf_object = NatafTransformation(X, ρ_X)
 
 # Generate 10000 samples of random vector in X-, Z-, and U-spaces using Latin Hypercube Sampling technique:
-XSamples, USamples, ZSamples = rand(NatafObject, 10000, :LHS)
+X_samples, U_samples, Z_samples = rand(nataf_object, 10000, :LHS)
 
 nothing # hide
 ```
@@ -35,9 +35,9 @@ nothing # hide
 
 ```@example 1
 # Compute joint PDF of random vector:
-xRange₁  = range(0, 20, 500)
-xRange₂  = range(5, 25, 500)
-fSamples = [pdf(NatafObject, [x₁, x₂]) for x₁ in xRange₁, x₂ in xRange₂]
+x_range_1  = range(0, 20, 500)
+x_range_2  = range(5, 25, 500)
+f_samples  = [pdf(nataf_object, [x_1, x_2]) for x_1 in x_range_1, x_2 in x_range_2]
 
 nothing # hide
 ```
@@ -52,24 +52,24 @@ nothing # hide
 
 ```@example 1
 # Define random vector:
-X₁ = randomvariable("Normal", "M", [0, 1])
-X₂ = randomvariable("Normal", "M", [0, 1])
-X  = [X₁, X₂]
+X_1 = randomvariable("Normal", "M", [0, 1])
+X_2 = randomvariable("Normal", "M", [0, 1])
+X   = [X_1, X_2]
 
 # Define correlation matrix:
-ρˣ  = [1 0; 0 1]
+ρ_X = [1 0; 0 1]
 
 # Define limit state function:
 β            = 3
 g(x::Vector) = β * sqrt(2) - x[1] - x[2]
 
 # Define reliability problem:
-Problem = ReliabilityProblem(X, ρˣ, g)
+problem = ReliabilityProblem(X, ρ_X, g)
 
 # Perform reliability analysis using Monte Carlo simulations:
-Solution = solve(Problem, MC())
+solution = solve(problem, MC())
 println("MC:")
-println("PoF: $(Solution.PoF)")
+println("PoF: $(solution.PoF)")
 ```
 
 ```@raw html
@@ -80,12 +80,12 @@ println("PoF: $(Solution.PoF)")
 
 ```@example 1
 # Define proposal probability density function:
-ProposalPDF = MvNormal([β / sqrt(2), β / sqrt(2)], [1 0; 0 1])
+q = MvNormal([β / sqrt(2), β / sqrt(2)], [1 0; 0 1])
 
 # Perform reliability analysis using Monte Carlo simulations:
-Solution = solve(Problem, IS(q = ProposalPDF))
+solution = solve(problem, IS(q = q))
 println("IS:")
-println("PoF: $(Solution.PoF)")
+println("PoF: $(solution.PoF)")
 ```
 
 ```@raw html
@@ -102,49 +102,49 @@ println("PoF: $(Solution.PoF)")
 
 ```@example 1
 # Define random vector:
-X₁ = randomvariable("Normal", "M", [10, 2])
-X₂ = randomvariable("Normal", "M", [20, 5])
-X  = [X₁, X₂]
+X_1 = randomvariable("Normal", "M", [10, 2])
+X_2 = randomvariable("Normal", "M", [20, 5])
+X   = [X_1, X_2]
 
 # Define correlation matrix:
-ρˣ = [1 0.5; 0.5 1]
+ρ_X = [1 0.5; 0.5 1]
 
 # Define two equivalent limit state functions:
-g₁(x::Vector) = x[1] ^ 2 - 2 * x[2]
-g₂(x::Vector) = 1 - 2 * x[2] / x[1] ^ 2
+g_1(x::Vector) = x[1] ^ 2 - 2 * x[2]
+g_2(x::Vector) = 1 - 2 * x[2] / x[1] ^ 2
 
 # Define reliability problems:
-Problem₁ = ReliabilityProblem(X, ρˣ, g₁)
-Problem₂ = ReliabilityProblem(X, ρˣ, g₂)
+problem_1 = ReliabilityProblem(X, ρ_X, g_1)
+problem_2 = ReliabilityProblem(X, ρ_X, g_2)
 
 # Perform reliability analysis using Mean-Centered First-Order Second-Moment (MCFOSM) method:
-Solution₁ = solve(Problem₁, FORM(MCFOSM()))
-Solution₂ = solve(Problem₂, FORM(MCFOSM()))
+solution_1 = solve(problem_1, FORM(MCFOSM()))
+solution_2 = solve(problem_2, FORM(MCFOSM()))
 println("MCFOSM:")
-println("β from g₁: $(Solution₁.β)")
-println("β from g₂: $(Solution₂.β)")
+println("β from g₁: $(solution_1.β)")
+println("β from g₂: $(solution_2.β)")
 ```
 
 ### Hasofer-Lind-Rackwitz-Fiessler Method
 
 ```@example 1
 # Perform reliability analysis using Hasofer-Lind-Rackwitz-Fiessler (HLRF) method:
-Solution₁ = solve(Problem₁, FORM(HLRF()))
-Solution₂ = solve(Problem₂, FORM(HLRF()))
+solution_1 = solve(problem_1, FORM(HLRF()))
+solution_2 = solve(problem_2, FORM(HLRF()))
 println("FORM:")
-println("β from g₁: $(Solution₁.β)")
-println("β from g₂: $(Solution₂.β)")
+println("β from g₁: $(solution_1.β)")
+println("β from g₂: $(solution_2.β)")
 ```
 
 ### Improved Hasofer-Lind-Rackwitz-Fiessler Method
 
 ```@example 1
 # Perform reliability analysis using improved Hasofer-Lind-Rackwitz-Fiessler (iHLRF) method:
-Solution₁ = solve(Problem₁, FORM(iHLRF()))
-Solution₂ = solve(Problem₂, FORM(iHLRF()))
+solution_1 = solve(problem_1, FORM(iHLRF()))
+solution_2 = solve(problem_2, FORM(iHLRF()))
 println("FORM:")
-println("β from g₁: $(Solution₁.β)")
-println("β from g₂: $(Solution₂.β)")
+println("β from g₁: $(solution_1.β)")
+println("β from g₂: $(solution_2.β)")
 ```
 
 ## Second-Order Reliability Methods
@@ -153,71 +153,71 @@ println("β from g₂: $(Solution₂.β)")
 
 ```@example 1
 # Define random vector:
-M₁ = randomvariable("Normal", "M", [250, 250 * 0.3])
-M₂ = randomvariable("Normal", "M", [125, 125 * 0.3])
-P  = randomvariable("Gumbel", "M", [2500, 2500 * 0.2])
-Y  = randomvariable("Weibull", "M", [40000, 40000 * 0.1])
-X  = [M₁, M₂, P, Y]
+M_1 = randomvariable("Normal", "M", [250, 250 * 0.3])
+M_2 = randomvariable("Normal", "M", [125, 125 * 0.3])
+P   = randomvariable("Gumbel", "M", [2500, 2500 * 0.2])
+Y   = randomvariable("Weibull", "M", [40000, 40000 * 0.1])
+X   = [M_1, M_2, P, Y]
 
 # Define correlation matrix:
-ρˣ = [1 0.5 0.3 0; 0.5 1 0.3 0; 0.3 0.3 1 0; 0 0 0 1]
+ρ_X = [1 0.5 0.3 0; 0.5 1 0.3 0; 0.3 0.3 1 0; 0 0 0 1]
 
 # Define limit state function:
-a            = 0.190
-s₁           = 0.030
-s₂           = 0.015
-g(x::Vector) = 1 - x[1] / (s₁ * x[4]) - x[2] / (s₂ * x[4]) - (x[3] / (a * x[4])) ^ 2
+a   = 0.190
+s_1 = 0.030
+s_2 = 0.015
+g(x::Vector) = 1 - x[1] / (s_1 * x[4]) - x[2] / (s_2 * x[4]) - (x[3] / (a * x[4])) ^ 2
 
 # Define reliability problem:
-Problem = ReliabilityProblem(X, ρˣ, g)
+problem = ReliabilityProblem(X, ρ_X, g)
 
 # Perform reliability analysis using Curve-Fitting (CF) method:
-Solution = solve(Problem, SORM(CF()))
+solution = solve(problem, SORM(CF()))
 println("SORM:")
-println("β from FORM: $(Solution.FORMSolution.β)")
-println("β from SORM: $(Solution.β₂[1]) (Hohenbichler and Rackwitz)")
-println("β from SORM: $(Solution.β₂[2]) (Breitung)")
-println("PoF from FORM: $(Solution.FORMSolution.PoF)")
-println("PoF from SORM: $(Solution.PoF₂[1]) (Hohenbichler and Rackwitz)")
-println("PoF from SORM: $(Solution.PoF₂[2]) (Breitung)")
+println("β from FORM: $(solution.FORMSolution.β)")
+println("β from SORM: $(solution.β₂[1]) (Hohenbichler and Rackwitz)")
+println("β from SORM: $(solution.β₂[2]) (Breitung)")
+println("PoF from FORM: $(solution.FORMSolution.PoF)")
+println("PoF from SORM: $(solution.PoF₂[1]) (Hohenbichler and Rackwitz)")
+println("PoF from SORM: $(solution.PoF₂[2]) (Breitung)")
 ```
 
 ### Point-Fitting Method
 
 ```@example 1
 # Perform reliability analysis using point-fitting SORM:
-Solution = solve(Problem, SORM(PF()))
+solution = solve(problem, SORM(PF()))
 println("SORM:")
-println("β from FORM: $(Solution.FORMSolution.β)")
-println("β from SORM: $(Solution.β₂[1]) (Hohenbichler and Rackwitz)")
-println("β from SORM: $(Solution.β₂[2]) (Breitung)")
-println("PoF from FORM: $(Solution.FORMSolution.PoF)")
-println("PoF from SORM: $(Solution.PoF₂[1]) (Hohenbichler and Rackwitz)")
-println("PoF from SORM: $(Solution.PoF₂[2]) (Breitung)")
+println("β from FORM: $(solution.FORMSolution.β)")
+println("β from SORM: $(solution.β₂[1]) (Hohenbichler and Rackwitz)")
+println("β from SORM: $(solution.β₂[2]) (Breitung)")
+println("PoF from FORM: $(solution.FORMSolution.PoF)")
+println("PoF from SORM: $(solution.PoF₂[1]) (Hohenbichler and Rackwitz)")
+println("PoF from SORM: $(solution.PoF₂[2]) (Breitung)")
 ```
 
 ## Subset Simulation Method
 
 ```@example 1
 # Define random vector:
-X₁ = randomvariable("Normal", "M", [0, 1])
-X₂ = randomvariable("Normal", "M", [0, 1])
-X  = [X₁, X₂]
+X_1 = randomvariable("Normal", "M", [0, 1])
+X_2 = randomvariable("Normal", "M", [0, 1])
+X  = [X_1, X_2]
 
 # Define correlation matrix:
-ρˣ  = [1 0; 0 1]
+ρ_X  = [1 0; 0 1]
 
 # Define limit state function:
-β            = 3
+β = 3
 g(x::Vector) = β * sqrt(2) - x[1] - x[2]
 
 # Define reliability problem:
-Problem = ReliabilityProblem(X, ρˣ, g)
+problem = ReliabilityProblem(X, ρ_X, g)
 
 # Perform reliability analysis using Monte Carlo simulations:
-Solution = solve(Problem, SSM())
+solution = solve(problem, SSM())
 println("SSM:")
-println("PoF: $(Solution.PoF)")
+println("PoF: $(solution.PoF)")
 ```
 
 ```@raw html

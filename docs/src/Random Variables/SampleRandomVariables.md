@@ -2,7 +2,7 @@
 
 `Fortuna.jl` package allows to easily generate samples of both uncorrelated and correlated random variables using `rand()` function using different sampling techniques. Current version of the package implements [Inverse Transform Sampling (ITS)](https://en.wikipedia.org/wiki/Inverse_transform_sampling) and [Latin Hypercube Sampling (LHS)](https://en.wikipedia.org/wiki/Latin_hypercube_sampling) techniques.
 
-```@setup 1
+```@setup sample_rv
 using Fortuna
 using Random
 Random.seed!(1)
@@ -14,7 +14,7 @@ To generate samples of a random variable:
 
 - Generate a random variable (`X`).
 
-```@example 1
+```@example sample_rv
 X = randomvariable("Gamma", "M", [10, 1.5])
 
 nothing # hide
@@ -22,8 +22,8 @@ nothing # hide
 
 - Sample the generated random variable using a sampling technique of your choice.
 
-```@example 1
-XSamples = rand(X, 10000, :LHS)
+```@example sample_rv
+X_samples = rand(X, 10000, :LHS)
 
 nothing # hide
 ```
@@ -36,27 +36,27 @@ nothing # hide
 
 To generate samples of a random vector with *uncorrelated* marginals:
 
-- Generate random variables (`X₁` and `X₂`).
+- Generate random variables (`X_1` and `X_2`).
 
-```@example 1
-X₁ = randomvariable("Gamma", "M", [10, 1.5])
-X₂ = randomvariable("Gamma", "M", [15, 2.5])
+```@example sample_rv
+X_1 = randomvariable("Gamma", "M", [10, 1.5])
+X_2 = randomvariable("Gamma", "M", [15, 2.5])
 
 nothing #hide
 ```
 
 - Define a random vector (`X`) with the generated random variables as marginals.
 
-```@example 1
-X = [X₁, X₂]
+```@example sample_rv
+X = [X_1, X_2]
 
 nothing # hide
 ```
 
 - Sample the defined random vector using a sampling technique of your choice.
 
-```@example 1
-XSamples = rand(X, 10000, :LHS)
+```@example sample_rv
+X_samples = rand(X, 10000, :LHS)
 
 nothing # hide
 ```
@@ -72,43 +72,43 @@ nothing # hide
 
 To generate samples of a random vector with *correlated* marginals:
 
-- Generate random variables (`X₁` and `X₂`).
+- Generate random variables (`X_1` and `X_2`).
 
-```@example 1
-X₁ = randomvariable("Gamma", "M", [10, 1.5])
-X₂ = randomvariable("Gamma", "M", [15, 2.5])
+```@example sample_rv
+X_1 = randomvariable("Gamma", "M", [10, 1.5])
+X_2 = randomvariable("Gamma", "M", [15, 2.5])
 
 nothing # hide
 ```
 
 - Define a random vector (`X`) with the generated random variables as marginals.
 
-```@example 1
-X = [X₁, X₂]
+```@example sample_rv
+X = [X_1, X_2]
 
 nothing # hide
 ```
 
 - Define a correlated matrix (`ρˣ`) for the defined random vector.
 
-```@example 1
-ρˣ = [1 -0.75; -0.75 1]
+```@example sample_rv
+ρ_X = [1 -0.75; -0.75 1]
 
 nothing # hide
 ```
 
 - Define a transformation object that hold all information about the defined random vector.
 
-```@example 1
-TransformationObject = NatafTransformation(X, ρˣ)
+```@example sample_rv
+transformation_object = NatafTransformation(X, ρ_X)
 
 nothing # hide
 ```
 
 - Sample the defined random vector using a sampling technique of your choice.
 
-```@example 1
-XSamples, ZSamples, USamples = rand(TransformationObject, 10000, :LHS)
+```@example sample_rv
+X_samples, Z_samples, U_samples = rand(transformation_object, 10000, :LHS)
 
 nothing # hide
 ```
